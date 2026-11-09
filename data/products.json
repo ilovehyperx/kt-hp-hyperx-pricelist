@@ -1,0 +1,3271 @@
+{
+ "updated": "2026-11-05T10:22:07Z",
+ "source": "KT-HP Threshold Costing (SRP, DP) · row.hyperx.com (photos)",
+ "laptopSource": {
+  "name": "HP Gaming Pricelist",
+  "url": "https://hp-hyperx-pl.github.io/HP-GM-PRICELIST---October-2026/",
+  "asOf": "2026-10-05T16:26:37",
+  "file": "Current Pricelist - HP Gaming.xlsx"
+ },
+ "categories": [
+  {
+   "id": "headsets",
+   "name": "Headsets",
+   "short": "Headsets"
+  },
+  {
+   "id": "earbuds",
+   "name": "Earbuds",
+   "short": "Earbuds"
+  },
+  {
+   "id": "mics",
+   "name": "Microphones & Streaming",
+   "short": "Mics"
+  },
+  {
+   "id": "mice",
+   "name": "Mice",
+   "short": "Mice"
+  },
+  {
+   "id": "mousepads",
+   "name": "Mousepads",
+   "short": "Mousepads"
+  },
+  {
+   "id": "keyboards",
+   "name": "Keyboards",
+   "short": "Keyboards"
+  },
+  {
+   "id": "kb-acc",
+   "name": "Keyboard Accessories",
+   "short": "KB Accessories"
+  },
+  {
+   "id": "console",
+   "name": "Console & Controllers",
+   "short": "Console"
+  },
+  {
+   "id": "laptops",
+   "name": "HyperX OMEN & HP Gaming Laptops",
+   "short": "Laptops"
+  },
+  {
+   "id": "monitors",
+   "name": "HyperX OMEN Monitors",
+   "short": "Monitors"
+  },
+  {
+   "id": "bags",
+   "name": "Bags",
+   "short": "Bags"
+  }
+ ],
+ "products": [
+  {
+   "id": "cloud-iii",
+   "cat": "headsets",
+   "name": "HyperX Cloud III",
+   "specs": [
+    "53mm angled drivers",
+    "Durable aluminum frame",
+    "Detachable noise-cancelling mic, LED mute",
+    "3.5mm, USB-C and USB-A"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "727A8AA",
+     "srp": 4990,
+     "dp": 3493.08
+    },
+    {
+     "label": "Black-Red",
+     "sku": "727A9AA",
+     "srp": 4990,
+     "dp": 3493.08
+    },
+    {
+     "label": "White",
+     "sku": "BS7C1AA",
+     "srp": 4990,
+     "dp": 3493.08
+    },
+    {
+     "label": "White-Pink",
+     "sku": "9W1Q4AA",
+     "srp": 4990,
+     "dp": 3493.08
+    },
+    {
+     "label": "Black-Blue",
+     "sku": "D0SX6AA",
+     "srp": 4990,
+     "dp": 3493.08
+    },
+    {
+     "label": "Black-Lavender",
+     "sku": "DF7F0AA",
+     "srp": 5350,
+     "dp": 3742.12
+    },
+    {
+     "label": "White-Blue",
+     "sku": "DF7F1AA",
+     "srp": 5350,
+     "dp": 3742.12
+    }
+   ],
+   "img": "https://row.hyperx.com/cdn/shop/files/hyperx_cloud_iii_red_66x0049_main_1.jpg",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC",
+    "PlayStation",
+    "Xbox",
+    "Switch",
+    "Mobile"
+   ],
+   "conn": "Wired",
+   "note": "New colorways Black-Lavender and White-Blue carry a higher SRP (₱5,350).",
+   "ltb": false,
+   "hero": true
+  },
+  {
+   "id": "cloud-iii-s-wl",
+   "cat": "headsets",
+   "name": "HyperX Cloud III S Wireless",
+   "specs": [
+    "Dual wireless: 2.4GHz + Bluetooth",
+    "53mm angled drivers",
+    "Aluminum frame, Signature Comfort",
+    "Noise-cancelling mic"
+   ],
+   "variants": [
+    {
+     "label": "Black-Red",
+     "sku": "A59Z0AA",
+     "srp": 7499,
+     "dp": 5249.51
+    },
+    {
+     "label": "Black",
+     "sku": "A59YZAA",
+     "srp": 7499,
+     "dp": 5249.51
+    },
+    {
+     "label": "White",
+     "sku": "AX6G1AA",
+     "srp": 7499,
+     "dp": 5249.51
+    },
+    {
+     "label": "Lavender",
+     "sku": "D95DFAA",
+     "srp": 7499,
+     "dp": 5249.51
+    },
+    {
+     "label": "Black-Blue",
+     "sku": "DF7E9AA",
+     "srp": 8090,
+     "dp": 5623.72
+    },
+    {
+     "label": "White-Pink",
+     "sku": "DG0R2AA",
+     "srp": 8090,
+     "dp": 5623.72
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_cloud_iii_s_wireless_red_a59z0aa_main_1.jpg?v=1793386388",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC",
+    "PlayStation",
+    "Switch",
+    "Mobile"
+   ],
+   "conn": "Wireless",
+   "note": "Black-Blue and White-Pink carry a higher SRP (₱8,090).",
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "cloud-alpha",
+   "cat": "headsets",
+   "name": "HyperX Cloud Alpha",
+   "specs": [
+    "50mm dual-chamber drivers",
+    "Red aluminum frame",
+    "Detachable noise-cancelling mic",
+    "Detachable braided 3.5mm cable"
+   ],
+   "variants": [
+    {
+     "label": "Red",
+     "sku": "4P5L1AB",
+     "srp": 6199,
+     "dp": 4339.01
+    }
+   ],
+   "img": null,
+   "tier": "Premium Flagship",
+   "platforms": [
+    "PC",
+    "PlayStation",
+    "Xbox",
+    "Switch",
+    "Mobile"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "cloud-alpha-wl",
+   "cat": "headsets",
+   "name": "HyperX Cloud Alpha Wireless",
+   "specs": [
+    "Up to 300 hours battery",
+    "50mm dual-chamber drivers",
+    "2.4GHz wireless (USB dongle)",
+    "DTS Headphone:X spatial audio"
+   ],
+   "variants": [
+    {
+     "label": "Black-Red",
+     "sku": "4P5D4AA",
+     "srp": 11200,
+     "dp": 7840.0
+    }
+   ],
+   "img": null,
+   "tier": "Premium Flagship",
+   "platforms": [
+    "PC",
+    "PlayStation"
+   ],
+   "conn": "Wireless",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "cloud-alpha-air",
+   "cat": "headsets",
+   "name": "HyperX Cloud Alpha Air",
+   "specs": [
+    "Open-back gaming headset",
+    "Airy, natural soundstage",
+    "Cloud Alpha comfort",
+    "Wired"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "D14ZCAA",
+     "srp": 9890,
+     "dp": 6907.11
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_cloud_alpha_air_d14zcaa_main_1.jpg?v=1790383021",
+   "tier": "Premium Flagship",
+   "platforms": [
+    "PC",
+    "PlayStation",
+    "Xbox",
+    "Mobile"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "cloud-alpha-2-wl",
+   "cat": "headsets",
+   "name": "HyperX Cloud Alpha 2 Wireless",
+   "specs": [
+    "53mm dual-chamber drivers",
+    "RGB media pad with volume rocker",
+    "2.4GHz + Bluetooth",
+    "Up to 250 hours battery"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "AJ5C7AA",
+     "srp": 18890,
+     "dp": 13222.59
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_cloud_alpha_2_wireless_aj5c7aa_main_1.jpg?v=1793386349",
+   "tier": "Premium Flagship",
+   "platforms": [
+    "PC",
+    "PlayStation",
+    "Mobile"
+   ],
+   "conn": "Wireless",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "stinger-3",
+   "cat": "headsets",
+   "name": "HyperX Cloud Stinger 3",
+   "specs": [
+    "50mm drivers",
+    "~272g with steel sliders",
+    "Swivel-to-mute mic",
+    "90° rotating earcups"
+   ],
+   "variants": [
+    {
+     "label": "Black · PC",
+     "sku": "BS1T5AA",
+     "srp": 2890,
+     "dp": 2022.59
+    },
+    {
+     "label": "White · PlayStation",
+     "sku": "BS1T6AA",
+     "srp": 2890,
+     "dp": 2022.59
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_cloud_stinger_3_pc_bs1t5aa_main_1.jpg?v=1793386461",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC",
+    "PlayStation",
+    "Switch",
+    "Mobile"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "stinger-3-x",
+   "cat": "headsets",
+   "name": "HyperX CloudX Stinger 3 (Xbox)",
+   "specs": [
+    "Officially licensed for Xbox",
+    "50mm drivers",
+    "Swivel-to-mute mic",
+    "Steel sliders, ~272g"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "BS1T7AA",
+     "srp": 2890,
+     "dp": 2022.59
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_cloudx_stinger_3_xb_bs1t7aa_main_1.jpg?v=1793386294",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "Xbox",
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "stinger-3-wl",
+   "cat": "headsets",
+   "name": "HyperX Cloud Stinger 3 Wireless",
+   "specs": [
+    "Up to 80 hours battery",
+    "2.4GHz + Bluetooth 5.2",
+    "50mm drivers, ~280g",
+    "Spatial audio via NGENUITY (PC)"
+   ],
+   "variants": [
+    {
+     "label": "Black · PC",
+     "sku": "BS1T8AA",
+     "srp": 5890,
+     "dp": 4122.92
+    },
+    {
+     "label": "White · PlayStation",
+     "sku": "BS1T9AA",
+     "srp": 5890,
+     "dp": 4122.92
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_cloud_stinger_3_wireless_pc_bs1t8aa_main_1.jpg?v=1793386466",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC",
+    "PlayStation",
+    "Mobile"
+   ],
+   "conn": "Wireless",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "stinger-2-core",
+   "cat": "headsets",
+   "name": "HyperX Cloud Stinger 2 Core",
+   "specs": [
+    "40mm drivers, enhanced bass",
+    "Lightweight ~272g",
+    "Swivel-to-mute mic",
+    "PC: DTS Headphone:X"
+   ],
+   "variants": [
+    {
+     "label": "Black · PC",
+     "sku": "683L9AA",
+     "srp": 2190,
+     "dp": 1532.42
+    },
+    {
+     "label": "Black · PlayStation",
+     "sku": "6H9B6AA",
+     "srp": 2390,
+     "dp": 1673.41
+    },
+    {
+     "label": "White · PlayStation",
+     "sku": "6H9B5AA",
+     "srp": 2390,
+     "dp": 1673.41
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/products/hyperx_cloud_stinger_2_core_white_ps_1_main.jpg?v=1665763174",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC",
+    "PlayStation"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "stinger-2-core-x",
+   "cat": "headsets",
+   "name": "HyperX CloudX Stinger 2 Core (Xbox)",
+   "specs": [
+    "Officially licensed for Xbox",
+    "40mm drivers",
+    "Swivel-to-mute mic",
+    "Lightweight build"
+   ],
+   "variants": [
+    {
+     "label": "White",
+     "sku": "6H9B7AA",
+     "srp": 2390,
+     "dp": 1673.41
+    },
+    {
+     "label": "Black",
+     "sku": "6H9B8AA",
+     "srp": 2390,
+     "dp": 1673.41
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/products/hyperx_cloudx_stinger_2_core_black_xbox_1_main.jpg?v=1665773634",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "Xbox",
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "stinger-2",
+   "cat": "headsets",
+   "name": "HyperX Cloud Stinger 2",
+   "specs": [
+    "50mm drivers",
+    "Memory foam cushions",
+    "90° rotating earcups",
+    "Swivel-to-mute, volume slider"
+   ],
+   "variants": [
+    {
+     "label": "Black · PC",
+     "sku": "519T1AA",
+     "srp": 2590,
+     "dp": 1813.08
+    },
+    {
+     "label": "Black · PlayStation",
+     "sku": "75X29AA",
+     "srp": 2890,
+     "dp": 2022.59
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_stinger_2_white_ps_75x29aa_main_1.jpg?v=1793386361",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC",
+    "PlayStation"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "stinger-2-x",
+   "cat": "headsets",
+   "name": "HyperX CloudX Stinger 2 (Xbox)",
+   "specs": [
+    "Officially licensed for Xbox",
+    "50mm drivers",
+    "Memory foam cushions",
+    "Swivel-to-mute mic"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "75X28AA",
+     "srp": 2890,
+     "dp": 2022.59
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_stinger_2_white_xbox_75x28aa_main_1.jpg?v=1793386311",
+   "tier": "Premium Performance",
+   "platforms": [
+    "Xbox",
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "stinger-2-wl",
+   "cat": "headsets",
+   "name": "HyperX Cloud Stinger 2 Wireless",
+   "specs": [
+    "2.4GHz wireless (USB dongle)",
+    "Up to 20 hours battery",
+    "DTS Headphone:X (PC)",
+    "Memory foam, swivel-to-mute"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "676A2AA",
+     "srp": 3890,
+     "dp": 4123.0
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/products/hyperx_cloud_stinger_2_wireless_1_main.jpg?v=1666717064",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wireless",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "cloud-jet-wl",
+   "cat": "headsets",
+   "name": "HyperX Cloud Jet Wireless",
+   "specs": [
+    "2.4GHz + Bluetooth 5.3",
+    "~295g, elastic suspension band",
+    "Breathable mesh cushions",
+    "Flip-to-mute mic with sidetone"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "AJ0T1AA",
+     "srp": 4449,
+     "dp": 3114.92
+    },
+    {
+     "label": "Blue",
+     "sku": "AM7A0AA",
+     "srp": 4449,
+     "dp": 3114.92
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_cloud_jet_blue_am7a0aa_main_1.jpg?v=1783539515",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC",
+    "PlayStation",
+    "Switch",
+    "Mobile"
+   ],
+   "conn": "Wireless",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "cloud-mini",
+   "cat": "headsets",
+   "name": "HyperX Cloud Mini (Kids)",
+   "specs": [
+    "Volume limited below 85dB",
+    "Sized for ages 8–12",
+    "Flip-to-mute mic",
+    "Lightweight"
+   ],
+   "variants": [
+    {
+     "label": "Multi",
+     "sku": "7G8F3AA",
+     "srp": 2190,
+     "dp": 1532.42
+    },
+    {
+     "label": "Black",
+     "sku": "7G8F4AA",
+     "srp": 2190,
+     "dp": 1532.42
+    },
+    {
+     "label": "Lavender",
+     "sku": "7G8F5AA",
+     "srp": 2190,
+     "dp": 1532.42
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_cloud_mini_lavender_main_1.jpg?v=1716938541",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC",
+    "Switch",
+    "Mobile"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "cloud-mini-wl",
+   "cat": "headsets",
+   "name": "HyperX Cloud Mini Wireless (Kids)",
+   "specs": [
+    "Volume limited below 85dB",
+    "Up to 25 hours battery",
+    "Bluetooth wireless",
+    "Sized for ages 8–12"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "7G8F1AA",
+     "srp": 2969,
+     "dp": 2077.93
+    },
+    {
+     "label": "White",
+     "sku": "7G8F2AA",
+     "srp": 2969,
+     "dp": 2077.93
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_cloud_mini_wireless_white_main_1.jpg?v=1793386296",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "Mobile",
+    "PC",
+    "Switch"
+   ],
+   "conn": "Wireless",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "earbuds-ii",
+   "cat": "earbuds",
+   "name": "HyperX Cloud Earbuds II",
+   "specs": [
+    "Angled snag-free 3.5mm plug",
+    "Hard carrying case",
+    "In-line mic",
+    "Made for handheld gaming"
+   ],
+   "variants": [
+    {
+     "label": "Red",
+     "sku": "705L8AA",
+     "srp": 1490,
+     "dp": 1183.25
+    },
+    {
+     "label": "Black",
+     "sku": "70N24AA",
+     "srp": 1490,
+     "dp": 1183.25
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_cloud_earbuds_ii_black_1_main.jpg?v=1793386437",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "Mobile",
+    "Switch",
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "earbuds-iii",
+   "cat": "earbuds",
+   "name": "HyperX Cloud Earbuds III",
+   "specs": [
+    "Newest generation",
+    "Patented ear-tip design",
+    "All-day comfort",
+    "In-line mic"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "BN7R9AA",
+     "srp": 2490,
+     "dp": 1977.79
+    },
+    {
+     "label": "Red",
+     "sku": "BN7S0AA",
+     "srp": 2490,
+     "dp": 1977.79
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_cloud_earbuds_iii_black_bn7r9aa_main_1.jpg?v=1793386357",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "Mobile",
+    "Switch",
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "earbuds-iii-s",
+   "cat": "earbuds",
+   "name": "HyperX Cloud Earbuds III S",
+   "specs": [
+    "S version of Cloud Earbuds III",
+    "Gaming earbuds",
+    "For mobile and handheld",
+    "Black or Red"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "BN7S1AA",
+     "srp": 3690,
+     "dp": 2930.45
+    },
+    {
+     "label": "Red",
+     "sku": "BN7S2AA",
+     "srp": 3690,
+     "dp": 2930.45
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_cloud_earbuds_iii_s_black_bn7s1aa_main_1.jpg?v=1793386355",
+   "tier": "Premium Performance",
+   "platforms": [
+    "Mobile",
+    "Switch",
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "solocast-2",
+   "cat": "mics",
+   "name": "HyperX SoloCast 2",
+   "specs": [
+    "USB-C plug-and-play",
+    "Cardioid condenser",
+    "Tap-to-mute",
+    "Black or Frost"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "AR0A0AA",
+     "srp": 2999,
+     "dp": 2399.44
+    },
+    {
+     "label": "Frost",
+     "sku": "DH2T0AA",
+     "srp": 3200,
+     "dp": 2249.22
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_solocast_2_ar0a0aa_main_1.jpg?v=1783539521",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC",
+    "PlayStation",
+    "Mobile"
+   ],
+   "conn": "Wired",
+   "note": "Frost carries a higher SRP (₱3,200).",
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "solocast-2-pro",
+   "cat": "mics",
+   "name": "HyperX SoloCast 2 Pro",
+   "specs": [
+    "Pro version of SoloCast 2",
+    "USB condenser mic",
+    "Tap-to-mute",
+    "Streaming and calls"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "C96GRAA",
+     "srp": 5920.000000000002,
+     "dp": 4144.0
+    }
+   ],
+   "img": "https://row.hyperx.com/cdn/shop/files/hyperx_solocast_2_pro_c96graa_main_1.jpg",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC",
+    "PlayStation",
+    "Mobile"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "duocast",
+   "cat": "mics",
+   "name": "HyperX DuoCast",
+   "specs": [
+    "Two polar patterns",
+    "Headphone jack for monitoring",
+    "RGB light ring",
+    "Tap-to-mute"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "4P5E2AA",
+     "srp": 4499,
+     "dp": 3374.49
+    }
+   ],
+   "img": null,
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC",
+    "PlayStation"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "quadcast-2",
+   "cat": "mics",
+   "name": "HyperX QuadCast 2",
+   "specs": [
+    "Four polar patterns",
+    "All-in-one onboard controls",
+    "Iconic red glow",
+    "Built-in shock mount"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "872V1AA",
+     "srp": 9790,
+     "dp": 6853.08
+    },
+    {
+     "label": "Frost (white)",
+     "sku": "AN1D9AA",
+     "srp": 9790,
+     "dp": 6853.08
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_quadcast_2_872v1aa_main_1.jpg?v=1793386338",
+   "tier": "Premium Flagship",
+   "platforms": [
+    "PC",
+    "PlayStation",
+    "Mobile"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "quadcast-2s",
+   "cat": "mics",
+   "name": "HyperX QuadCast 2 S",
+   "specs": [
+    "192kHz / 32-bit audio",
+    "100+ customizable RGB LEDs",
+    "AI noise reduction",
+    "Four polar patterns"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "9A273AA",
+     "srp": 13090,
+     "dp": 9162.92
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_quadcast_2_s_9a273aa_main_1.jpg?v=1793386499",
+   "tier": "Premium Flagship",
+   "platforms": [
+    "PC",
+    "PlayStation",
+    "Mobile"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "flipcast",
+   "cat": "mics",
+   "name": "HyperX FlipCast",
+   "specs": [
+    "Dynamic microphone",
+    "USB and XLR outputs",
+    "For streaming and podcasts",
+    "Creator-grade build"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "B2CM1AA",
+     "srp": 14790,
+     "dp": 10352.75
+    }
+   ],
+   "img": "https://row.hyperx.com/cdn/shop/files/hyperx_flipcast_b2cm1aa_main_1.jpg",
+   "tier": "Premium Flagship",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "audio-mixer",
+   "cat": "mics",
+   "name": "HyperX Audio Mixer",
+   "specs": [
+    "Desktop streaming audio mixer",
+    "Per-channel control",
+    "For creators and streamers",
+    "Pairs with HyperX mics"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "73C12AA",
+     "srp": 12799,
+     "dp": 8958.68
+    }
+   ],
+   "img": "https://row.hyperx.com/cdn/shop/files/hyperx_audio_mixer_73c12aa_main_1.jpg",
+   "tier": "Premium Flagship",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "shield",
+   "cat": "mics",
+   "name": "HyperX Shield Pop Filter",
+   "specs": [
+    "Microphone pop filter",
+    "Reduces plosives",
+    "Fits HyperX mics",
+    "Creator accessory"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "6X256AA",
+     "srp": 1899,
+     "dp": 1329.51
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_shield_microphone_pop_filter_main_1.jpg?v=1793386541",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Accessory",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "xlr-cable",
+   "cat": "mics",
+   "name": "HyperX XLR Cable",
+   "specs": [
+    "XLR to XLR",
+    "For XLR mics and mixers",
+    "Desktop audio",
+    "Creator accessory"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "6Z2B9AA",
+     "srp": 1499,
+     "dp": 1048.85
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_xlr_cable_6z2b9aa_main_1.jpg?v=1793386426",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Accessory",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "haste-3-wl",
+   "cat": "mice",
+   "name": "HyperX Pulsefire Haste 3 Wireless",
+   "specs": [
+    "Newest Pulsefire Haste generation",
+    "Ultralight esports shape",
+    "Wireless",
+    "Black"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "D9LS1AA",
+     "srp": 6590,
+     "dp": 4559.06
+    }
+   ],
+   "img": "https://row.hyperx.com/cdn/shop/files/hyperx_pulsefire_haste_3_d9ls1aa_main_1.jpg",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wireless",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "haste-3",
+   "cat": "mice",
+   "name": "HyperX Pulsefire Haste 3",
+   "specs": [
+    "Newest Pulsefire Haste generation",
+    "Ultralight esports shape",
+    "Wired",
+    "Black"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "D9LS2AA",
+     "srp": 3290,
+     "dp": 2301.93
+    }
+   ],
+   "img": "https://row.hyperx.com/cdn/shop/files/hyperx_pulsefire_haste_3_wireless_d9ls2aa_main_1.jpg",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "haste-3-pro-wl",
+   "cat": "mice",
+   "name": "HyperX Pulsefire Haste 3 Pro Wireless",
+   "specs": [
+    "Pro version of Haste 3",
+    "Ultralight esports shape",
+    "Wireless",
+    "Black"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "D6GJ3AA",
+     "srp": 8490,
+     "dp": 5939.95
+    }
+   ],
+   "img": "https://row.hyperx.com/cdn/shop/files/hyperx_pulsefire_haste_3_pro_d6gj3aa_main_1.jpg",
+   "tier": "Premium Flagship",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wireless",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "haste-2",
+   "cat": "mice",
+   "name": "HyperX Pulsefire Haste 2",
+   "specs": [
+    "Ultralight 53g",
+    "8,000Hz polling",
+    "26K DPI sensor",
+    "HyperFlex USB cable"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "6N0A7AA",
+     "srp": 2890,
+     "dp": 2022.59
+    },
+    {
+     "label": "White",
+     "sku": "6N0A8AA",
+     "srp": 2890,
+     "dp": 2022.59
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/products/hyperx_pulsefire_haste_2_white_1_main.jpg?v=1680540394",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "haste-2-core-wl",
+   "cat": "mice",
+   "name": "HyperX Pulsefire Haste 2 Core Wireless",
+   "specs": [
+    "2.4GHz + Bluetooth",
+    "Up to 100 hours on 1 AAA",
+    "12K DPI sensor",
+    "Lightweight shape"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "8R2E6AA",
+     "srp": 3890,
+     "dp": 2723.58
+    },
+    {
+     "label": "White",
+     "sku": "8R2E7AA",
+     "srp": 3890,
+     "dp": 2723.58
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_pulsefire_haste_2_core_wireless_black_8r2e6aa_main_1.jpg?v=1716312861",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC",
+    "Mobile"
+   ],
+   "conn": "Wireless",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "fuse-wl",
+   "cat": "mice",
+   "name": "HyperX Pulsefire Fuse Wireless",
+   "specs": [
+    "Ambidextrous shape",
+    "Up to 85 hours on 1 AAA",
+    "2.4GHz + Bluetooth",
+    "Lightweight"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "A1KY6AA",
+     "srp": 3890,
+     "dp": 2723.58
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_pulsefire_fuse_wireless_a1ky6aa_main_1.jpg?v=1764893462",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC",
+    "Mobile"
+   ],
+   "conn": "Wireless",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "saga",
+   "cat": "mice",
+   "name": "HyperX Pulsefire Saga",
+   "specs": [
+    "Modular magnetic shells",
+    "Swappable buttons and sides",
+    "26K DPI sensor",
+    "8,000Hz polling"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "A2PB3AA",
+     "srp": 4390,
+     "dp": 3072.75
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_pulsefire_saga_a2pb3aa_main_1.jpg?v=1793386323",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "haste-2-mini-wl",
+   "cat": "mice",
+   "name": "HyperX Pulsefire Haste 2 Mini Wireless",
+   "specs": [
+    "Compact, ultralight",
+    "2.4GHz + Bluetooth",
+    "26K DPI sensor",
+    "Long battery life"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "7D388AA",
+     "srp": 4590,
+     "dp": 3212.42
+    },
+    {
+     "label": "White",
+     "sku": "7D389AA",
+     "srp": 4590,
+     "dp": 3212.42
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_pulsefire_haste_2_mini_wireless_white_7d389aa_main_1.jpg?v=1704231343",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC",
+    "Mobile"
+   ],
+   "conn": "Wireless",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "haste-2-wl",
+   "cat": "mice",
+   "name": "HyperX Pulsefire Haste 2 Wireless",
+   "specs": [
+    "Ultralight 61g",
+    "2.4GHz + Bluetooth",
+    "Up to 100 hours battery",
+    "26K DPI sensor"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "6N0B0AA",
+     "srp": 4990,
+     "dp": 3493.08
+    },
+    {
+     "label": "White",
+     "sku": "6N0A9AA",
+     "srp": 4990,
+     "dp": 3493.08
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_pulsefire_haste_2_wireless_white_main_1.jpg?v=1793386486",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC",
+    "Mobile"
+   ],
+   "conn": "Wireless",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "pulsefire-mat",
+   "cat": "mousepads",
+   "name": "HyperX Pulsefire Mat (Cloth)",
+   "specs": [
+    "Cloth gaming surface",
+    "Anti-fray stitched edges",
+    "Natural rubber base",
+    "M / L / XL / 2XL"
+   ],
+   "variants": [
+    {
+     "label": "M",
+     "sku": "4Z7X3AA",
+     "srp": 799,
+     "dp": 558.68
+    },
+    {
+     "label": "L",
+     "sku": "4Z7X4AA",
+     "srp": 1099,
+     "dp": 769.51
+    },
+    {
+     "label": "XL",
+     "sku": "4Z7X5AA",
+     "srp": 1699,
+     "dp": 1189.84
+    },
+    {
+     "label": "2XL",
+     "sku": "4Z7X6AA",
+     "srp": 2499,
+     "dp": 1749.84
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_pulsefire_mat_l_1_straight.jpg?v=1793386436",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Accessory",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "alloy-core-rgb",
+   "cat": "keyboards",
+   "name": "HyperX Alloy Core RGB",
+   "specs": [
+    "Full-size membrane",
+    "Quiet, spill-resistant",
+    "RGB lighting zones",
+    "Dedicated media keys"
+   ],
+   "variants": [
+    {
+     "label": "Black · US",
+     "sku": "4P4F5AA",
+     "srp": 2590,
+     "dp": 1942.21
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_alloy_core_rgb_ru_1_main.jpg?v=1734473869",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "eve-1800",
+   "cat": "keyboards",
+   "name": "HyperX Eve 1800",
+   "specs": [
+    "1800 layout with number pad",
+    "Membrane switches",
+    "Compact body",
+    "RGB lighting"
+   ],
+   "variants": [
+    {
+     "label": "Black · US",
+     "sku": "B7JE0AA",
+     "srp": 2690,
+     "dp": 2017.32
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_eve_1800_us_b7je0a6_23aba_main_1.jpg?v=1793386426",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "origins-2-65",
+   "cat": "keyboards",
+   "name": "HyperX Origins 2 65",
+   "specs": [
+    "65% mechanical",
+    "8K polling",
+    "Modular housing",
+    "\"Thocky\" typing sound"
+   ],
+   "variants": [
+    {
+     "label": "Black · US",
+     "sku": "B4QS3AA",
+     "srp": 6890,
+     "dp": 5167.81
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_origins_2_65_us_b4qs3aa_main_1.jpg?v=1782291187",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "origins-2-1800",
+   "cat": "keyboards",
+   "name": "HyperX Origins 2 1800",
+   "specs": [
+    "1800 mechanical with numpad",
+    "8K polling",
+    "Two-piece modular housing",
+    "Hot-swap ready"
+   ],
+   "variants": [
+    {
+     "label": "Black · US",
+     "sku": "B4QS4AA",
+     "srp": 9190,
+     "dp": 6892.61
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_origins_2_1800_us_b4qs4aa_main_1.jpg?v=1778747706",
+   "tier": "Premium Flagship",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "origins-pro-2-65",
+   "cat": "keyboards",
+   "name": "HyperX Origins Pro 2 65",
+   "specs": [
+    "Ultra-fast switches",
+    "Gasket mount",
+    "Magnetic swappable top plates",
+    "65% layout"
+   ],
+   "variants": [
+    {
+     "label": "Black · US",
+     "sku": "BN7S3AA",
+     "srp": 9590,
+     "dp": 7193.04
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_origins_2_pro_65_us_bn7s3aa_main_1.jpg?v=1793386349",
+   "tier": "Premium Flagship",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "alloy-rise-75",
+   "cat": "keyboards",
+   "name": "HyperX Alloy Rise 75",
+   "specs": [
+    "75% mechanical",
+    "Hot-swap switches",
+    "Swappable top plates",
+    "8K polling"
+   ],
+   "variants": [
+    {
+     "label": "Black · Red linear",
+     "sku": "7G7A4AA",
+     "srp": 8799,
+     "dp": 6598.78
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_alloy_rise_75_th_7g7a4aa_23akl_main_1.jpg?v=1728987101",
+   "tier": "Premium Flagship",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "alloy-rise",
+   "cat": "keyboards",
+   "name": "HyperX Alloy Rise",
+   "specs": [
+    "Full-size mechanical",
+    "Hot-swap switches",
+    "Swappable top plates",
+    "8K polling"
+   ],
+   "variants": [
+    {
+     "label": "Black · Red linear",
+     "sku": "7G7A3AA",
+     "srp": 9799,
+     "dp": 7349.84
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_alloy_rise_th_7g7a3aa_23akl_main_1.jpg?v=1723927145",
+   "tier": "Premium Flagship",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "alloy-origins",
+   "cat": "keyboards",
+   "name": "HyperX Alloy Origins RGB",
+   "specs": [
+    "Full-size mechanical",
+    "Aircraft-grade aluminum body",
+    "RGB per-key lighting",
+    "Detachable USB-C cable"
+   ],
+   "variants": [
+    {
+     "label": "Red linear",
+     "sku": "4P4F6AA",
+     "srp": 5999,
+     "dp": 4499.76
+    },
+    {
+     "label": "Aqua tactile",
+     "sku": "4P5N9AA",
+     "srp": 5999,
+     "dp": 4499.76
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_alloy_origins_tw_1_top_down.jpg?v=1734473781",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": "End of life — sell only while stock lasts.",
+   "ltb": true,
+   "hero": false
+  },
+  {
+   "id": "alloy-origins-60",
+   "cat": "keyboards",
+   "name": "HyperX Alloy Origins 60",
+   "specs": [
+    "60% mechanical",
+    "Aluminum body",
+    "RGB lighting",
+    "Detachable USB-C cable"
+   ],
+   "variants": [
+    {
+     "label": "Red linear",
+     "sku": "4P5N4AA",
+     "srp": 5999,
+     "dp": 4499.76
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_alloy_origins_60_ar_main_1_7b7490ba-1999-4bb4-a7a5-6912ba7aa00f.jpg?v=1793386408",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": "End of life — sell only while stock lasts.",
+   "ltb": true,
+   "hero": false
+  },
+  {
+   "id": "alloy-origins-65",
+   "cat": "keyboards",
+   "name": "HyperX Alloy Origins 65",
+   "specs": [
+    "65% mechanical",
+    "Aluminum body",
+    "RGB lighting",
+    "Detachable USB-C cable"
+   ],
+   "variants": [
+    {
+     "label": "Red linear",
+     "sku": "4P5D6AA",
+     "srp": 5999,
+     "dp": 4499.76
+    },
+    {
+     "label": "Aqua tactile",
+     "sku": "56R64AA",
+     "srp": 5999,
+     "dp": 4499.76
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_alloy_origins_65_english_us_aqua_1_top_down.jpg?v=1740220815",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": "End of life — sell only while stock lasts.",
+   "ltb": true,
+   "hero": false
+  },
+  {
+   "id": "alloy-origins-pbt",
+   "cat": "keyboards",
+   "name": "HyperX Alloy Origins PBT",
+   "specs": [
+    "Full-size mechanical",
+    "Double-shot PBT keycaps",
+    "Aluminum body",
+    "RGB lighting"
+   ],
+   "variants": [
+    {
+     "label": "Red linear",
+     "sku": "639N3AA",
+     "srp": 6499,
+     "dp": 4873.98
+    },
+    {
+     "label": "Blue clicky",
+     "sku": "639N4AA",
+     "srp": 6499,
+     "dp": 4873.98
+    },
+    {
+     "label": "Aqua tactile",
+     "sku": "639N5AA",
+     "srp": 6499,
+     "dp": 4873.98
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/products/hyperx_alloy_origins_pbt_english_us_aqua_1_main.jpg?v=1666376510",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": "End of life — sell only while stock lasts.",
+   "ltb": true,
+   "hero": false
+  },
+  {
+   "id": "alloy-origins-core-pbt",
+   "cat": "keyboards",
+   "name": "HyperX Alloy Origins Core PBT",
+   "specs": [
+    "Tenkeyless mechanical",
+    "Double-shot PBT keycaps",
+    "Aluminum body",
+    "RGB lighting"
+   ],
+   "variants": [
+    {
+     "label": "Blue clicky",
+     "sku": "639N8AA",
+     "srp": 5999,
+     "dp": 4499.76
+    },
+    {
+     "label": "Aqua tactile",
+     "sku": "639N9AA",
+     "srp": 5999,
+     "dp": 4499.76
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/products/hyperx_alloy_origins_core_pbt_english_us_blue_1_main.jpg?v=1663889002",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": "End of life — sell only while stock lasts.",
+   "ltb": true,
+   "hero": false
+  },
+  {
+   "id": "pbt-keycaps",
+   "cat": "kb-acc",
+   "name": "HyperX Full Keycap Set – PBT",
+   "specs": [
+    "Double-shot PBT",
+    "Full key set",
+    "US layout",
+    "Black / White / Pink"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "519P1AA",
+     "srp": 1399,
+     "dp": 979.01
+    },
+    {
+     "label": "White",
+     "sku": "519T5AA",
+     "srp": 1399,
+     "dp": 979.01
+    },
+    {
+     "label": "Pink",
+     "sku": "519T9AA",
+     "srp": 1399,
+     "dp": 2010.73
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_pbt_keycaps_pink_us_1_angled.jpg?v=1793386571",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Accessory",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "pudding-keycaps",
+   "cat": "kb-acc",
+   "name": "HyperX Pudding Keycap Set – PBT (Pink)",
+   "specs": [
+    "Translucent pudding sides",
+    "PBT keycaps",
+    "Full key set",
+    "US layout"
+   ],
+   "variants": [
+    {
+     "label": "Pink",
+     "sku": "644H7AA",
+     "srp": 1490,
+     "dp": 1043.58
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_pudding_keycaps_2_pink_7g8k3aa_angle_6.jpg?v=1793386479",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Accessory",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "switches",
+   "cat": "kb-acc",
+   "name": "HyperX Switches",
+   "specs": [
+    "Linear (Red) or Tactile (Aqua)",
+    "For hot-swap keyboards",
+    "Switch pack",
+    "Smooth, consistent feel"
+   ],
+   "variants": [
+    {
+     "label": "Linear · Red",
+     "sku": "85U07AA",
+     "srp": 1499,
+     "dp": 1048.85
+    },
+    {
+     "label": "Tactile · Aqua",
+     "sku": "85U08AA",
+     "srp": 1499,
+     "dp": 1048.85
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_linear_switch_85u07aa_main_1.jpg?v=1793386478",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Accessory",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "coiled-cable",
+   "cat": "kb-acc",
+   "name": "HyperX USB-C Coiled Cable",
+   "specs": [
+    "USB-C to USB-A",
+    "Coiled with aviator connector",
+    "Six colorways",
+    "Desk-setup upgrade"
+   ],
+   "variants": [
+    {
+     "label": "Red-Black",
+     "sku": "6J677AA",
+     "srp": 1099,
+     "dp": 769.51
+    },
+    {
+     "label": "Gray",
+     "sku": "6J678AA",
+     "srp": 1099,
+     "dp": 769.51
+    },
+    {
+     "label": "Gray-Black",
+     "sku": "6J679AA",
+     "srp": 1099,
+     "dp": 769.51
+    },
+    {
+     "label": "Light Blue-White",
+     "sku": "6J680AA",
+     "srp": 1099,
+     "dp": 769.51
+    },
+    {
+     "label": "Light Green-White",
+     "sku": "6J681AA",
+     "srp": 1099,
+     "dp": 769.51
+    },
+    {
+     "label": "Light Purple",
+     "sku": "6J682AA",
+     "srp": 1099,
+     "dp": 769.51
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/products/hyperx_coiled_cable_light_purple_6j682aa_main_1.jpg?v=1671055342",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Accessory",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "rise-top-plate",
+   "cat": "kb-acc",
+   "name": "HyperX Alloy Rise Top Plate",
+   "specs": [
+    "For Alloy Rise (full-size)",
+    "Magnetic swap",
+    "White or Navy",
+    "Restyle your board"
+   ],
+   "variants": [
+    {
+     "label": "White",
+     "sku": "85U09AA",
+     "srp": 2199,
+     "dp": 1539.01
+    },
+    {
+     "label": "Navy",
+     "sku": "85U10AA",
+     "srp": 2199,
+     "dp": 1539.01
+    }
+   ],
+   "img": null,
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Accessory",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "rise-75-top-plate",
+   "cat": "kb-acc",
+   "name": "HyperX Alloy Rise 75 Top Plate",
+   "specs": [
+    "For Alloy Rise 75",
+    "Magnetic swap",
+    "White or Navy",
+    "Restyle your board"
+   ],
+   "variants": [
+    {
+     "label": "White",
+     "sku": "85U14AA",
+     "srp": 1999,
+     "dp": 1399.34
+    },
+    {
+     "label": "Navy",
+     "sku": "85U15AA",
+     "srp": 1999,
+     "dp": 1399.34
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_rise_75_top_plate_white_85u14aa_main_1.jpg?v=1793386471",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Accessory",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "badges",
+   "cat": "kb-acc",
+   "name": "HyperX Magnetic Badges",
+   "specs": [
+    "Magnetic badge pack",
+    "For Alloy Rise boards",
+    "8-Bit / Abstract / Cute",
+    "Personalize your setup"
+   ],
+   "variants": [
+    {
+     "label": "8-Bit",
+     "sku": "85U19AA",
+     "srp": 1499,
+     "dp": 1048.85
+    },
+    {
+     "label": "Abstract",
+     "sku": "85U20AA",
+     "srp": 1499,
+     "dp": 1048.85
+    },
+    {
+     "label": "Cute",
+     "sku": "85U21AA",
+     "srp": 1499,
+     "dp": 1048.85
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_badge_pack_abstract_85u20aa_main_1.jpg?v=1793386535",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Accessory",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "wrist-rest",
+   "cat": "kb-acc",
+   "name": "HyperX Wrist Rest",
+   "specs": [
+    "Cooling gel memory foam",
+    "Anti-slip base",
+    "Full / 60 / 75 / Mouse",
+    "Ergonomic support"
+   ],
+   "variants": [
+    {
+     "label": "Full-size",
+     "sku": "4P5M9AA",
+     "srp": 1299,
+     "dp": 909.18
+    },
+    {
+     "label": "60",
+     "sku": "4Z7X0AA",
+     "srp": 999,
+     "dp": 699.67
+    },
+    {
+     "label": "75 / TKL",
+     "sku": "4Z7X1AA",
+     "srp": 999,
+     "dp": 699.67
+    },
+    {
+     "label": "Mouse",
+     "sku": "4Z7X2AA",
+     "srp": 799,
+     "dp": 558.68
+    }
+   ],
+   "img": "https://row.hyperx.com/cdn/shop/files/hyperx_wrist_rest_full_sized_1_main.jpg",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Accessory",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "chargeplay-duo",
+   "cat": "console",
+   "name": "HyperX ChargePlay Duo (PS5)",
+   "specs": [
+    "Charges two DualSense controllers",
+    "Drop-in charging",
+    "LED charge indicators",
+    "Matches PS5 style"
+   ],
+   "variants": [
+    {
+     "label": "White",
+     "sku": "51P68AA",
+     "srp": 1490,
+     "dp": 1043.58
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_chargeplay_duo_ps5_1_main.jpg?v=1793386456",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PlayStation"
+   ],
+   "conn": "Accessory",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "chargeplay-quad-2",
+   "cat": "console",
+   "name": "HyperX ChargePlay Quad 2",
+   "specs": [
+    "Charges up to four controllers",
+    "2nd generation",
+    "LED charge indicators",
+    "Compact dock"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "6Y2G7AA",
+     "srp": 1490,
+     "dp": 1043.58
+    }
+   ],
+   "img": null,
+   "tier": "Premium Essentials",
+   "platforms": [
+    "Switch"
+   ],
+   "conn": "Accessory",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "gladiate",
+   "cat": "console",
+   "name": "HyperX Clutch Gladiate",
+   "specs": [
+    "Wired controller",
+    "Officially licensed for Xbox",
+    "Works on PC",
+    "Dual trigger locks"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "6L366AA",
+     "srp": 1999,
+     "dp": 1399.34
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_clutch_gladiate_6l366aa_main_1.jpg?v=1793386485",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "Xbox",
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "gladiate-rgb",
+   "cat": "console",
+   "name": "HyperX Clutch Gladiate RGB",
+   "specs": [
+    "Wired controller with RGB",
+    "Officially licensed for Xbox",
+    "Works on PC",
+    "Clear shell"
+   ],
+   "variants": [
+    {
+     "label": "Clear",
+     "sku": "7D6H2AA",
+     "srp": 2299,
+     "dp": 1608.85
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_clutch_gladiate_rgb_7d6h2aa_main_1.jpg?v=1793386415",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "Xbox",
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "clutch-tachi",
+   "cat": "console",
+   "name": "HyperX Clutch Tachi",
+   "specs": [
+    "Leverless arcade controller",
+    "For Xbox and PC",
+    "Fighting-game layout",
+    "Tournament-style buttons"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "B11D9AA",
+     "srp": 12890,
+     "dp": 9023.25
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_clutch_tachi_b11d9aa_main_1.jpg?v=1793386441",
+   "tier": "Premium Flagship",
+   "platforms": [
+    "Xbox",
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "omen-24e",
+   "cat": "monitors",
+   "name": "HyperX OMEN 24E",
+   "specs": [
+    "24-inch gaming monitor",
+    "HyperX OMEN line",
+    "Esports-ready",
+    "See HP spec sheet"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "D5KB2AA",
+     "srp": 7990,
+     "dp": 6791.5
+    }
+   ],
+   "img": null,
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC",
+    "PlayStation",
+    "Xbox"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "omen-24-g2",
+   "cat": "monitors",
+   "name": "HyperX OMEN 24 G2",
+   "specs": [
+    "24-inch gaming monitor",
+    "HyperX OMEN line",
+    "2nd generation",
+    "See HP spec sheet"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "C2JP4AA",
+     "srp": 9990,
+     "dp": 8491.51
+    }
+   ],
+   "img": null,
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC",
+    "PlayStation",
+    "Xbox"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "omen-27e",
+   "cat": "monitors",
+   "name": "HyperX OMEN 27E",
+   "specs": [
+    "27-inch gaming monitor",
+    "HyperX OMEN line",
+    "Esports-ready",
+    "See HP spec sheet"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "D5KB3AA",
+     "srp": 12990,
+     "dp": 10813.84
+    }
+   ],
+   "img": null,
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC",
+    "PlayStation",
+    "Xbox"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "omen-oled-27q",
+   "cat": "monitors",
+   "name": "HyperX OMEN OLED 27Q",
+   "specs": [
+    "27-inch OLED gaming monitor",
+    "HyperX OMEN line",
+    "OLED contrast",
+    "See HP spec sheet"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "CH0R2AA",
+     "srp": 34990,
+     "dp": 30711.34
+    }
+   ],
+   "img": null,
+   "tier": "Premium Flagship",
+   "platforms": [
+    "PC",
+    "PlayStation",
+    "Xbox"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "omen-oled-34",
+   "cat": "monitors",
+   "name": "HyperX OMEN OLED 34",
+   "specs": [
+    "34-inch OLED gaming monitor",
+    "HyperX OMEN line",
+    "Ultrawide OLED",
+    "See HP spec sheet"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "C49PPAA",
+     "srp": 88990,
+     "dp": 73252.82
+    }
+   ],
+   "img": null,
+   "tier": "Premium Flagship",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Wired",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "delta-backpack",
+   "cat": "bags",
+   "name": "HyperX Delta Backpack",
+   "specs": [
+    "Padded laptop compartment",
+    "Water-resistant",
+    "Everyday carry",
+    "Gamer styling"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "8C524AA",
+     "srp": 1999,
+     "dp": 1399.34
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_delta_black_8c524aa_angle1_20.jpg?v=1793386335",
+   "tier": "Premium Essentials",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Accessory",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "knight-backpack",
+   "cat": "bags",
+   "name": "HyperX Knight Backpack",
+   "specs": [
+    "Padded laptop compartment",
+    "Organizer pockets",
+    "Water-resistant",
+    "Premium build"
+   ],
+   "variants": [
+    {
+     "label": "Black",
+     "sku": "8C525AA",
+     "srp": 3999,
+     "dp": 2799.3
+    }
+   ],
+   "img": "https://cdn.shopify.com/s/files/1/0564/3612/9997/files/hyperx_knight_black_8c525aa_angle1.jpg?v=1793386335",
+   "tier": "Premium Performance",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Accessory",
+   "note": null,
+   "ltb": false,
+   "hero": false
+  },
+  {
+   "id": "lt-15-fa3040tx",
+   "cat": "laptops",
+   "name": "VICTUS 15 15-fa3040TX",
+   "specs": [
+    "Core 5 205H",
+    "NVIDIA GeForce RTX 3050 6GB VRAM",
+    "8GB DDR4 1DM 3200 · 512GB PCIe Gen4 Value",
+    "15.6\" FHD (1920x1080) 144 Hz"
+   ],
+   "img": "assets/laptops/15-fa3040tx.webp",
+   "tier": "VICTUS",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Win 11 Home, warranty 2-2-2.",
+   "ltb": true,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Mica Silver",
+     "sku": "E5VL4PA",
+     "srp": 79990,
+     "dp": 67992,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-15-fa3040tx-16gb",
+   "cat": "laptops",
+   "name": "VICTUS 15 16GB 15-fa3040TX",
+   "specs": [
+    "Core 5 205H",
+    "NVIDIA GeForce RTX 3050 6GB VRAM",
+    "16GB DDR4 1DM 3200 · 512GB PCIe Gen4 Value",
+    "15.6\" FHD (1920x1080) 144 Hz"
+   ],
+   "img": "assets/laptops/15-fa3040tx-16gb.webp",
+   "tier": "VICTUS",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Win 11 Home, warranty 2-2-2.",
+   "ltb": true,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Mica Silver",
+     "sku": "E5VL4PA",
+     "srp": 85990,
+     "dp": 73092,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-16-ap1097ax",
+   "cat": "laptops",
+   "name": "HyperX OMEN 16 16-ap1097AX",
+   "specs": [
+    "Ryzen 9 8940HX (16C)",
+    "NVIDIA GeForce RTX 5060 8GB VRAM",
+    "16GB DDR5 1DM 5200 · 512GB PCIe Gen4 Value",
+    "16.0\" 2.5K (2560x1600) 240 Hz"
+   ],
+   "img": "assets/laptops/16-ap1097ax.webp",
+   "tier": "HyperX OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HyperX Knight Gaming Backpack (8C525AA) bundled. OST W11H6 PLS SL APACPPP, warranty 2-2-2.",
+   "ltb": false,
+   "hero": false,
+   "badge": "Iontech exclusive",
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black Plastic",
+     "sku": "DW8L9PA",
+     "srp": 152990,
+     "dp": 130042,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-16-am2160tx",
+   "cat": "laptops",
+   "name": "HyperX OMEN 16 16-am2160TX",
+   "specs": [
+    "Core i7-14650HX (8C+8C)",
+    "NVIDIA GeForce RTX 5060 8GB VRAM",
+    "16GB DDR5 1DM 5600 · 1TB PCIe Gen4 Value",
+    "16.0\" 2.5K (2560x1600) 240 Hz"
+   ],
+   "img": "assets/laptops/16-am2160tx.webp",
+   "tier": "HyperX OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HyperX Knight Gaming Backpack (8C525AA) bundled. OST W11H6 PLS SL APACPPP, warranty 2-2-2.",
+   "ltb": false,
+   "hero": false,
+   "badge": "Iontech exclusive",
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black Plastic",
+     "sku": "DW8L8PA",
+     "srp": 162990,
+     "dp": 138542,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-15-gb0201ax",
+   "cat": "laptops",
+   "name": "HyperX OMEN 15 15-gb0201AX",
+   "specs": [
+    "Ryzen 9 8940HX (16C)",
+    "NVIDIA GeForce RTX 5060 8GB VRAM",
+    "16GB DDR5 1DM 5200 · 512GB PCIe Gen4 Value",
+    "15.3\" 3K (2880x1800) OLED 120 Hz"
+   ],
+   "img": "assets/laptops/15-gb0201ax.webp",
+   "tier": "HyperX OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. OST W11H6 PLS SL APACPPP, warranty 2-2-2.",
+   "ltb": false,
+   "hero": false,
+   "badge": "Iontech exclusive",
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "DU6N6PA",
+     "srp": 148990,
+     "dp": 126642,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-15-gb0183ax",
+   "cat": "laptops",
+   "name": "HyperX OMEN 15 15-gb0183AX",
+   "specs": [
+    "Ryzen 7 8745HX",
+    "NVIDIA GeForce RTX 5050 8GB VRAM",
+    "16GB DDR5 1DM 5200 · 512GB PCIe Gen4 Value",
+    "15.3\" 2K (1920x1200) 165 Hz"
+   ],
+   "img": "assets/laptops/15-gb0183ax.webp",
+   "tier": "HyperX OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Promo DP ₱99,713. OST W11H6 PLS SL APACPPP, warranty 2-2-2.",
+   "ltb": false,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "DN9P5PA",
+     "srp": 125991,
+     "dp": 104541.5,
+     "level": "ok"
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-16-ap1088ax",
+   "cat": "laptops",
+   "name": "HyperX OMEN 16 16-ap1088AX",
+   "specs": [
+    "Ryzen 9 8940HX (16C)",
+    "NVIDIA GeForce RTX 5070 8GB VRAM",
+    "24GB DDR5 1DM 5200 · 1TB PCIe Gen4 Value",
+    "16.0\" 2.5K (2560x1600) 240 Hz"
+   ],
+   "img": "assets/laptops/16-ap1088ax.webp",
+   "tier": "HyperX OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HyperX Knight Gaming Backpack (8C525AA) bundled. OST W11H6 PLS SL APACPPP, warranty 2-2-2.",
+   "ltb": false,
+   "hero": false,
+   "badge": "Iontech exclusive",
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black Plastic",
+     "sku": "DJ8V2PA",
+     "srp": 185990,
+     "dp": 158092,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-15-gb0059ax",
+   "cat": "laptops",
+   "name": "HyperX OMEN 15 15-gb0059AX",
+   "specs": [
+    "Ryzen 7 260",
+    "NVIDIA GeForce RTX 5060 8GB VRAM",
+    "24GB DDR5 1DM 5600 · 1TB PCIe Gen4 NVMe",
+    "15.3\" 2.5K (2560x1600) 180 Hz"
+   ],
+   "img": "assets/laptops/15-gb0059ax.webp",
+   "tier": "HyperX OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Win 11 Home.",
+   "ltb": false,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "D6UY9PA",
+     "srp": 134990,
+     "dp": 113391.6,
+     "level": "ok"
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-15-gb0057ax",
+   "cat": "laptops",
+   "name": "HyperX OMEN 15 15-gb0057AX",
+   "specs": [
+    "Ryzen 5 240",
+    "NVIDIA GeForce RTX 5050 8GB VRAM",
+    "16GB DDR5 1DM 5600 · 512GB PCIe Gen4 NVMe",
+    "15.3\" 2K (1920x1200) 165 Hz"
+   ],
+   "img": "assets/laptops/15-gb0057ax.webp",
+   "tier": "HyperX OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Also includes: MS Office H&S 2024 + M365 Basic. Win 11 Home.",
+   "ltb": false,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "D6UY8PA",
+     "srp": 105490,
+     "dp": 88611.6,
+     "level": "ok"
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-15-ga0046tx",
+   "cat": "laptops",
+   "name": "HyperX OMEN 15 15-ga0046TX",
+   "specs": [
+    "Core i7-14650HX (8C+8C)",
+    "NVIDIA GeForce RTX 5060 8GB VRAM",
+    "16GB DDR5 1DM 5600 · 512GB PCIe Gen4 Value",
+    "15.3\" WQXGA (2560x1600) 180 Hz"
+   ],
+   "img": "assets/laptops/15-ga0046tx.webp",
+   "tier": "HyperX OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Also includes: 2-2-2P. OST W11H6 PLS SL APACPPP.",
+   "ltb": false,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "D6UY7PA",
+     "srp": 127490,
+     "dp": 107091.6,
+     "level": "ok"
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-15-ga0045tx",
+   "cat": "laptops",
+   "name": "HyperX OMEN 15 15-ga0045TX",
+   "specs": [
+    "Core 5 210H",
+    "NVIDIA GeForce RTX 5050 8GB VRAM",
+    "16GB DDR5 1DM 5200 · 512GB PCIe Gen4 NVMe",
+    "15.3\" 2K (1920x1200) 165 Hz"
+   ],
+   "img": "assets/laptops/15-ga0045tx.webp",
+   "tier": "HyperX OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Also includes: MS Office H&S 2024. Win 11 Home.",
+   "ltb": false,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "D6UY6PA",
+     "srp": 109490,
+     "dp": 91971.6,
+     "level": "ok"
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-15-fb3428ax",
+   "cat": "laptops",
+   "name": "VICTUS 15 15-fb3428AX",
+   "specs": [
+    "Ryzen 7-8845HS (8C) 16 NPU TOPs",
+    "NVIDIA GeForce RTX 4050 6GB VRAM",
+    "8GB DDR5 1DM 5600 · 512GB PCIe Gen4 Value",
+    "15.6\" FHD (1920x1080) 144 Hz"
+   ],
+   "img": "assets/laptops/15-fb3428ax.webp",
+   "tier": "VICTUS",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Also includes: MISC PC Game Pass DA 3M & MS Office Home 2024 Philippines + 1yr M365 Basic. OST W11H6 PLS SL APACPPP, warranty 2-2-2.",
+   "ltb": false,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Mica Silver",
+     "sku": "E81FRPA",
+     "srp": 114990,
+     "dp": 97742,
+     "level": "incoming"
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-16-am0379tx",
+   "cat": "laptops",
+   "name": "OMEN 16 16-am0379TX",
+   "specs": [
+    "Core Ultra 7 255H",
+    "NVIDIA GeForce RTX 5070 8GB VRAM",
+    "24GB DDR5 1DM 5600 · 1TB PCIe Gen4 NVMe",
+    "16\" WQXGA (2560x1600) 240 Hz"
+   ],
+   "img": "assets/laptops/ltb-16-am0379tx.webp",
+   "tier": "OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Last-time-buy sale price ₱113,248. Win 11 Home.",
+   "ltb": true,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "D07CJPA",
+     "srp": 145990,
+     "dp": 116750,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-16-am0378tx",
+   "cat": "laptops",
+   "name": "OMEN 16 16-am0378TX",
+   "specs": [
+    "Core Ultra 7 255H",
+    "NVIDIA GeForce RTX 5060 8GB VRAM",
+    "24GB DDR5 1DM 5600 · 1TB PCIe Gen4 NVMe",
+    "16\" WQXGA (2560x1600) 240 Hz"
+   ],
+   "img": "assets/laptops/ltb-16-am0378tx.webp",
+   "tier": "OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Last-time-buy sale price ₱103,499. Win 11 Home.",
+   "ltb": true,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "D07CHPA",
+     "srp": 133990,
+     "dp": 106700,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-16-am0097tx",
+   "cat": "laptops",
+   "name": "OMEN 16 16-am0097TX",
+   "specs": [
+    "Core Ultra 7 255H",
+    "NVIDIA GeForce RTX 5070 8GB VRAM",
+    "16GB DDR5 1DM 5600 · 1TB PCIe Gen4 NVMe",
+    "16\" WQXGA (2560x1600) 240 Hz"
+   ],
+   "img": "assets/laptops/ltb-16-am0097tx.webp",
+   "tier": "OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Last-time-buy sale price ₱117,671. Also includes: 1y (1/1/0); MS Office H&S 2024 + M365. Win 11 Home.",
+   "ltb": true,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "BP4S0PA",
+     "srp": 151990,
+     "dp": 121310,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-16-am0096tx",
+   "cat": "laptops",
+   "name": "OMEN 16 16-am0096TX",
+   "specs": [
+    "Core i9-14900HX",
+    "NVIDIA GeForce RTX 5060 8GB VRAM",
+    "16GB DDR5 1DM 5600 · 512GB PCIe Gen4 NVMe",
+    "16\" 2K (1920x1200) 165 Hz"
+   ],
+   "img": "assets/laptops/ltb-16-am0096tx.webp",
+   "tier": "OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Also includes: MS Office H&S 2024 + M365 Basic. Win 11 Home.",
+   "ltb": true,
+   "hero": false,
+   "badge": null,
+   "priceNote": "See laptop pricelist",
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "BL2J1PA",
+     "srp": null,
+     "dp": null,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-16-ap0997ax",
+   "cat": "laptops",
+   "name": "OMEN 16 16-ap0997AX",
+   "specs": [
+    "Ryzen AI 9 365",
+    "NVIDIA GeForce RTX 5060 8GB VRAM",
+    "16GB DDR5 1DM 5600 · 512GB PCIe Gen4 NVMe",
+    "16\" 2K (1920x1200) 165 Hz"
+   ],
+   "img": "assets/laptops/ltb-16-ap0997ax.webp",
+   "tier": "OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Last-time-buy sale price ₱95,535. Also includes: MS Office H&S 2024 + M365 Basic. Win 11 Home.",
+   "ltb": true,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "BK7V9PA",
+     "srp": 123990,
+     "dp": 98490,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-16-ah0559tx",
+   "cat": "laptops",
+   "name": "OMEN MAX 16 16-ah0559TX",
+   "specs": [
+    "Core Ultra 7 255HX",
+    "NVIDIA GeForce RTX 5070 Ti 12GB VRAM",
+    "32GB DDR5 2DM 5600 · 1TB PCIe Gen5 Performance",
+    "16\" WQXGA (2560x1600) 240 Hz"
+   ],
+   "img": "assets/laptops/ltb-16-ah0559tx.webp",
+   "tier": "OMEN MAX",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Last-time-buy sale price ₱172,282. Win 11 Home.",
+   "ltb": true,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "BE6U5PA",
+     "srp": 222990,
+     "dp": 177610,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-16-ah0557tx",
+   "cat": "laptops",
+   "name": "OMEN MAX 16 16-ah0557TX",
+   "specs": [
+    "Core Ultra 9 275HX",
+    "NVIDIA GeForce RTX 5070 Ti 12GB VRAM",
+    "32GB DDR5 2DM 5600 · 1TB PCIe Gen5 Performance",
+    "16\" WQXGA (2560x1600) 240 Hz"
+   ],
+   "img": "assets/laptops/ltb-16-ah0557tx.webp",
+   "tier": "OMEN MAX",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Last-time-buy sale price ₱155,190. Win 11 Home.",
+   "ltb": true,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "B8BB4PA",
+     "srp": 199990,
+     "dp": 159990,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-16-ah0555tx",
+   "cat": "laptops",
+   "name": "OMEN MAX 16 16-ah0555TX",
+   "specs": [
+    "Core Ultra 9 275HX",
+    "NVIDIA GeForce RTX 5080 16GB VRAM",
+    "32GB DDR5 2DM 5600 · 1TB PCIe Gen5 Performance",
+    "16\" WQXGA (2560x1600) 240 Hz"
+   ],
+   "img": "assets/laptops/ltb-16-ah0555tx.webp",
+   "tier": "OMEN MAX",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Last-time-buy sale price ₱178,470. Also includes: MS Office H&S 2024 + M365 Basic. Win 11 Home.",
+   "ltb": true,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "B87Q0PA",
+     "srp": 229990,
+     "dp": 183990,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-14-fb0121tx",
+   "cat": "laptops",
+   "name": "OMEN Transcend 14 14-fb0121TX",
+   "specs": [
+    "Core Ultra 7 155H",
+    "NVIDIA GeForce RTX 4060 8GB VRAM",
+    "16GB LPDDR5X (onboard) · 1TB PCIe NVMe",
+    "14\" 120 Hz"
+   ],
+   "img": "assets/laptops/ltb-14-fb0121tx.webp",
+   "tier": "OMEN Transcend",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Last-time-buy sale price ₱110,124. Also includes: MS Office H&S 2021. Win 11 Home.",
+   "ltb": true,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "AY2T2PA",
+     "srp": 141990,
+     "dp": 113530,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-16-xf0101ax",
+   "cat": "laptops",
+   "name": "OMEN 16 16-xf0101AX",
+   "specs": [
+    "Ryzen 9 7940HS",
+    "NVIDIA GeForce RTX 4070 8GB VRAM",
+    "16GB DDR5 2DM 5600 · 1TB PCIe Gen4 TLC",
+    "16.1\" QHD (2560x1440) 240 Hz"
+   ],
+   "img": "assets/laptops/ltb-16-xf0101ax.webp",
+   "tier": "OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Last-time-buy sale price ₱113,674. Win 11 Home.",
+   "ltb": true,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "A32XZPA",
+     "srp": 146990,
+     "dp": 117190,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-14-fb0555tx",
+   "cat": "laptops",
+   "name": "OMEN Transcend 14 14-fb0555TX",
+   "specs": [
+    "Core Ultra 9 185H",
+    "NVIDIA GeForce RTX 4070 8GB VRAM",
+    "32GB LPDDR5x 7467 (onboard) · 1TB PCIe Gen4 Performance",
+    "14\" 2.8K (2880x1800) OLED 120 Hz"
+   ],
+   "img": "assets/laptops/ltb-14-fb0555tx.webp",
+   "tier": "OMEN Transcend",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Last-time-buy sale price ₱123,413. Win 11 Home.",
+   "ltb": true,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Ceramic White",
+     "sku": "A32XYPA",
+     "srp": 159990,
+     "dp": 127230,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-16-xf0031ax",
+   "cat": "laptops",
+   "name": "OMEN 16 16-xf0031AX",
+   "specs": [
+    "Ryzen 7 7840HS",
+    "NVIDIA GeForce RTX 4060 8GB VRAM",
+    "16GB DDR5 2DM 5600 · 1TB PCIe Gen4 TLC",
+    "16.1\" QHD (2560x1440) 240 Hz"
+   ],
+   "img": "assets/laptops/ltb-16-xf0031ax.webp",
+   "tier": "OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Last-time-buy sale price ₱94,187. Also includes: MS Office H&S 2021. Win 11 Home.",
+   "ltb": true,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "86J82PA",
+     "srp": 121990,
+     "dp": 97100,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-16-wf0069tx",
+   "cat": "laptops",
+   "name": "OMEN 16 16-wf0069TX",
+   "specs": [
+    "Core i5-13500HX",
+    "NVIDIA GeForce RTX 4060 8GB VRAM",
+    "16GB DDR5 2DM 4800 · 512GB PCIe NVMe",
+    "16.1\" FHD 165 Hz"
+   ],
+   "img": "assets/laptops/ltb-16-wf0069tx.webp",
+   "tier": "OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Last-time-buy sale price ₱86,214. Also includes: MS Office H&S 2021. Win 11 Home.",
+   "ltb": true,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "Shadow Black",
+     "sku": "86J77PA",
+     "srp": 111990,
+     "dp": 88880,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  },
+  {
+   "id": "lt-16-k0052tx",
+   "cat": "laptops",
+   "name": "OMEN 16 16-k0052TX",
+   "specs": [
+    "Core i7-12700H",
+    "NVIDIA GeForce RTX 3070 Ti",
+    "16GB RAM · 1TB SSD",
+    "16.1\" QHD 165 Hz"
+   ],
+   "img": "assets/laptops/ltb-16-k0052tx.webp",
+   "tier": "OMEN",
+   "platforms": [
+    "PC"
+   ],
+   "conn": "Laptop",
+   "note": "FREE HP Everyday 16-inch Laptop Briefcase (A08JTAA) bundled. Last-time-buy sale price ₱111,938. Also includes: OPI. W11, warranty 2-2-2.",
+   "ltb": true,
+   "hero": false,
+   "badge": null,
+   "priceNote": null,
+   "variants": [
+    {
+     "label": "—",
+     "sku": "6J5G9PA",
+     "srp": 144990,
+     "dp": 115400,
+     "level": null
+    }
+   ],
+   "source": "laptops"
+  }
+ ]
+}
