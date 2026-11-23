@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pricelist Editor · HyperX · Iontech</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0d0e10">
+<meta name="color-scheme" content="light dark">
+<script>
+(function(){var t=null;try{t=localStorage.getItem("hxpl-theme")}catch(e){}
+if(t!=="light"&&t!=="dark")t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
+document.documentElement.setAttribute("data-theme",t)})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="assets/hx-app.css">
+<style>
+.container{max-width:1600px}
+.header-inner{max-width:1600px}
+.ed-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.dirty{font-size:12.5px;font-weight:700;color:var(--lim);background:var(--lim-bg);border-radius:999px;padding:4px 11px}
+.panel{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);margin-bottom:14px;box-shadow:var(--shadow)}
+.panel>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:12px 16px;font-weight:800}
+.panel>summary::-webkit-details-marker{display:none}
+.panel>summary .hint{font-weight:500;color:var(--muted);font-size:12.5px}
+.panel>summary .chev{margin-left:auto;transition:transform .15s;width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.panel[open]>summary .chev{transform:rotate(180deg)}
+.rules{width:100%;border-collapse:collapse;font-size:13px}
+.rules th{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:700;padding:6px 8px;text-align:center;border-bottom:1px solid var(--line);white-space:nowrap}
+.rules th.l,.rules td.l{text-align:left}
+.rules th.segh{color:var(--ink);font-size:11px;border-bottom:2px solid var(--line)}
+.rules th.segh.new{border-bottom-color:var(--red-2)}
+.rules td{padding:5px 8px;border-bottom:1px solid var(--line-2);text-align:center}
+.rules td.cat{font-weight:700;white-space:nowrap}
+.rules td.n{color:var(--faint);font-size:12px}
+.rules tr.all td{background:var(--surface-2)}
+.rules .sep{border-left:1px solid var(--line)}
+.pin{width:64px;height:30px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);text-align:right;padding:0 6px;font-variant-numeric:tabular-nums;font-weight:700}
+.pin:focus{outline:2px solid var(--red-2);outline-offset:0;border-color:transparent}
+.pin.chg{border-color:var(--lim);background:var(--lim-bg)}
+.rsel{height:30px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);padding:0 4px;font-size:12px;font-weight:600}
+.rsel.chg{border-color:var(--lim);background:var(--lim-bg)}
+.pctwrap{display:inline-flex;align-items:center;gap:3px}
+.pctwrap i{font-style:normal;color:var(--faint);font-size:12px}
+.rules-foot{display:flex;gap:12px;flex-wrap:wrap;align-items:center;padding:10px 16px 14px;color:var(--muted);font-size:12.5px}
+/* condensed grid */
+.tbl.dense{font-size:12.5px}
+.tbl.dense td{padding:4px 8px}
+.tbl.dense th{padding:7px 8px}
+.tbl.dense tr.sub td{background:var(--surface-2);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:6px 10px}
+.tbl.dense .sku{font-size:12px}
+.tbl.dense td.d{max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.oin{width:84px;height:26px;border:1px dashed var(--line);border-radius:6px;background:transparent;text-align:right;padding:0 5px;font-variant-numeric:tabular-nums;font-size:12px}
+.oin:focus{outline:2px solid var(--red-2);border-style:solid}
+.oin.set{border-style:solid;border-color:var(--inc);background:var(--inc-bg);font-weight:700}
+.nchk{width:16px;height:16px;accent-color:var(--red)}
+.delta{display:block;font-size:10.5px;font-weight:700}
+.delta.up{color:var(--out)}.delta.dn{color:var(--ok)}
+tr.changed td{background:color-mix(in srgb,var(--lim-bg) 60%,transparent)}
+tr.inactive td{opacity:.45}
+.mini{font-size:11px;color:var(--faint);display:block}
+.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin:8px 0 0}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html" aria-label="Back to the HyperX pricelist">
+      <span class="wm-hx">Hyper<b>X</b></span>
+      <span class="wm-ion">IONTECH</span>
+      <span class="brand-divider" aria-hidden="true"></span>
+      <span class="brand-title">Pricelist Editor</span>
+    </a>
+    <div class="search" role="search" id="searchBox" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search SKU or description…" autocomplete="off" spellcheck="false" aria-label="Search">
+    </div>
+    <a class="btn hdr-link" href="admin.html">Admin</a>
+    <a class="btn hdr-link" href="sales.html">Sales view</a>
+    <div class="user-chip" id="userChip" hidden>
+      <img id="userPic" alt="" referrerpolicy="no-referrer">
+      <span class="who"><b id="userName"></b><span>Admin</span></span>
+      <button class="btn btn-sm" id="signOut" type="button">Sign out</button>
+    </div>
+    <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch theme">
+      <svg class="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="gate" id="gate">
+  <div class="gate-card">
+    <p class="eyebrow">HyperX brand manager only</p>
+    <h1>Pricelist Editor</h1>
+    <p>Sign in with the HyperX admin Google account to change margin structures, rounding and per-SKU prices.</p>
+    <div id="gsiButton"></div>
+    <p class="gate-msg" id="gateMsg" role="status" aria-live="polite"></p>
+  </div>
+</section>
+
+<main class="container app-main" id="app" hidden>
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">KT-HP · Threshold costing</p>
+      <h1>Pricelist Editor</h1>
+      <p class="meta" id="meta"></p>
+    </div>
+    <span class="spacer"></span>
+    <div class="ed-actions">
+      <span class="dirty" id="dirty" hidden></span>
+      <button class="btn" type="button" id="discardBtn" disabled>Discard</button>
+      <button class="btn" type="button" id="csvBtn"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Export CSV</button>
+      <button class="btn btn-primary" type="button" id="saveBtn" disabled>Save to Sheet</button>
+    </div>
+  </div>
+
+  <details class="panel" id="rulesPanel" open>
+    <summary>Margin structure by category <span class="hint">price = invoice cost ÷ (1 − margin) · Base DP rounds to the nearest step, Threshold rounds <b>up</b></span><svg class="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div style="overflow:auto;padding:0 8px">
+      <table class="rules">
+        <thead>
+          <tr><th class="l" rowspan="2">Category</th><th rowspan="2">SKUs</th>
+            <th class="segh sep" colspan="5">Existing products</th><th class="segh new sep" colspan="5">New products</th></tr>
+          <tr><th class="sep">Base DP</th><th title="Base DP rounds to the nearest step">DP round</th><th>Threshold</th><th title="Threshold rounds UP to the step">Thr. round ↑</th><th title="Special prices under this margin (without rebate) are tagged Limited Qty. Blank = the global setting.">Limited below</th>
+              <th class="sep">Base DP</th><th>DP round</th><th>Threshold</th><th>Thr. round ↑</th><th>Limited below</th></tr>
+        </thead>
+        <tbody id="rulesBody"></tbody>
+      </table>
+    </div>
+    <div class="rules-foot">
+      <span>Rounding steps: <b>₱0.01</b> · <b>₱0.10</b> · <b>₱1</b> · <b>₱10</b> (Excel ROUND / ROUNDUP with 2, 1, 0, −1). Base DP uses nearest; Threshold rounds up.</span>
+      <span>Special price for rebate SKUs = ROUNDUP((NDP − rebate) × 1.12 ÷ (1 − threshold margin)) while rebate units are left. Under the category's <b>Limited below</b> margin without the rebate (blank = <b id="minM">5%</b>) → <b>Limited Qty Price</b>.</span>
+      <span><b>New</b> = Auto by date: released or added to the OPG within the last <b id="newDays">90</b> days (change in Admin → Settings). Pick New or Existing on a SKU to override.</span>
+    </div>
+  </details>
+
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <select class="sel" id="cat" aria-label="Category"><option value="">All categories</option></select>
+      <div class="seg" role="group" aria-label="New or existing" id="segNew">
+        <button type="button" data-v="all" aria-pressed="true">All<span class="n" id="nAll"></span></button>
+        <button type="button" data-v="new" aria-pressed="false">New<span class="n" id="nNew"></span></button>
+        <button type="button" data-v="existing" aria-pressed="false">Existing<span class="n" id="nEx"></span></button>
+      </div>
+      <div class="seg" role="group" aria-label="Show" id="segShow">
+        <button type="button" data-v="all" aria-pressed="true">Everything</button>
+        <button type="button" data-v="limited" aria-pressed="false">Limited Qty</button>
+        <button type="button" data-v="override" aria-pressed="false">Overrides</button>
+        <button type="button" data-v="changed" aria-pressed="false">Changed</button>
+      </div>
+    </div>
+    <div class="toolbar-right">
+      <label class="check"><input type="checkbox" id="showInactive"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span><span class="label">Show inactive</span></label>
+      <p class="result-count" id="count"></p>
+    </div>
+  </div>
+
+  <div class="tbl-wrap" style="max-height:calc(100vh - 230px)">
+    <table class="tbl dense">
+      <thead><tr>
+        <th>SKU</th><th>Description</th><th title="Auto = New when released or added to the OPG within the window">New?</th><th>Released</th><th>OPG added</th>
+        <th class="r">NDP</th><th class="r">Inv. cost</th><th class="r">SRP</th>
+        <th class="r">Base DP</th><th class="r" title="Type a price to fix Base DP for this SKU; clear it to go back to the rule">DP override</th><th class="r">DP %</th>
+        <th class="r">Threshold</th><th class="r" title="Type a price to fix the Threshold for this SKU">Thr. override</th><th class="r">Thr. %</th>
+        <th class="r">Rebate</th><th class="r">Special price</th><th class="r">Margin w/o rebate</th><th>Sales tag</th><th class="r">On hand</th><th class="c">Active</th>
+      </tr></thead>
+      <tbody id="tbody"><tr><td class="loading" colspan="20">Loading…</td></tr></tbody>
+    </table>
+  </div>
+  <div class="legend">
+    <span><i style="background:var(--lim-bg);border:1px solid var(--lim)"></i>Unsaved change</span>
+    <span><i style="background:var(--inc-bg);border:1px solid var(--inc)"></i>Manual override (ignores the margin rule)</span>
+    <span><b class="delta up" style="display:inline">+₱</b>/<b class="delta dn" style="display:inline">−₱</b> difference from the saved price</span>
+  </div>
+  <p class="foot-note">Changes apply to the Sheet when you press <b>Save to Sheet</b>; the sales page picks them up on its next load. The public pricelist (index.html) still reads its own data files — publish DP changes there separately.</p>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/pricing-engine.js"></script>
+<script src="assets/hx-auth.js"></script>
+<script>
+(function(){
+"use strict";
+var $=function(s){return document.querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var E=HXPricing;
+var CAT_ORDER=["PC Headset","Console","Mobile Audio","Microphone","Mouse","Keyboard","Accessory","Monitor"];
+var DIGITS=[{v:2,t:"₱0.01"},{v:1,t:"₱0.10"},{v:0,t:"₱1"},{v:-1,t:"₱10"}];
+var SRV=null, RULES=[], ITEMS=[], BASE={}, ME=null, st={cat:"",nw:"all",show:"all",q:"",inactive:false};
+
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function money(n,dec){if(n==null||n===""||isNaN(n))return "—";var d=dec==null?(Math.round(n)!==n?2:0):dec;return Number(n).toLocaleString("en-PH",{minimumFractionDigits:d,maximumFractionDigits:d})}
+function pct(x){return x==null||isNaN(x)?"—":(x*100).toFixed(1)+"%"}
+function clone(o){return JSON.parse(JSON.stringify(o))}
+function toast(t){var el=$("#toast");el.textContent=t;el.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(function(){el.classList.remove("show")},2600)}
+function fmtDay(s){if(!s)return "";var d=new Date(s+"T00:00:00+08:00");return isNaN(d)?s:d.toLocaleDateString("en-PH",{month:"short",day:"numeric",year:"numeric"})}
+$("#themeToggle").addEventListener("click",function(){var t=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("hxpl-theme",t)}catch(e){}});
+
+/* ---------- sign-in + load ---------- */
+function gateMsg(t,ok){var m=$("#gateMsg");m.textContent=t||"";m.classList.toggle("ok",!!ok)}
+function load(){
+  gateMsg("Checking your access…",true);
+  HXAuth.api("editor").then(function(d){
+    if(!d.ok){gateMsg(HXAuth.message(d.error)+(d.email?" ("+d.email+")":""));if(d.error==="not_allowed"||d.error==="admin_only")HXAuth.signOut();showGate();return}
+    ME=d.user;accept(d);showApp();
+  }).catch(function(e){gateMsg("Could not reach the pricing server. "+e.message);showGate()});
+}
+function accept(d){
+  SRV=d;RULES=clone(d.rules);ITEMS=d.items.map(function(i){i=clone(i);i.active=i.active!==false;resolveNew(i);return i});
+  BASE={rules:clone(RULES),items:{}};ITEMS.forEach(function(i){BASE.items[i.sku]=clone(i)});
+  BASE.priced=priceAll(BASE.rules,ITEMS.map(function(i){return BASE.items[i.sku]}));
+  buildRules();render();
+}
+function showGate(){$("#gate").hidden=false;$("#app").hidden=true;$("#userChip").hidden=true;$("#searchBox").hidden=true}
+function showApp(){$("#gate").hidden=true;$("#app").hidden=false;$("#userChip").hidden=false;$("#searchBox").hidden=false;
+  $("#userName").textContent=ME.name||ME.email;if(ME.picture)$("#userPic").src=ME.picture;else $("#userPic").hidden=true;
+  var d=SRV.deal;$("#meta").innerHTML=ITEMS.length+" SKUs · VAT "+SRV.opts.vat+" · prices as of <b>"+esc(fmtDay(SRV.asOf)||"—")+"</b>"+(d?" · rebate deal "+esc(d.id)+" ("+esc(fmtDay(d.start))+" – "+esc(fmtDay(d.end))+")":"")+(SRV.selloutAsOf?" · sell-out to "+esc(fmtDay(SRV.selloutAsOf)):"");
+  $("#minM").textContent=pct(E.pct(SRV.opts.minMargin));$("#newDays").textContent=SRV.opts.newDays||90;
+  $("#cat").innerHTML='<option value="">All categories</option>'+cats().map(function(c){return "<option>"+esc(c)+"</option>"}).join("");
+}
+$("#signOut").addEventListener("click",function(){if(dirtyCount()&&!confirmLeave())return;HXAuth.signOut();gateMsg("Signed out.",true);showGate()});
+HXAuth.init($("#gsiButton"),load).catch(function(e){gateMsg(HXAuth.message(e.message==="not_configured"?"not_configured":e.message))});
+
+/* ---------- pricing ---------- */
+function resolveNew(i){i.isNew=E.resolveNew(i.newMode==="Auto"?"":i.newMode,i.release,i.opgAdded,SRV.opts.today,SRV.opts.newDays);return i}
+function priceAll(rules,items){var m={};items.forEach(function(i){m[i.sku]=E.priceItem(i,rules,SRV.rebate[i.sku],SRV.opts)});return m}
+function cats(){var s={};ITEMS.forEach(function(i){s[i.cat]=1});RULES.forEach(function(r){if(r.cat!=="*")s[r.cat]=1});
+  return Object.keys(s).sort(function(a,b){var x=CAT_ORDER.indexOf(a),y=CAT_ORDER.indexOf(b);return (x<0?99:x)-(y<0?99:y)||a.localeCompare(b)})}
+function rule(cat,seg){var r=RULES.filter(function(r){return r.cat===cat&&r.seg===seg})[0];
+  if(!r){var f=E.findRule(RULES,cat,seg);r={cat:cat,seg:seg,dpMargin:f.dpMargin,dpDigits:f.dpDigits,thrMargin:f.thrMargin,thrDigits:f.thrDigits};RULES.push(r)}return r}
+function baseRule(cat,seg){return BASE.rules.filter(function(r){return r.cat===cat&&r.seg===seg})[0]||null}
+
+/* ---------- margin matrix ---------- */
+function pctIn(cat,seg,key){var r=rule(cat,seg),b=baseRule(cat,seg),blank=r[key]==null||r[key]==="";
+  var chg=b&&(String(b[key]==null?"":b[key])!==String(r[key]==null?"":r[key]));
+  return '<span class="pctwrap"><input class="pin'+(chg?" chg":"")+'" inputmode="decimal" data-cat="'+esc(cat)+'" data-seg="'+seg+'" data-k="'+key+'" value="'+(blank?"":+(r[key]*100).toFixed(3))+'"'+(key==="limitBelow"?' placeholder="'+(+(E.pct(SRV.opts.minMargin)*100).toFixed(2))+'"':"")+' aria-label="'+esc(cat+" "+seg+" "+key)+'"><i>%</i></span>'}
+function digIn(cat,seg,key){var r=rule(cat,seg),b=baseRule(cat,seg),chg=b&&b[key]!==r[key];
+  return '<select class="rsel'+(chg?" chg":"")+'" data-cat="'+esc(cat)+'" data-seg="'+seg+'" data-k="'+key+'">'+DIGITS.map(function(d){return '<option value="'+d.v+'"'+(+r[key]===d.v?" selected":"")+'>'+d.t+'</option>'}).join("")+'</select>'}
+function buildRules(){
+  var cnt={};ITEMS.forEach(function(i){var k=i.cat+"|"+(i.isNew?"New":"Existing");cnt[k]=(cnt[k]||0)+1;cnt[i.cat]=(cnt[i.cat]||0)+1});
+  var html=cats().map(function(c){
+    return '<tr><td class="cat l">'+esc(c)+'</td><td class="n">'+(cnt[c]||0)+' <span title="Existing / New">('+(cnt[c+"|Existing"]||0)+'/'+(cnt[c+"|New"]||0)+')</span></td>'+
+      '<td class="sep">'+pctIn(c,"Existing","dpMargin")+'</td><td>'+digIn(c,"Existing","dpDigits")+'</td><td>'+pctIn(c,"Existing","thrMargin")+'</td><td>'+digIn(c,"Existing","thrDigits")+'</td><td>'+pctIn(c,"Existing","limitBelow")+'</td>'+
+      '<td class="sep">'+pctIn(c,"New","dpMargin")+'</td><td>'+digIn(c,"New","dpDigits")+'</td><td>'+pctIn(c,"New","thrMargin")+'</td><td>'+digIn(c,"New","thrDigits")+'</td><td>'+pctIn(c,"New","limitBelow")+'</td></tr>'}).join("");
+  html+='<tr class="all"><td class="cat l">Set all categories</td><td class="n"></td>'+
+    ["Existing","New"].map(function(s){return '<td class="sep"><span class="pctwrap"><input class="pin" data-all="'+s+'" data-k="dpMargin" placeholder="—"><i>%</i></span></td><td><select class="rsel" data-all="'+s+'" data-k="dpDigits"><option value="">—</option>'+DIGITS.map(function(d){return '<option value="'+d.v+'">'+d.t+'</option>'}).join("")+'</select></td><td><span class="pctwrap"><input class="pin" data-all="'+s+'" data-k="thrMargin" placeholder="—"><i>%</i></span></td><td><select class="rsel" data-all="'+s+'" data-k="thrDigits"><option value="">—</option>'+DIGITS.map(function(d){return '<option value="'+d.v+'">'+d.t+'</option>'}).join("")+'</select></td><td></td>'}).join("")+'</tr>';
+  $("#rulesBody").innerHTML=html;
+}
+$("#rulesBody").addEventListener("change",function(e){
+  var el=e.target,k=el.dataset.k;if(!k)return;
+  var isPct=/Margin$|limitBelow/.test(k),val=isPct?parseFloat(el.value)/100:parseInt(el.value,10);
+  if(k==="limitBelow"&&el.value.trim()===""&&!el.dataset.all){rule(el.dataset.cat,el.dataset.seg)[k]=null;buildRules();render();return}
+  if(el.value===""||isNaN(val))return;
+  if(isPct&&(val<-0.5||val>=0.95)){toast("Margin must be between −50% and 94.99%");buildRules();return}
+  if(el.dataset.all){cats().forEach(function(c){rule(c,el.dataset.all)[k]=val});}
+  else rule(el.dataset.cat,el.dataset.seg)[k]=val;
+  buildRules();render();
+});
+
+/* ---------- condensed grid ---------- */
+function wireSeg(id,key){$$("#"+id+" button").forEach(function(b){b.addEventListener("click",function(){st[key]=b.dataset.v;$$("#"+id+" button").forEach(function(x){x.setAttribute("aria-pressed",x===b)});render()})})}
+wireSeg("segNew","nw");wireSeg("segShow","show");
+$("#cat").addEventListener("change",function(e){st.cat=e.target.value;render()});
+$("#q").addEventListener("input",function(e){st.q=e.target.value.trim().toLowerCase();render()});
+$("#showInactive").addEventListener("change",function(e){st.inactive=e.target.checked;render()});
+
+function itemChanged(i){var b=BASE.items[i.sku];return !!b&&(b.newMode!==i.newMode||String(b.release||"")!==String(i.release||"")||String(b.opgAdded||"")!==String(i.opgAdded||"")||String(b.dpOverride==null?"":b.dpOverride)!==String(i.dpOverride==null?"":i.dpOverride)||String(b.thrOverride==null?"":b.thrOverride)!==String(i.thrOverride==null?"":i.thrOverride)||b.active!==i.active)}
+function rulesChanged(){return RULES.filter(function(r){var b=baseRule(r.cat,r.seg);return !b||["dpMargin","dpDigits","thrMargin","thrDigits"].some(function(k){return Math.abs((+b[k]||0)-(+r[k]||0))>1e-9})||String(b.limitBelow==null?"":b.limitBelow)!==String(r.limitBelow==null?"":r.limitBelow)})}
+function dirtyCount(){return rulesChanged().length+ITEMS.filter(itemChanged).length}
+function deltaTag(now,was){if(now==null||was==null)return "";var d=Math.round((now-was)*100)/100;if(!d)return "";return '<span class="delta '+(d>0?"up":"dn")+'">'+(d>0?"+":"−")+"₱"+money(Math.abs(d))+'</span>'}
+
+function render(){
+  if(!SRV)return;
+  var P=priceAll(RULES,ITEMS), B=BASE.priced;
+  var nAll=0,nNew=0;ITEMS.forEach(function(i){if(!i.active&&!st.inactive)return;nAll++;if(i.isNew)nNew++});
+  $("#nAll").textContent=nAll;$("#nNew").textContent=nNew;$("#nEx").textContent=nAll-nNew;
+  var list=ITEMS.filter(function(i){var p=P[i.sku];
+    if(!i.active&&!st.inactive)return false;
+    if(st.cat&&i.cat!==st.cat)return false;
+    if(st.nw==="new"&&!i.isNew)return false;if(st.nw==="existing"&&i.isNew)return false;
+    if(st.show==="limited"&&!p.limited)return false;
+    if(st.show==="override"&&!(p.dpOverridden||p.thrOverridden))return false;
+    if(st.show==="changed"&&!(itemChanged(i)||Math.abs((p.sp||0)-(B[i.sku].sp||0))>.001||Math.abs((p.dp||0)-(B[i.sku].dp||0))>.001))return false;
+    if(st.q&&(i.sku+" "+i.desc).toLowerCase().indexOf(st.q)<0)return false;
+    return true});
+  $("#count").innerHTML="<strong>"+list.length+"</strong> of "+ITEMS.length+" SKUs";
+  var html="";
+  cats().forEach(function(c){
+    var g=list.filter(function(i){return i.cat===c});if(!g.length)return;
+    html+='<tr class="grp"><td colspan="20">'+esc(c)+'<span class="n">'+g.length+' SKUs</span></td></tr>';
+    [["New",true],["Existing",false]].forEach(function(sg){
+      var s=g.filter(function(i){return i.isNew===sg[1]});if(!s.length)return;
+      var r=rule(c,sg[0]);
+      html+='<tr class="sub"><td colspan="20">'+sg[0]+' · '+s.length+' · DP '+pct(r.dpMargin)+' (round '+DIGITS.filter(function(d){return d.v===+r.dpDigits})[0].t+') · Threshold '+pct(r.thrMargin)+' (round '+DIGITS.filter(function(d){return d.v===+r.thrDigits})[0].t+')</td></tr>';
+      s.sort(function(a,b){return a.desc.localeCompare(b.desc)}).forEach(function(i){
+        var p=P[i.sku],b=B[i.sku],chg=itemChanged(i);
+        var tag=p.limited?(p.unitsLeft===0?'<span class="tag tag-out">Limited · 0 left</span>':'<span class="tag tag-lim">Limited'+(p.unitsLeft!=null?" · "+p.unitsLeft:"")+'</span>'+(p.noRebateCover?'<span class="mini">no rebate cover</span>':"")):'<span class="tag tag-sp">Special</span>';
+        var mcls=p.marginNoRebate==null?"":p.marginNoRebate<0?"neg":p.marginNoRebate<p.limitBelow?"warn":"okc";
+        html+='<tr data-sku="'+esc(i.sku)+'" class="'+(chg?"changed ":"")+(i.active?"":"inactive")+'">'+
+          '<td class="sku">'+esc(i.sku)+'</td><td class="d" title="'+esc(i.desc)+'">'+esc(i.desc)+'</td>'+
+          '<td><select class="rsel" data-f="newMode" aria-label="New or existing">'+[["Auto","Auto · "+(i.isNew?"New":"Existing")],["Y","New"],["N","Existing"]].map(function(o){return '<option value="'+o[0]+'"'+(i.newMode===o[0]?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></td>'+
+          '<td><input type="date" class="oin" style="width:128px;text-align:left" data-f="release" value="'+esc(i.release||"")+'"></td>'+
+          '<td><input type="date" class="oin" style="width:128px;text-align:left" data-f="opgAdded" value="'+esc(i.opgAdded||"")+'"></td>'+
+          '<td class="r">'+money(p.ndp,2)+'</td><td class="r">'+money(p.cost,2)+'</td><td class="r">'+money(p.srp)+'</td>'+
+          '<td class="r"><b>'+money(p.dp)+'</b>'+deltaTag(p.dp,b.dp)+'</td>'+
+          '<td class="r"><input class="oin'+(p.dpOverridden?" set":"")+'" data-f="dpOverride" inputmode="decimal" value="'+esc(i.dpOverride==null?"":i.dpOverride)+'" placeholder="'+money(p.dpCalc)+'"></td>'+
+          '<td class="r">'+pct(p.dpMarginActual)+'</td>'+
+          '<td class="r"><b>'+money(p.thr)+'</b>'+deltaTag(p.thr,b.thr)+'</td>'+
+          '<td class="r"><input class="oin'+(p.thrOverridden?" set":"")+'" data-f="thrOverride" inputmode="decimal" value="'+esc(i.thrOverride==null?"":i.thrOverride)+'" placeholder="'+money(p.thrCalc)+'"></td>'+
+          '<td class="r">'+pct(p.cost&&p.thr?1-p.cost/p.thr:null)+'</td>'+
+          '<td class="r">'+(p.rebate?money(p.rebate)+'<span class="mini">'+p.rebateLeft+' of '+p.rebateMax+' left</span>':"—")+'</td>'+
+          '<td class="r sp-val">'+money(p.sp)+deltaTag(p.sp,b.sp)+'</td>'+
+          '<td class="r '+mcls+'">'+pct(p.marginNoRebate)+'</td><td>'+tag+'</td>'+
+          '<td class="r">'+(p.onHand==null?"—":money(p.onHand))+'</td>'+
+          '<td class="c"><input type="checkbox" class="nchk" data-f="active"'+(i.active?" checked":"")+' aria-label="Active"></td></tr>'})})});
+  $("#tbody").innerHTML=html||'<tr class="empty-row"><td colspan="20">Nothing matches these filters.</td></tr>';
+  var n=dirtyCount();$("#dirty").hidden=!n;$("#dirty").textContent=n+" unsaved change"+(n===1?"":"s");$("#saveBtn").disabled=!n;$("#discardBtn").disabled=!n;
+}
+$("#tbody").addEventListener("change",function(e){
+  var el=e.target,f=el.dataset.f;if(!f)return;var tr=el.closest("tr"),sku=tr&&tr.dataset.sku;
+  var it=ITEMS.filter(function(i){return i.sku===sku})[0];if(!it)return;
+  if(f==="active")it[f]=el.checked;
+  else if(f==="newMode"||f==="release"||f==="opgAdded"){it[f]=el.value;resolveNew(it)}
+  else{var v=el.value.trim().replace(/[₱,\s]/g,"");if(v!==""&&(isNaN(+v)||+v<=0)){toast("Enter a price in pesos, or leave it blank");el.value=it[f]||"";return}it[f]=v===""?"":+v}
+  if(f==="newMode"||f==="release"||f==="opgAdded")buildRules();
+  render();
+});
+
+/* ---------- save / discard / export ---------- */
+$("#saveBtn").addEventListener("click",function(){
+  var rc=rulesChanged(),ic=ITEMS.filter(itemChanged).map(function(i){return {sku:i.sku,newMode:i.newMode,release:i.release||"",opgAdded:i.opgAdded||"",dpOverride:i.dpOverride,thrOverride:i.thrOverride,active:i.active}});
+  if(!rc.length&&!ic.length)return;
+  var btn=$("#saveBtn");btn.disabled=true;btn.textContent="Saving…";
+  HXAuth.api("save",{rules:rc,items:ic,pricesAsOf:new Date().toLocaleDateString("en-CA",{timeZone:"Asia/Manila"})}).then(function(d){
+    btn.textContent="Save to Sheet";
+    if(!d.ok){toast(HXAuth.message(d.error)+(d.detail?" "+d.detail:""));render();return}
+    accept(d);showApp();toast("Saved: "+rc.length+" margin rule"+(rc.length===1?"":"s")+", "+ic.length+" SKU"+(ic.length===1?"":"s"));
+  }).catch(function(e){btn.textContent="Save to Sheet";toast("Save failed: "+e.message);render()});
+});
+$("#discardBtn").addEventListener("click",function(){if(!confirmLeave())return;accept(SRV);showApp();toast("Changes discarded")});
+function confirmLeave(){return window.confirm("Discard "+dirtyCount()+" unsaved change(s)?")}
+window.addEventListener("beforeunload",function(e){if(SRV&&dirtyCount()){e.preventDefault();e.returnValue=""}});
+$("#csvBtn").addEventListener("click",function(){
+  var P=priceAll(RULES,ITEMS);
+  var H=["Category","Segment","SKU","Description","NDP","Invoice cost","SRP","Base DP","DP margin","Threshold","Threshold margin","Rebate/unit","Rebate units left","Special price","Margin w/o rebate","Margin w/ rebate","Sales tag","Units left","On hand","Active"];
+  var q=function(x){x=String(x==null?"":x);return /[",\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x};
+  var r4=function(x){return x==null?"":Math.round(x*10000)/10000};
+  var rows=ITEMS.map(function(i){var p=P[i.sku];return [i.cat,p.segment,i.sku,i.desc,p.ndp,r4(p.cost),p.srp,p.dp,r4(p.dpMarginActual),p.thr,r4(p.cost&&p.thr?1-p.cost/p.thr:null),p.rebate||"",p.rebateLeft==null?"":p.rebateLeft,p.sp,r4(p.marginNoRebate),r4(p.marginWithRebate),p.limited?"Limited Qty":"Special",p.unitsLeft==null?"":p.unitsLeft,p.onHand==null?"":p.onHand,i.active?"Y":"N"]});
+  var csv="﻿"+[H].concat(rows).map(function(r){return r.map(q).join(",")}).join("\r\n");
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="HyperX-pricelist-editor-"+new Date().toISOString().slice(0,10)+".csv";a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},500);
+});
+})();
+</script>
+</body>
+</html>

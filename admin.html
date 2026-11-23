@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Admin · HyperX Pricing · Iontech</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0d0e10">
+<meta name="color-scheme" content="light dark">
+<script>
+(function(){var t=null;try{t=localStorage.getItem("hxpl-theme")}catch(e){}
+if(t!=="light"&&t!=="dark")t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
+document.documentElement.setAttribute("data-theme",t)})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="assets/hx-app.css">
+<style>
+.container,.header-inner{max-width:1500px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+.tabs button{border:0;background:none;padding:11px 14px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;font-size:14px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--red-2)}
+.tabs .n{font-size:11px;border:1px solid var(--line);border-radius:999px;padding:0 6px;margin-left:5px;color:var(--faint)}
+.card{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);padding:16px 18px;margin-bottom:14px}
+.card h2{font-size:16px;font-weight:800;margin-bottom:4px}
+.card .sub{color:var(--muted);font-size:13px;margin-bottom:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.inp,.txt,select.inp{height:34px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);padding:0 10px;font-size:13px;min-width:0}
+.txt{height:auto;width:100%;padding:8px 10px;font-family:ui-monospace,Consolas,monospace;font-size:12px;resize:vertical}
+.inp:focus,.txt:focus{outline:2px solid var(--red-2);border-color:transparent}
+.inp.num{width:100px;text-align:right;font-variant-numeric:tabular-nums}
+.inp.sm{width:80px}
+label.f{display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--muted)}
+label.f .inp,label.f .txt{font-weight:500;color:var(--ink)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.split{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px;align-items:start}
+.dlist{display:grid;gap:6px;max-height:calc(100vh - 260px);overflow:auto}
+.ditem{text-align:left;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:9px 12px;cursor:pointer;display:grid;gap:2px}
+.ditem b{font-size:13.5px}
+.ditem span{font-size:12px;color:var(--muted)}
+.ditem[aria-current="true"]{border-color:var(--red-2);background:var(--red-soft)}
+.ditem.off{opacity:.55}
+.star{border:0;background:none;cursor:pointer;font-size:16px;line-height:1;padding:0 2px 0 0;color:var(--faint);vertical-align:-1px}
+.star.on{color:#f5b301}.star:hover{color:#f5b301}
+.role{height:30px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);font-weight:600;font-size:12.5px;padding:0 6px}
+.lock{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+.x{border:0;background:none;color:var(--faint);cursor:pointer;font-size:18px;line-height:1;padding:2px 6px}
+.x:hover{color:var(--out)}
+.tbl.dense td{padding:4px 8px}
+.msg{font-size:13px;min-height:18px}
+.msg.ok{color:var(--ok)}.msg.err{color:var(--out)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13px}
+.kv dt{color:var(--muted)}.kv dd{margin:0;font-weight:600}
+.roles-help{font-size:12.5px;color:var(--muted);display:grid;gap:3px;margin-top:10px}
+.add-sku{position:relative}
+.add-sku input{width:320px}
+.sugg{position:absolute;z-index:20;top:38px;left:0;width:520px;max-height:320px;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.sugg button{display:flex;gap:10px;width:100%;text-align:left;border:0;background:none;padding:7px 10px;cursor:pointer;font-size:12.5px}
+.sugg button:hover,.sugg button.on{background:var(--surface-2)}
+.sugg .s{font-weight:700;width:76px;flex:none}
+.sugg .m{color:var(--faint);margin-left:auto;white-space:nowrap}
+@media (max-width:1000px){.split{grid-template-columns:1fr}.dlist{max-height:none}}
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html" aria-label="Back to the HyperX pricelist">
+      <span class="wm-hx">Hyper<b>X</b></span><span class="wm-ion">IONTECH</span><span class="brand-divider" aria-hidden="true"></span><span class="brand-title">Admin</span>
+    </a>
+    <span style="flex:1"></span>
+    <a class="btn hdr-link" href="editor.html">Pricelist editor</a>
+    <a class="btn hdr-link" href="sales.html">Sales view</a>
+    <a class="btn hdr-link" href="dealer.html">Dealer pages</a>
+    <div class="user-chip" id="userChip" hidden><img id="userPic" alt="" referrerpolicy="no-referrer"><span class="who"><b id="userName"></b><span>Admin</span></span><button class="btn btn-sm" id="signOut" type="button">Sign out</button></div>
+    <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch theme">
+      <svg class="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="gate" id="gate"><div class="gate-card">
+  <p class="eyebrow">HyperX admins only</p><h1>Admin console</h1>
+  <p>Manage who can sign in, dealer price pages, data uploads and settings.</p>
+  <div id="gsiButton"></div><p class="gate-msg" id="gateMsg" role="status" aria-live="polite"></p>
+</div></section>
+
+<main class="container app-main" id="app" hidden>
+  <div class="page-head"><div><p class="eyebrow">HyperX · Iontech</p><h1>Admin console</h1><p class="meta" id="meta"></p></div></div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="dealers" aria-selected="true">Dealer pages<span class="n" id="tnD"></span></button>
+    <button role="tab" data-tab="users" aria-selected="false">Users &amp; admins<span class="n" id="tnU"></span></button>
+    <button role="tab" data-tab="data" aria-selected="false">Data uploads</button>
+    <button role="tab" data-tab="settings" aria-selected="false">Settings</button>
+    <button role="tab" data-tab="activity" aria-selected="false">Activity</button>
+  </nav>
+
+  <!-- ===== Dealers ===== -->
+  <section data-panel="dealers">
+    <div class="split">
+      <div>
+        <div class="row" style="margin-bottom:8px"><input class="inp" id="dSearch" placeholder="Search dealers, code, HP lead…" style="flex:1"><button class="btn btn-primary btn-sm" id="dNew" type="button">+ New dealer</button></div>
+        <div class="row" style="margin-bottom:8px"><div class="seg" id="dSeg"><button type="button" data-v="fav" aria-pressed="true">★ Favorites</button><button type="button" data-v="priced" aria-pressed="false">With prices</button><button type="button" data-v="all" aria-pressed="false">All</button></div>
+          <select class="inp" id="dLead" style="flex:1;min-width:120px"><option value="">Any HP lead</option></select></div>
+        <div class="dlist" id="dList"></div>
+      </div>
+      <div id="dEditor"><div class="card"><p class="sub">Pick a dealer on the left, or create a new one.</p></div></div>
+    </div>
+  </section>
+
+  <!-- ===== Users ===== -->
+  <section data-panel="users" hidden>
+    <div class="card">
+      <h2>Who can sign in</h2>
+      <p class="sub">Only these Google accounts can open the sales, dealer, editor and admin pages. Turn someone off with Active instead of deleting if you may need them again.</p>
+      <div class="row" style="margin-bottom:10px">
+        <input class="inp" id="uEmail" placeholder="name@gmail.com" style="width:240px" autocomplete="off">
+        <input class="inp" id="uName" placeholder="Name" style="width:180px">
+        <select class="inp" id="uRole"><option value="sales">Sales</option><option value="cso">Channel sales (CSO)</option><option value="csomgr">CSO manager</option><option value="admin">Admin</option></select>
+        <button class="btn btn-sm" id="uAdd" type="button">Add to list</button>
+        <span style="flex:1"></span>
+        <input class="inp" id="uFilter" placeholder="Filter…" style="width:160px">
+        <button class="btn btn-primary btn-sm" id="uSave" type="button" disabled>Save users</button>
+      </div>
+      <div class="tbl-wrap"><table class="tbl dense"><thead><tr><th>Email</th><th>Name</th><th>Role</th><th class="c">Active</th><th>Dealer pages</th><th>Last changed</th><th></th></tr></thead><tbody id="uBody"></tbody></table></div>
+      <p class="msg" id="uMsg"></p>
+      <div class="roles-help">
+        <span><b>Admin</b>: everything here, the pricelist editor, every dealer page, cost and margins.</span>
+        <span><b>Sales</b>: the sales special-price page, plus any dealer pages they're assigned to. No cost or margin.</span>
+        <span><b>Channel sales (CSO)</b>: only the dealer pages they're assigned to. Adding an email to a dealer page adds it here as a CSO automatically.</span>
+        <span><b>CSO manager</b>: the sales special-price page and every active dealer page, view only (no cost, margin or editing). Promote to Admin if they should edit.</span>
+        <span>The owner account (<b id="ownerEmail"></b>) always stays an active admin, and you can't remove your own admin access from here.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Data ===== -->
+  <section data-panel="data" hidden>
+    <div class="card">
+      <h2>HP sell-out report</h2>
+      <p class="sub">Counts rebate units already claimed. Open the KT-HP_SELL_OUT file in Excel, press Ctrl+A, Ctrl+C, then paste here.</p>
+      <dl class="kv" id="soStat"></dl>
+      <textarea class="txt" id="soText" rows="5" placeholder="Paste the whole report, header row included…" style="margin-top:10px"></textarea>
+      <div class="row" style="margin-top:8px">
+        <label class="check"><input type="radio" name="soMode" value="replace" checked><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span><span class="label">Replace (report covers the whole program period)</span></label>
+        <label class="check"><input type="radio" name="soMode" value="append"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span><span class="label">Add to existing (skips duplicates)</span></label>
+        <span style="flex:1"></span><button class="btn btn-primary btn-sm" id="soGo" type="button">Upload sell-out</button>
+      </div>
+      <p class="msg" id="soMsg"></p>
+    </div>
+    <div class="card">
+      <h2>SAP stock (on hand)</h2>
+      <p class="sub">Used for "units left" on Limited Qty prices. Copy the whole list from SAP (MB52 or similar: Material and Unrestricted columns), paste here. Quantities are summed per SKU across storage locations.</p>
+      <textarea class="txt" id="stText" rows="5" placeholder="Paste the SAP list, header row included…"></textarea>
+      <div class="row" style="margin-top:8px">
+        <label class="check"><input type="checkbox" id="stZero" checked><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span><span class="label">SKUs missing from the paste have 0 on hand</span></label>
+        <span style="flex:1"></span><button class="btn btn-primary btn-sm" id="stGo" type="button">Upload stock</button>
+      </div>
+      <p class="msg" id="stMsg"></p>
+    </div>
+    <div class="card">
+      <h2>New HP rebate program</h2>
+      <p class="sub">Replaces the current program. Paste the SKU lines from the HP program letter (each line needs the part number, max qty and rebate per unit, in that order). The current program: <b id="rbNow"></b>.</p>
+      <div class="grid2">
+        <label class="f">Deal number<input class="inp" id="rbDeal" placeholder="48552980"></label>
+        <label class="f">Program name<input class="inp" id="rbName" placeholder="PH Q227 CPS HyperX Accy ST Program_Iontech"></label>
+        <label class="f">Start date<input class="inp" id="rbStart" type="date"></label>
+        <label class="f">End date<input class="inp" id="rbEnd" type="date"></label>
+      </div>
+      <textarea class="txt" id="rbText" rows="5" placeholder="MS BN7S1AA   Earbuds III S (Black)   130   556   Rebate Per Unit…" style="margin-top:10px"></textarea>
+      <div class="row" style="margin-top:8px"><span style="flex:1"></span><button class="btn btn-primary btn-sm" id="rbGo" type="button">Replace rebate program</button></div>
+      <p class="msg" id="rbMsg"></p>
+    </div>
+  </section>
+
+  <!-- ===== Settings ===== -->
+  <section data-panel="settings" hidden>
+    <div class="card">
+      <h2>Settings</h2>
+      <p class="sub">Margin structures and rounding live in the <a href="editor.html">Pricelist editor</a>.</p>
+      <div class="grid2">
+        <label class="f">Limited Qty below this margin (without rebate)<span class="row"><input class="inp num" id="sMin" inputmode="decimal"> %</span></label>
+        <label class="f">Prices as of<input class="inp" id="sAsOf" type="date"></label>
+        <label class="f">"New" window (released or added to OPG within)<span class="row"><input class="inp num" id="sNew" inputmode="numeric"> days</span></label>
+      </div>
+      <label class="f" style="margin-top:12px">Banner on the sales page<textarea class="txt" id="sSales" rows="2" style="font-family:inherit;font-size:13px"></textarea></label>
+      <label class="f" style="margin-top:12px">Banner on dealer pages<textarea class="txt" id="sDealer" rows="2" style="font-family:inherit;font-size:13px"></textarea></label>
+      <div class="row" style="margin-top:10px"><span class="msg" id="sMsg"></span><span style="flex:1"></span><button class="btn btn-primary btn-sm" id="sGo" type="button">Save settings</button></div>
+    </div>
+    <div class="card">
+      <h2>Behind the scenes</h2>
+      <dl class="kv" id="sInfo"></dl>
+    </div>
+  </section>
+
+  <!-- ===== Activity ===== -->
+  <section data-panel="activity" hidden>
+    <div class="card"><h2>Changes</h2><p class="sub">Last 60 saves by admins.</p><div class="tbl-wrap" style="max-height:340px"><table class="tbl dense"><thead><tr><th>When</th><th>Who</th><th>What</th></tr></thead><tbody id="eBody"></tbody></table></div></div>
+    <div class="card"><h2>Sign-ins and page views</h2><p class="sub">Last 200 requests, including people who were turned away.</p>
+      <div class="row" style="margin-bottom:8px"><input class="inp" id="aFilter" placeholder="Filter by email or action…" style="width:260px"></div>
+      <div class="tbl-wrap" style="max-height:460px"><table class="tbl dense"><thead><tr><th>When</th><th>Email</th><th>Role</th><th>Action</th><th>Page</th></tr></thead><tbody id="aBody"></tbody></table></div></div>
+  </section>
+</main>
+
+<datalist id="leadList"></datalist>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="assets/pricing-engine.js"></script>
+<script src="assets/hx-auth.js"></script>
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var E=HXPricing, A=null, ME=null, USERS=[], USERS0="", CUR=null, CUR0="", CAT={};
+var DIGITS=[{v:2,t:"₱0.01"},{v:1,t:"₱0.10"},{v:0,t:"₱1"},{v:-1,t:"₱10"}];
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function money(n,d){if(n==null||n===""||isNaN(n))return "—";d=d!=null?d:(Math.round(n)!==n?2:0);return Number(n).toLocaleString("en-PH",{minimumFractionDigits:d,maximumFractionDigits:d})}
+function pct(x){return x==null||isNaN(x)?"—":(x*100).toFixed(1)+"%"}
+function when(s){if(!s)return "";var d=new Date(s);return isNaN(d)?s:d.toLocaleString("en-PH",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}
+function fmtDay(s){if(!s)return "";var d=new Date(s+"T00:00:00+08:00");return isNaN(d)?s:d.toLocaleDateString("en-PH",{month:"short",day:"numeric",year:"numeric"})}
+function toast(t){var el=$("#toast");el.textContent=t;el.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(function(){el.classList.remove("show")},2800)}
+function msg(id,t,ok){var m=$(id);m.textContent=t||"";m.className="msg "+(t?(ok?"ok":"err"):"")}
+function clone(o){return JSON.parse(JSON.stringify(o))}
+$("#themeToggle").addEventListener("click",function(){var t=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("hxpl-theme",t)}catch(e){}});
+
+/* ---------- sign-in ---------- */
+function gateMsg(t,ok){var m=$("#gateMsg");m.textContent=t||"";m.classList.toggle("ok",!!ok)}
+function load(){gateMsg("Checking your access…",true);
+  HXAuth.api("admin").then(function(d){if(!d.ok){gateMsg(HXAuth.message(d.error)+(d.email?" ("+d.email+")":""));if(d.error==="not_allowed"||d.error==="admin_only")HXAuth.signOut();return}
+    ME=d.user;accept(d);$("#gate").hidden=true;$("#app").hidden=false;$("#userChip").hidden=false;$("#userName").textContent=ME.name||ME.email;if(ME.picture)$("#userPic").src=ME.picture;else $("#userPic").hidden=true;route();
+  }).catch(function(e){gateMsg("Could not reach the pricing server. "+e.message)})}
+HXAuth.init($("#gsiButton"),load).catch(function(e){gateMsg(HXAuth.message(e.message==="not_configured"?"not_configured":e.message))});
+$("#signOut").addEventListener("click",function(){HXAuth.signOut();location.reload()});
+function call(action,payload,okText){return HXAuth.api(action,payload).then(function(d){if(!d.ok){toast(HXAuth.message(d.error)+(d.detail?" — "+d.detail:""));throw new Error(d.error)}accept(d);if(okText)toast(okText);return d})}
+
+function accept(d){
+  A=d;CAT={};d.catalog.forEach(function(c){CAT[c.sku]=c});
+  USERS=clone(d.users);USERS0=JSON.stringify(USERS);
+  $("#meta").innerHTML=d.catalog.length+" SKUs · "+d.users.length+" users · "+d.dealers.length+" dealer pages"+(d.deal?" · rebate deal "+esc(d.deal.id)+" to "+esc(fmtDay(d.deal.end)):"")+(d.selloutAsOf?" · sell-out to "+esc(fmtDay(d.selloutAsOf)):"");
+  $("#tnD").textContent=d.dealers.length;$("#tnU").textContent=d.users.length;
+  var lds={};d.dealers.forEach(function(x){if(x.hpLead)lds[x.hpLead]=1});$("#leadList").innerHTML=Object.keys(lds).sort().map(function(l){return '<option value="'+esc(l)+'">'}).join("");
+  renderUsers();renderDealerList();renderData();renderSettings();renderActivity();
+  if(CUR&&CUR.id){var fresh=d.dealers.filter(function(x){return x.id===CUR.id})[0];if(fresh&&!dirtyDealer()){CUR=clone(fresh);CUR0=JSON.stringify(CUR)}renderDealerList();renderDealer()}
+}
+
+/* ---------- tabs + hash routing (#dealers/D-0001) ---------- */
+function showTab(t){$$(".tabs button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.tab===t)});$$("[data-panel]").forEach(function(p){p.hidden=p.dataset.panel!==t})}
+$$(".tabs button").forEach(function(b){b.addEventListener("click",function(){history.replaceState(null,"","#"+b.dataset.tab);showTab(b.dataset.tab)})});
+function route(){var h=location.hash.replace(/^#/,"").split("/");showTab(["dealers","users","data","settings","activity"].indexOf(h[0])>=0?h[0]:"dealers");if(h[0]==="dealers"&&h[1])editDealer(decodeURIComponent(h[1]))}
+
+/* ================= USERS ================= */
+function dealerCount(email){return A.dealers.filter(function(d){return d.emails.indexOf(email)>=0}).map(function(d){return d.name})}
+function renderUsers(){
+  var f=($("#uFilter").value||"").toLowerCase(),owner=(A.settings.OWNER_EMAIL||"").toLowerCase();$("#ownerEmail").textContent=owner||"not set";
+  var rows=USERS.map(function(u,i){return {u:u,i:i}}).filter(function(x){return !f||(x.u.email+" "+x.u.name+" "+x.u.role).toLowerCase().indexOf(f)>=0});
+  rows.sort(function(a,b){var r={admin:0,csomgr:1,sales:2,cso:3};return (r[a.u.role]-r[b.u.role])||a.u.email.localeCompare(b.u.email)});
+  $("#uBody").innerHTML=rows.map(function(x){var u=x.u,locked=u.email===owner,dl=dealerCount(u.email);
+    return '<tr data-i="'+x.i+'"><td class="sku">'+esc(u.email)+(locked?' <span class="lock">owner</span>':"")+(u.email===ME.email?' <span class="lock">you</span>':"")+'</td>'+
+      '<td><input class="inp" data-f="name" value="'+esc(u.name)+'" style="width:180px"></td>'+
+      '<td><select class="role" data-f="role"'+(locked?" disabled":"")+'>'+[["admin","Admin"],["csomgr","CSO manager"],["sales","Sales"],["cso","Channel sales (CSO)"]].map(function(r){return '<option value="'+r[0]+'"'+(u.role===r[0]?" selected":"")+'>'+r[1]+'</option>'}).join("")+'</select></td>'+
+      '<td class="c"><input type="checkbox" data-f="active"'+(u.active?" checked":"")+(locked?" disabled":"")+'></td>'+
+      '<td style="font-size:12px;color:var(--muted)">'+(u.role==="admin"||u.role==="csomgr"?"All":esc(dl.join(", ")||"—"))+'</td>'+
+      '<td style="font-size:12px;color:var(--faint)">'+esc(when(u.updatedOn))+(u.updatedBy&&u.updatedBy!=="setup"?" · "+esc(u.updatedBy):"")+'</td>'+
+      '<td>'+(locked?"":'<button class="x" data-del title="Remove from list" type="button">×</button>')+'</td></tr>'}).join("")||'<tr class="empty-row"><td colspan="7">No users match.</td></tr>';
+  $("#uSave").disabled=JSON.stringify(USERS)===USERS0;
+}
+$("#uFilter").addEventListener("input",renderUsers);
+$("#uBody").addEventListener("change",function(e){var tr=e.target.closest("tr");if(!tr)return;var u=USERS[+tr.dataset.i],f=e.target.dataset.f;if(!f)return;u[f]=f==="active"?e.target.checked:e.target.value;renderUsers()});
+$("#uBody").addEventListener("click",function(e){if(!e.target.hasAttribute("data-del"))return;var tr=e.target.closest("tr"),u=USERS[+tr.dataset.i];
+  var dl=dealerCount(u.email);if(dl.length&&!confirm(u.email+" is assigned to "+dl.join(", ")+". Remove anyway? (They will lose access.)"))return;
+  USERS.splice(+tr.dataset.i,1);renderUsers()});
+$("#uAdd").addEventListener("click",function(){var e=$("#uEmail").value.trim().toLowerCase();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){msg("#uMsg","Enter a full email address.");return}
+  if(USERS.some(function(u){return u.email===e})){msg("#uMsg",e+" is already on the list.");return}
+  USERS.push({email:e,name:$("#uName").value.trim(),role:$("#uRole").value,active:true});$("#uEmail").value="";$("#uName").value="";msg("#uMsg","Added "+e+" — press Save users to apply.",true);renderUsers()});
+$("#uSave").addEventListener("click",function(){var b=$("#uSave");b.disabled=true;b.textContent="Saving…";
+  call("saveUsers",{users:USERS},"Users saved").then(function(){msg("#uMsg","Saved.",true)},function(){}).then(function(){b.textContent="Save users";renderUsers()})});
+
+/* ================= DEALERS ================= */
+var DSEG="fav",BULK={base:"thr",pct:"",round:"0"};
+function renderDealerList(){
+  var f=($("#dSearch").value||"").toLowerCase(),lead=$("#dLead").value;
+  var leads={};A.dealers.forEach(function(d){if(d.hpLead)leads[d.hpLead]=1});
+  $("#dLead").innerHTML='<option value="">Any HP lead</option>'+Object.keys(leads).sort().map(function(l){return '<option'+(l===lead?" selected":"")+'>'+esc(l)+'</option>'}).join("");
+  var list=A.dealers.filter(function(d){
+    if(f&&(d.name+" "+d.code+" "+d.partnerId+" "+d.hpLead+" "+d.csoManager+" "+d.emails.join(" ")).toLowerCase().indexOf(f)<0)return false;
+    if(lead&&d.hpLead!==lead)return false;
+    if(!f&&!lead&&DSEG==="fav"&&!d.favorite)return false;
+    if(DSEG==="priced"&&!d.prices.length)return false;
+    return true}).sort(function(a,b){return (b.favorite-a.favorite)||a.name.localeCompare(b.name)});
+  $("#dList").innerHTML=list.map(function(d){
+    return '<div class="ditem'+(d.active?"":" off")+'" data-id="'+esc(d.id)+'" role="button" tabindex="0"'+(CUR&&CUR.id===d.id?' aria-current="true"':"")+'><b><button type="button" class="star'+(d.favorite?" on":"")+'" data-star="'+esc(d.id)+'" title="'+(d.favorite?"Remove from favorites":"Add to favorites")+'" aria-label="Favorite">'+(d.favorite?"★":"☆")+'</button> '+esc(d.name)+'</b><span>'+esc(d.code||d.id)+(d.hpLead?" · HP "+esc(d.hpLead):"")+' · '+d.prices.length+' SKUs · '+(d.emails.length||"no")+' viewer'+(d.emails.length===1?"":"s")+(d.validUntil?" · to "+esc(fmtDay(d.validUntil)):"")+(d.active?"":" · inactive")+'</span></div>'}).join("")||'<p class="sub" style="padding:10px">'+(DSEG==="fav"&&!f&&!lead?"No favorites yet — tap ☆ on a dealer to pin it here.":"No dealers match.")+'</p>';
+}
+$("#dSearch").addEventListener("input",renderDealerList);
+$("#dLead").addEventListener("change",renderDealerList);
+$$("#dSeg button").forEach(function(b){b.addEventListener("click",function(){DSEG=b.dataset.v;$$("#dSeg button").forEach(function(x){x.setAttribute("aria-pressed",x===b)});renderDealerList()})});
+$("#dList").addEventListener("click",function(e){var st=e.target.closest("[data-star]");
+  if(st){e.stopPropagation();var d=A.dealers.filter(function(x){return x.id===st.dataset.star})[0];if(!d)return;var to=!d.favorite;st.disabled=true;
+    call("setFavorite",{dealerId:d.id,favorite:to},to?"★ "+d.name+" added to favorites":d.name+" removed from favorites").catch(function(){});return}
+  var b=e.target.closest(".ditem");if(b){if(dirtyDealer()&&!confirm("Discard unsaved changes to "+CUR.name+"?"))return;editDealer(b.dataset.id)}});
+$("#dNew").addEventListener("click",function(){if(dirtyDealer()&&!confirm("Discard unsaved changes?"))return;CUR={id:"",name:"",code:"",partnerId:"",hpLead:"",csoManager:"",favorite:false,emails:[],validUntil:"",note:"",active:true,prices:[]};CUR0=JSON.stringify(CUR);history.replaceState(null,"","#dealers");renderDealerList();renderDealer();$("#fName").focus()});
+function editDealer(id,keepEdits){var d=A.dealers.filter(function(x){return x.id===id})[0];if(!d)return;
+  if(!(keepEdits&&CUR&&CUR.id===id&&dirtyDealer())){CUR=clone(d);CUR0=JSON.stringify(CUR)}
+  history.replaceState(null,"","#dealers/"+encodeURIComponent(id));showTab("dealers");renderDealerList();renderDealer()}
+function dirtyDealer(){return CUR&&JSON.stringify(CUR)!==CUR0}
+function link(){return location.href.replace(/admin\.html.*$/,"dealer.html?d="+encodeURIComponent(CUR.id))}
+
+function margins(p){var c=CAT[p.sku];if(!c||!c.cost||!p.price)return {no:null,w:null};
+  var useReb=c.rebate&&c.rebateLeft>0;return {no:1-c.cost/p.price,w:1-(useReb?(c.ndp-c.rebate)*A.opts.vat:c.cost)/p.price}}
+function renderDealer(){
+  if(!CUR){return}
+  var minM=A.opts.minMargin;
+  var priceRows=CUR.prices.map(function(p,i){var c=CAT[p.sku]||{},m=margins(p),lb=c.limitBelow!=null?c.limitBelow:minM,lim=m.no!=null&&m.no<lb;
+    return '<tr data-i="'+i+'"><td class="sku">'+esc(p.sku)+'</td><td class="d" style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+esc(c.desc)+'">'+esc(c.desc||"Unknown SKU")+(c.isNew?' <span class="tag tag-new">New</span>':"")+'</td>'+
+      '<td class="r">'+money(c.cost,2)+'</td><td class="r">'+money(c.dp)+'</td><td class="r">'+money(c.thr)+'</td><td class="r">'+money(c.sp)+'</td>'+
+      '<td class="r"><input class="inp num" data-f="price" inputmode="decimal" value="'+esc(p.price==null?"":p.price)+'"></td>'+
+      '<td class="r '+(m.no==null?"":m.no<0?"neg":lim?"warn":"okc")+'">'+pct(m.no)+'</td><td class="r '+(m.w!=null&&m.w<lb?"neg":"")+'">'+pct(m.w)+'</td>'+
+      '<td>'+(m.no==null?"":lim?'<span class="tag tag-lim">Limited Qty</span>':'<span class="tag tag-sp">Special</span>')+(c.rebate?'<span class="units">rebate ₱'+money(c.rebate)+' · '+c.rebateLeft+' left</span>':"")+'</td>'+
+      '<td class="r"><input class="inp sm" data-f="qtyCap" inputmode="numeric" value="'+esc(p.qtyCap==null?"":p.qtyCap)+'" placeholder="—"></td>'+
+      '<td><input class="inp" data-f="note" value="'+esc(p.note||"")+'" style="width:150px"></td><td><button class="x" data-del type="button" title="Remove SKU">×</button></td></tr>'}).join("");
+  $("#dEditor").innerHTML=
+   '<div class="card"><div class="row" style="justify-content:space-between"><h2>'+(CUR.id?(CUR.favorite?"★ ":"")+esc(CUR.name)+' <span class="lock">'+esc(CUR.id)+'</span>':"New dealer page")+'</h2>'+
+     (CUR.id?'<div class="row"><a class="btn btn-sm" href="'+esc(link())+'" target="_blank" rel="noopener">Open page</a><button class="btn btn-sm" id="dCopy" type="button">Copy link</button></div>':"")+'</div>'+
+     '<div class="grid2" style="margin-top:10px">'+
+       '<label class="f">Dealer / retailer name<input class="inp" id="fName" value="'+esc(CUR.name)+'" placeholder="e.g. PC Express"></label>'+
+       '<label class="f">Customer code (SAP)<input class="inp" id="fCode" value="'+esc(CUR.code)+'" placeholder="e.g. M-321"></label>'+
+       '<label class="f">Valid until<input class="inp" id="fValid" type="date" value="'+esc(CUR.validUntil)+'"></label>'+
+       '<label class="f">HP partner ID<input class="inp" id="fPid" value="'+esc(CUR.partnerId)+'" placeholder="e.g. 2-SISC-23901"></label>'+
+       '<label class="f">HP lead (RAM)<input class="inp" id="fLead" value="'+esc(CUR.hpLead)+'" list="leadList" placeholder="e.g. Yvette Dela Paz"></label>'+
+       '<label class="f">CSO manager<input class="inp" id="fMgr" value="'+esc(CUR.csoManager)+'" placeholder="Name or email (to be added)"></label>'+
+       '<label class="f">Favorite<select class="inp" id="fFav"><option value="1"'+(CUR.favorite?" selected":"")+'>★ Yes — pin to the top</option><option value="0"'+(CUR.favorite?"":" selected")+'>No</option></select></label>'+
+       '<label class="f">Status<select class="inp" id="fActive"><option value="1"'+(CUR.active?" selected":"")+'>Active — viewers can open it</option><option value="0"'+(CUR.active?"":" selected")+'>Inactive — hidden from viewers</option></select></label></div>'+
+     '<label class="f" style="margin-top:12px">Who can see this page (Google emails, comma or new line)<textarea class="txt" id="fEmails" rows="2" placeholder="cso.name@gmail.com, other.cso@gmail.com">'+esc(CUR.emails.join(", "))+'</textarea></label>'+
+     '<p class="sub" style="margin:4px 0 0;font-size:12px">Emails not yet on the user list are added as Channel sales (CSO) when you save. Admins can always see every dealer page.</p>'+
+     '<label class="f" style="margin-top:12px">Note shown on the page<input class="inp" id="fNote" value="'+esc(CUR.note)+'" placeholder="e.g. Q4 volume deal · min 10 units per SKU"></label></div>'+
+   '<div class="card"><div class="row" style="justify-content:space-between;margin-bottom:10px"><div><h2>Special prices for this dealer</h2><p class="sub" style="margin:0">Type the price you dictate. Under the category&#39;s Limited-below margin ('+pct(minM)+' unless set; monitors 0%) without the rebate shows the dealer a <b>Limited Qty Price</b> with units left (rebate units, stock and your qty cap, whichever is lowest).</p></div></div>'+
+     '<div class="row" style="margin-bottom:10px"><div class="add-sku"><input class="inp" id="skuQ" placeholder="Add SKU: type model or SKU…" autocomplete="off"><div class="sugg" id="sugg" hidden></div></div>'+
+       '<button class="btn btn-sm" id="addLim" type="button" title="Adds every SKU that currently has a rebate-backed Limited Qty sales price">+ All rebate SKUs</button>'+
+       '<span style="flex:1"></span><span style="font-size:12.5px;color:var(--muted)">Set all prices to</span>'+
+       '<select class="inp" id="bulkBase"><option value="thr">Threshold</option><option value="sp">Sales special price</option><option value="dp">Base DP</option><option value="margin">Margin on cost…</option></select>'+
+       '<input class="inp sm" id="bulkPct" placeholder="%" inputmode="decimal" hidden><select class="inp" id="bulkRound" hidden>'+DIGITS.map(function(d){return '<option value="'+d.v+'"'+(d.v===0?" selected":"")+'>round up '+d.t+'</option>'}).join("")+'</select>'+
+       '<button class="btn btn-sm" id="bulkGo" type="button">Apply</button></div>'+
+     '<div class="tbl-wrap" style="max-height:460px"><table class="tbl dense"><thead><tr><th>SKU</th><th>Description</th><th class="r">Inv. cost</th><th class="r">Base DP</th><th class="r">Threshold</th><th class="r">Sales SP</th><th class="r">Dealer price</th><th class="r">Margin w/o rebate</th><th class="r">w/ rebate</th><th>Tag</th><th class="r">Qty cap</th><th>Note</th><th></th></tr></thead><tbody id="pBody">'+(priceRows||'<tr class="empty-row"><td colspan="13">No SKUs yet. Add them with the search box above.</td></tr>')+'</tbody></table></div>'+
+     '<div class="row" style="margin-top:12px"><span class="msg" id="dMsg"></span><span style="flex:1"></span>'+(CUR.id?'<button class="btn btn-sm" id="dRevert" type="button"'+(dirtyDealer()?"":" disabled")+'>Discard changes</button>':"")+'<button class="btn btn-primary" id="dSave" type="button"'+(dirtyDealer()?"":" disabled")+'>'+(CUR.id?"Save dealer page":"Create dealer page")+'</button></div></div>';
+  wireDealer();
+}
+function wireDealer(){
+  var bind=function(id,key,fn){$(id).addEventListener("input",function(e){CUR[key]=fn?fn(e.target.value):e.target.value;refreshSave()})};
+  bind("#fName","name");bind("#fCode","code");bind("#fPid","partnerId");bind("#fLead","hpLead");bind("#fMgr","csoManager");
+  $("#fFav").addEventListener("change",function(e){CUR.favorite=e.target.value==="1";refreshSave()});bind("#fValid","validUntil");bind("#fNote","note");
+  bind("#fEmails","emails",function(v){return v.split(/[\s,;]+/).map(function(x){return x.trim().toLowerCase()}).filter(Boolean)});
+  $("#fActive").addEventListener("change",function(e){CUR.active=e.target.value==="1";refreshSave()});
+  if($("#dCopy"))$("#dCopy").addEventListener("click",function(){navigator.clipboard.writeText(link()).then(function(){toast("Link copied")})});
+  if($("#dRevert"))$("#dRevert").addEventListener("click",function(){CUR=JSON.parse(CUR0);renderDealer()});
+  $("#pBody").addEventListener("change",function(e){var tr=e.target.closest("tr"),f=e.target.dataset.f;if(!tr||!f)return;var p=CUR.prices[+tr.dataset.i],v=e.target.value.trim();
+    if(f==="note")p.note=v;else{var n=v===""?null:Number(v.replace(/[₱,\s]/g,""));if(v!==""&&(isNaN(n)||n<0)){toast("Enter a number");e.target.value=p[f]==null?"":p[f];return}p[f]=f==="qtyCap"&&n!=null?Math.round(n):n}
+    renderDealer()});
+  $("#pBody").addEventListener("click",function(e){if(!e.target.hasAttribute("data-del"))return;CUR.prices.splice(+e.target.closest("tr").dataset.i,1);renderDealer()});
+  $("#addLim").addEventListener("click",function(){var n=0;A.catalog.forEach(function(c){if(c.active&&c.limited&&c.rebate&&c.rebateLeft>0&&!CUR.prices.some(function(p){return p.sku===c.sku})){CUR.prices.push({sku:c.sku,price:c.sp,qtyCap:null,note:""});n++}});toast(n?"Added "+n+" SKUs at the sales special price":"Nothing new to add");renderDealer()});
+  var syncBulk=function(){var m=BULK.base==="margin";$("#bulkBase").value=BULK.base;$("#bulkPct").value=BULK.pct;$("#bulkRound").value=BULK.round;$("#bulkPct").hidden=!m;$("#bulkRound").hidden=!m};syncBulk();
+  $("#bulkBase").addEventListener("change",function(e){BULK.base=e.target.value;syncBulk()});
+  $("#bulkPct").addEventListener("input",function(e){BULK.pct=e.target.value});$("#bulkRound").addEventListener("change",function(e){BULK.round=e.target.value});
+  $("#bulkGo").addEventListener("click",function(){if(!CUR.prices.length)return;var base=$("#bulkBase").value,mp=parseFloat($("#bulkPct").value)/100,dg=+$("#bulkRound").value;
+    if(base==="margin"&&(isNaN(mp)||mp<=-0.5||mp>=0.95)){toast("Enter a margin %, e.g. 4");return}
+    CUR.prices.forEach(function(p){var c=CAT[p.sku];if(!c)return;p.price=base==="margin"?(c.cost?E.roundUp(c.cost/(1-mp),dg):p.price):(c[base]!=null?c[base]:p.price)});renderDealer()});
+  var q=$("#skuQ"),sg=$("#sugg"),hits=[],on=0;
+  function sugg(){var v=q.value.trim().toLowerCase();if(!v){sg.hidden=true;return}
+    hits=A.catalog.filter(function(c){return c.active&&!CUR.prices.some(function(p){return p.sku===c.sku})&&(c.sku+" "+c.desc+" "+c.cat).toLowerCase().indexOf(v)>=0}).slice(0,12);on=0;
+    sg.innerHTML=hits.map(function(c,i){return '<button type="button" data-sku="'+esc(c.sku)+'"'+(i===0?' class="on"':"")+'><span class="s">'+esc(c.sku)+'</span><span>'+esc(c.desc)+'</span><span class="m">Thr ₱'+money(c.thr)+'</span></button>'}).join("")||'<p class="sub" style="padding:8px 10px;margin:0">No match</p>';sg.hidden=false}
+  function add(sku){var c=CAT[sku];if(!c)return;CUR.prices.push({sku:sku,price:c.thr,qtyCap:null,note:""});renderDealer();$("#skuQ").focus()}
+  q.addEventListener("input",sugg);
+  q.addEventListener("keydown",function(e){if(sg.hidden)return;if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();on=Math.max(0,Math.min(hits.length-1,on+(e.key==="ArrowDown"?1:-1)));$$("button",sg).forEach(function(b,i){b.classList.toggle("on",i===on)})}
+    else if(e.key==="Enter"&&hits[on]){e.preventDefault();add(hits[on].sku)}else if(e.key==="Escape")sg.hidden=true});
+  sg.addEventListener("click",function(e){var b=e.target.closest("button[data-sku]");if(b)add(b.dataset.sku)});
+  q.addEventListener("blur",function(){setTimeout(function(){sg.hidden=true},150)});
+  $("#dSave").addEventListener("click",saveDealer);
+}
+function refreshSave(){var d=dirtyDealer();$("#dSave").disabled=!d;if($("#dRevert"))$("#dRevert").disabled=!d}
+function saveDealer(){
+  if(!CUR.name.trim()){msg("#dMsg","Give the dealer a name.");return}
+  var bad=CUR.emails.filter(function(e){return !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)});if(bad.length){msg("#dMsg","Check these emails: "+bad.join(", "));return}
+  var missing=CUR.prices.filter(function(p){return p.price==null||p.price<=0});if(missing.length){msg("#dMsg","Set a price for "+missing.map(function(p){return p.sku}).join(", ")+" or remove it.");return}
+  var b=$("#dSave");b.disabled=true;b.textContent="Saving…";
+  call("saveDealer",{dealer:{id:CUR.id,name:CUR.name,code:CUR.code,partnerId:CUR.partnerId,hpLead:CUR.hpLead,csoManager:CUR.csoManager,favorite:CUR.favorite,emails:CUR.emails,validUntil:CUR.validUntil,note:CUR.note,active:CUR.active},prices:CUR.prices}).then(function(d){
+    CUR=null;editDealer(d.savedDealer);toast("Saved "+d.savedDealer+(d.addedUsers&&d.addedUsers.length?" · added "+d.addedUsers.join(", ")+" as CSO":""));
+  },function(){b.disabled=false;b.textContent="Save dealer page"});
+}
+
+/* ================= DATA ================= */
+function renderData(){
+  $("#soStat").innerHTML="<dt>Rows on file</dt><dd>"+A.sellout.rows+"</dd><dt>Latest sell-out date counted</dt><dd>"+esc(fmtDay(A.selloutAsOf)||"—")+"</dd>";
+  $("#rbNow").textContent=A.deal?A.deal.id+" · "+A.rebate+" SKUs · "+fmtDay(A.deal.start)+" – "+fmtDay(A.deal.end):"none";
+}
+function upload(btn,action,payload,msgId,done){var b=$(btn);b.disabled=true;var t=b.textContent;b.textContent="Uploading…";
+  call(action,payload).then(function(d){msg(msgId,done(d.uploaded||{}),true)},function(){msg(msgId,"Upload failed — see the message above.")}).then(function(){b.disabled=false;b.textContent=t})}
+$("#soGo").addEventListener("click",function(){var t=$("#soText").value;if(!t.trim()){msg("#soMsg","Paste the report first.");return}
+  upload("#soGo","uploadSellout",{text:t,mode:$("input[name=soMode]:checked").value},"#soMsg",function(u){$("#soText").value="";return "Saved "+u.rows+" rows"+(u.skipped?" ("+u.skipped+" duplicates skipped)":"")+". Rebate units left are updated."})});
+$("#stGo").addEventListener("click",function(){var t=$("#stText").value;if(!t.trim()){msg("#stMsg","Paste the SAP list first.");return}
+  upload("#stGo","uploadStock",{text:t,zeroMissing:$("#stZero").checked},"#stMsg",function(u){$("#stText").value="";return u.matched+" SAP lines matched, "+u.changed+" SKUs changed."+(u.unknown&&u.unknown.length?" Not in the pricelist: "+u.unknown.slice(0,8).join(", ")+(u.unknown.length>8?"…":""):"")})});
+$("#rbGo").addEventListener("click",function(){var p={deal:$("#rbDeal").value.trim(),program:$("#rbName").value.trim(),start:$("#rbStart").value,end:$("#rbEnd").value,text:$("#rbText").value};
+  if(!p.deal||!p.start||!p.end||!p.text.trim()){msg("#rbMsg","Fill in the deal number, dates and SKU lines.");return}
+  if(!confirm("Replace rebate program "+(A.deal?A.deal.id:"")+" with "+p.deal+"? Limited Qty prices will be recalculated."))return;
+  upload("#rbGo","uploadRebate",p,"#rbMsg",function(u){return "Loaded "+u.rows+" SKUs for deal "+p.deal+"."})});
+
+/* ================= SETTINGS ================= */
+function renderSettings(){var s=A.settings;$("#sMin").value=+(E.pct(s.MIN_MARGIN)*100).toFixed(3);$("#sAsOf").value=String(s.PRICES_AS_OF||"").slice(0,10);$("#sNew").value=s.NEW_DAYS||90;$("#sSales").value=s.SALES_NOTE||"";$("#sDealer").value=s.DEALER_NOTE||"";
+  $("#sInfo").innerHTML="<dt>Owner account</dt><dd>"+esc(s.OWNER_EMAIL||"—")+"</dd><dt>Google sign-in client</dt><dd>"+(s.CLIENT_ID_SET?"Set":"Missing — add CLIENT_ID in the Sheet's Settings tab")+"</dd><dt>VAT</dt><dd>"+A.opts.vat+"</dd><dt>Data lives in</dt><dd>The private Google Sheet “HyperX Sales Pricing” (owner’s Drive). Every save is logged.</dd>"}
+$("#sGo").addEventListener("click",function(){var m=parseFloat($("#sMin").value);if(isNaN(m)||m<0||m>50){msg("#sMsg","Margin must be 0–50%.");return}
+  var nd=parseInt($("#sNew").value,10);if(isNaN(nd)||nd<1||nd>730){msg("#sMsg","New window must be 1–730 days.");return}
+  call("saveSettings",{settings:{MIN_MARGIN:m/100,NEW_DAYS:nd,PRICES_AS_OF:$("#sAsOf").value,SALES_NOTE:$("#sSales").value.trim(),DEALER_NOTE:$("#sDealer").value.trim()}},"Settings saved").then(function(){msg("#sMsg","Saved.",true)},function(){})});
+
+/* ================= ACTIVITY ================= */
+function renderActivity(){
+  $("#eBody").innerHTML=A.edits.map(function(r){return "<tr><td style='white-space:nowrap'>"+esc(when(r[0]))+"</td><td>"+esc(r[1])+"</td><td>"+esc(r[2])+"</td></tr>"}).join("")||'<tr class="empty-row"><td colspan="3">No changes yet.</td></tr>';
+  var f=($("#aFilter").value||"").toLowerCase();
+  $("#aBody").innerHTML=A.access.filter(function(r){return !f||r.join(" ").toLowerCase().indexOf(f)>=0}).map(function(r){var bad=/rejected|not on allowlist|denied/.test(r[4]);
+    return "<tr><td style='white-space:nowrap'>"+esc(when(r[0]))+"</td><td>"+esc(r[1])+"</td><td>"+esc(r[3])+"</td><td"+(bad?" class='neg'":"")+">"+esc(r[4])+"</td><td>"+esc(r[5])+"</td></tr>"}).join("")||'<tr class="empty-row"><td colspan="5">Nothing yet.</td></tr>';
+}
+$("#aFilter").addEventListener("input",renderActivity);
+window.addEventListener("beforeunload",function(e){if((CUR&&dirtyDealer())||(A&&JSON.stringify(USERS)!==USERS0)){e.preventDefault();e.returnValue=""}});
+window.addEventListener("hashchange",function(){if(A)route()});
+})();
+</script>
+</body>
+</html>
