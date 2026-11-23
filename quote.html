@@ -28,7 +28,7 @@
 @media (max-width:1000px){.qgrid{grid-template-columns:1fr}}
 @media print{body>*:not(#printArea){display:none!important}#printArea{display:block!important}}
 #printArea{display:none;font-family:Inter,Arial,sans-serif;color:#000;padding:10mm}
-#printArea table{width:100%;border-collapse:collapse;font-size:11px;margin-top:10px}#printArea th,#printArea td{border-bottom:1px solid #ccc;padding:5px;text-align:left}#printArea .r{text-align:right}
+#printArea{font-size:11px}#printArea table{width:100%;border-collapse:collapse}#printArea .hd td{padding:2px 4px}#printArea .it th{background:#fff;color:#000;font-weight:800;border:1px solid #000;padding:5px;text-align:center}#printArea .it td{border:1px solid #000;padding:5px}#printArea .r{text-align:right}#printArea .tt td{font-weight:800;border-top:2px solid #000}@page{size:A4;margin:12mm}
 </style>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
@@ -55,6 +55,9 @@
         </div>
         <p class="status" id="dealerStatus"></p>
       </div>
+      <details class="card" id="metaBox"><summary style="cursor:pointer;font-weight:800">Formal quotation details <span style="font-weight:500;color:var(--muted);font-size:12.5px">— printed on the official IONTECH quotation</span></summary>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin-top:10px" id="metaFields"></div>
+      </details>
       <div class="saved" id="savedBox" hidden></div>
       <div class="tbl-wrap"><table class="tbl"><thead><tr><th>SKU</th><th>SKU Desc</th><th class="r">Qty</th><th class="r">SRP</th><th class="r">Regular DP</th><th class="r">SP</th><th class="r">Line total</th><th></th></tr></thead><tbody id="lines"></tbody></table></div>
       <div class="tot"><span>Items <b id="nItems">0</b></span><span>Total <b id="total">₱0</b></span></div>
@@ -77,6 +80,7 @@
 <script>
 (function(){"use strict";
 var $=function(s){return document.querySelector(s)};
+var META_F=[["attention","Attention to",""],["company","Company name",""],["address","Address",""],["project","Project name","KT-HP"],["availability","Availability","LIMITED STOCKS - 1st PO 1st serve basis"],["warranty","Warranty","Two (2) year warranty"],["validity","Price validity","End of this Month Only"],["payment","Payment Terms","CASH -Via Bank Transfer"],["note","Note","All prices are already best price and VAT-inclusive."],["preparedBy","Prepared by",""],["title","Title","Account Executive"]];
 var ME=null,DEALERS=[],ITEMS=[],BY={},LINES=[],IDEM=null,CUR=null;
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function peso(n){if(n==null||isNaN(n))return "—";return "₱"+Number(n).toLocaleString("en-PH",{minimumFractionDigits:Math.round(n)!==n?2:0,maximumFractionDigits:2})}
@@ -93,6 +97,7 @@ function start(){
     $("#gate").hidden=true;$("#app").hidden=false;$("#userChip").hidden=false;$("#userName").textContent=ME.name||ME.email;$("#userRole").textContent=ME.role;
     $("#salesLink").hidden=!d.can.sales;$("#adminLink").hidden=!d.can.admin;
     DEALERS=d.dealers||[];
+    $("#metaFields").innerHTML=META_F.map(function(f){return '<label style="display:grid;gap:3px;font-size:11.5px;font-weight:700;color:var(--muted)">'+f[1]+'<input class="inp" data-m="'+f[0]+'" value="'+esc(f[0]==="preparedBy"?(ME.name||""):f[2])+'"></label>'}).join("");
     $("#dealer").innerHTML='<option value="">Choose a dealer…</option>'+DEALERS.map(function(x){return '<option value="'+esc(x.id)+'">'+(x.favorite?"★ ":"")+esc(x.name)+'</option>'}).join("");
     var dr=null;try{dr=JSON.parse(sessionStorage.getItem(DRAFT)||"null")}catch(e){}
     var want=(location.search.match(/[?&]d=([^&]+)/)||[])[1];
@@ -100,7 +105,8 @@ function start(){
     render();history_();
   }).catch(function(e){$("#gateMsg").textContent="Could not reach the pricing server. "+e.message});
 }
-function pick(id){$("#dealer").value=id;if(!id){ITEMS=[];BY={};return}
+function meta(){var o={};[].forEach.call(document.querySelectorAll("[data-m]"),function(i){o[i.dataset.m]=i.value.trim()});return o}
+function pick(id){$("#dealer").value=id;var dn=(DEALERS.filter(function(x){return x.id===id})[0]||{}).name;var c=document.querySelector('[data-m=company]');if(c&&dn)c.value=dn;if(!id){ITEMS=[];BY={};return}
   st("#dealerStatus","Loading dealer prices…",true);
   HXAuth.api("dealer",{dealerId:id}).then(function(d){
     if(!d.ok){st("#dealerStatus",HXAuth.message(d.error));return}
@@ -135,7 +141,7 @@ $("#note").addEventListener("input",saveDraft);
 
 $("#saveBtn").addEventListener("click",function(){
   if(!IDEM)IDEM=newKey();saveDraft();var b=$("#saveBtn");b.disabled=true;st("#status","Saving…",true);
-  HXAuth.api("createQuote",{dealerId:$("#dealer").value,lines:LINES.map(function(l){return{sku:l.sku,qty:l.qty,sp:l.sp==null?null:l.sp}}),note:$("#note").value,idem:IDEM,source:"Website"}).then(function(d){
+  HXAuth.api("createQuote",{dealerId:$("#dealer").value,lines:LINES.map(function(l){return{sku:l.sku,qty:l.qty,sp:l.sp==null?null:l.sp}}),note:$("#note").value,meta:meta(),idem:IDEM,source:"Website"}).then(function(d){
     b.disabled=false;if(!d.ok){st("#status",HXAuth.message(d.error)+(d.detail?" — "+d.detail:""));return}
     st("#status","",true);show(d.quote,true);LINES=[];IDEM=null;$("#note").value="";render();saveDraft();history_();
   }).catch(function(e){b.disabled=false;st("#status","Not saved: "+e.message+". Press Save again — it won't create a duplicate.")});
@@ -145,10 +151,20 @@ function show(q,fresh){CUR_Q=q;var box=$("#savedBox");box.hidden=false;
   box.innerHTML=(fresh?"<b>Saved "+esc(q.id)+"</b>":"<b>"+esc(q.id)+"</b>")+" · "+esc(q.dealer)+" · "+q.lines+" item"+(q.lines===1?"":"s")+" · <b>"+peso(q.total)+"</b> · "+esc(new Date(q.created).toLocaleString("en-PH"))+(q.email!==ME.email?" · by "+esc(q.name||q.email):"")+
   ' <span style="float:right"><button class="btn btn-sm" id="cpy" type="button">Copy as table</button> <button class="btn btn-sm" id="prt" type="button">Print / PDF</button> <button class="btn btn-sm" id="dup" type="button">Copy to new quote</button></span>';
   $("#cpy").onclick=function(){navigator.clipboard.writeText(tsv(q)).then(function(){toast("Copied — paste into Viber, email or Excel")})};
-  $("#prt").onclick=function(){$("#printArea").innerHTML='<h2 style="margin:0">Quotation '+esc(q.id)+'</h2><p style="margin:4px 0">IONTECH · HyperX · '+esc(q.dealer)+' · '+esc(new Date(q.created).toLocaleDateString("en-PH",{year:"numeric",month:"long",day:"numeric"}))+' · Prepared by '+esc(q.name||q.email)+'</p><p style="font-size:10px;color:#555;margin:0">DRAFT LAYOUT — official quotation template to be confirmed. Prices in PHP, VAT-inclusive, subject to stock availability.</p><table><tr><th>SKU</th><th>Description</th><th class="r">Qty</th><th class="r">SRP</th><th class="r">Regular DP</th><th class="r">SP</th><th class="r">Line total</th></tr>'+q.items.map(function(i){return '<tr><td>'+esc(i.sku)+'</td><td>'+esc(i.desc)+'</td><td class="r">'+i.qty+'</td><td class="r">'+peso(i.srp)+'</td><td class="r">'+peso(i.dp)+'</td><td class="r">'+peso(i.sp)+'</td><td class="r">'+peso(i.total)+'</td></tr>'}).join("")+'<tr><td colspan="6" class="r"><b>Total</b></td><td class="r"><b>'+peso(q.total)+'</b></td></tr></table>'+(q.note?'<p>Note: '+esc(q.note)+'</p>':"");window.print()};
+  $("#prt").onclick=function(){$("#printArea").innerHTML=formal(q);setTimeout(function(){window.print()},300)};
   $("#dup").onclick=function(){LINES=q.items.map(function(i){return{sku:i.sku,qty:i.qty}});IDEM=null;pick(q.dealerId);render();saveDraft();toast("Copied with current dealer prices")};
 }
 var CUR_Q=null;
+function n2(v){return Number(v).toLocaleString("en-PH",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function formal(q){var m=q.meta||{},d=new Date(q.created),kv=function(k,v){return '<tr><td style="width:150px;font-weight:700">'+k+'</td><td style="width:14px">:</td><td>'+esc(v||"")+'</td></tr>'};
+  return '<div class="fq"><img src="assets/iontech-logo.png" alt="IONTECH" style="height:46px"><table class="hd" style="margin-top:14px">'+kv("DATE",d.toLocaleDateString("en-PH",{year:"numeric",month:"long",day:"numeric"}))+kv("QUOTATION NO.",q.id)+kv("ATTENTION TO",m.attention)+kv("COMPANY NAME",m.company||q.dealer)+kv("ADDRESS",m.address)+kv("PROJECT NAME",m.project||"KT-HP")+'</table>'+
+  '<p style="margin:14px 0 8px">We are pleased to present our proposal for the following product(s) subject to the terms and conditions set forth hereunder:</p>'+
+  '<table class="it"><tr><th style="width:50px">QTY</th><th>ITEM CODE<br><span style="font-weight:400">PRODUCT CODE</span></th><th>SPECIFICATION</th><th class="r">UNIT PRICE</th><th class="r">TOTAL PRICE</th></tr>'+
+  q.items.map(function(i){return '<tr><td>'+i.qty+'</td><td>'+esc(i.sku)+'</td><td>'+esc(i.desc)+'</td><td class="r">'+n2(i.sp)+'</td><td class="r">'+n2(i.total)+'</td></tr>'}).join("")+
+  '<tr><td colspan="5" style="font-style:italic;color:#555">**Optional** &nbsp; N/A</td></tr><tr class="tt"><td colspan="3" class="r">TOTAL DEALER\'S PRICE :</td><td class="r">PHP</td><td class="r">'+n2(q.total)+'</td></tr></table>'+
+  '<p style="text-align:center;font-weight:800;margin:18px 0 6px">TERMS AND CONDITION</p><table class="hd">'+kv("Availability",m.availability)+kv("Warranty",m.warranty)+kv("Price validity",m.validity)+kv("Payment Terms",m.payment)+kv("Note",m.note)+
+  '<tr><td></td><td></td><td>Above quoted prices and quantity are subject to confirmation upon placement of order.</td></tr><tr><td></td><td></td><td>Above quoted prices are subject to change in the event of changes in prevailing market conditions, duties, taxes, and all other importation charges.</td></tr><tr><td></td><td></td><td>Return policy is only applicable if due to wrong delivery or defective units. Cancelled P.O. is subject to 30% charge of total amount.</td></tr></table>'+
+  '<table style="margin-top:34px;width:100%"><tr><td style="width:50%;vertical-align:top"><b>PREPARED BY :</b><br><br><br>'+esc(m.preparedBy||q.name||q.email)+'<br>'+esc(m.title||"")+'<br>IONTECH, INC.</td><td style="vertical-align:top"><b>CONFORME :</b><br><br><br>Signature over Printed name : ____________________<br><br>Date : ____________________</td></tr></table></div>'}
 function history_(){HXAuth.api("quotes",{}).then(function(d){if(!d.ok)return;
   $("#hist").innerHTML=(d.quotes||[]).slice(0,30).map(function(q){return '<button type="button" data-id="'+esc(q.id)+'"><b>'+esc(q.id)+' · '+peso(q.total)+'</b><span>'+esc(q.dealer)+' · '+q.lines+' items · '+esc(new Date(q.created).toLocaleDateString("en-PH",{month:"short",day:"numeric"}))+(q.email!==ME.email?" · "+esc(q.name||q.email):"")+'</span></button>'}).join("")||'<p class="sub">None yet.</p>'})}
 $("#hist").addEventListener("click",function(e){var b=e.target.closest("button[data-id]");if(!b)return;HXAuth.api("quotes",{quoteId:b.dataset.id}).then(function(d){if(d.ok)show(d.quote,false);else toast(HXAuth.message(d.error))})});

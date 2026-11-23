@@ -191,7 +191,7 @@ var ROLES = ['admin', 'csomgr', 'sales', 'csa', 'cso', 'hplead', 'dealer'];
 var ALL_DEALERS = { admin: 1, csomgr: 1, sales: 1, csa: 1 };
 var CAN_QUOTE = { admin: 1, csomgr: 1, sales: 1, csa: 1, cso: 1 };
 var SEES_SALES = { admin: 1, csomgr: 1, sales: 1, csa: 1 };
-H.quotes = ['Quote ID', 'Created', 'Email', 'Name', 'Role', 'Dealer ID', 'Dealer name', 'Source', 'Status', 'Lines', 'Total', 'Note', 'Idempotency key'];
+H.quotes = ['Quote ID', 'Created', 'Email', 'Name', 'Role', 'Dealer ID', 'Dealer name', 'Source', 'Status', 'Lines', 'Total', 'Note', 'Idempotency key', 'Meta'];
 H.qlines = ['Quote ID', 'Line', 'SKU', 'Description', 'Qty', 'SRP', 'Regular DP', 'SP', 'Line total', 'Price source'];
 TAB.quotes = 'Quotes'; TAB.qlines = 'QuoteLines';
 var EDITABLE_SETTINGS = ['MIN_MARGIN', 'NEW_DAYS', 'SALES_NOTE', 'DEALER_NOTE', 'PRICES_AS_OF'];
@@ -449,7 +449,7 @@ function createQuote_(ctx) {
     var lsh = sheet_(TAB.qlines);
     if (lsh.getLastRow() === 0) lsh.appendRow(H.qlines);
     // idempotency: same key -> return the quote already saved
-    var keyCol = H.quotes.length;
+    var keyCol = H.quotes.indexOf('Idempotency key') + 1;
     if (qsh.getLastRow() > 1) {
       var keys = qsh.getRange(2, keyCol, qsh.getLastRow() - 1, 1).getValues();
       for (var k = keys.length - 1; k >= 0; k--) if (String(keys[k][0]) === key) {
@@ -474,16 +474,23 @@ function createQuote_(ctx) {
     }
     total = Math.round(total * 100) / 100;
     lsh.getRange(lsh.getLastRow() + 1, 1, rows.length, H.qlines.length).setValues(rows);
-    qsh.appendRow([id, new Date(), u.email, u.name, u.role, dd.dealer.id, dd.dealer.name, String(b.source || 'Website').slice(0, 20), 'Issued', n, total, String(b.note || '').slice(0, 300), key]);
+    qsh.appendRow([id, new Date(), u.email, u.name, u.role, dd.dealer.id, dd.dealer.name, String(b.source || 'Website').slice(0, 20), 'Issued', n, total, String(b.note || '').slice(0, 300), key, cleanMeta_(b.meta)]);
     return quoteById_(ctx, id);
   } finally { lock.releaseLock(); }
 }
 
+/** Formal-quotation header + terms, as typed by the salesperson (plain text only). */
+function cleanMeta_(m) {
+  if (!m || typeof m !== 'object') return '';
+  var o = {}, keys = ['attention', 'company', 'address', 'project', 'availability', 'warranty', 'validity', 'payment', 'note', 'preparedBy', 'title'];
+  keys.forEach(function (k) { if (m[k] != null) o[k] = String(m[k]).slice(0, 300); });
+  return JSON.stringify(o);
+}
 function quoteRows_() {
   var qs = rows_(TAB.quotes).filter(function (r) { return r['Quote ID']; });
   return qs.map(function (r) {
     return { id: String(r['Quote ID']), created: r['Created'] instanceof Date ? r['Created'].toISOString() : String(r['Created']), email: String(r['Email']), name: String(r['Name'] || ''),
-      dealerId: String(r['Dealer ID']), dealer: String(r['Dealer name']), source: String(r['Source'] || ''), status: String(r['Status'] || ''), lines: Number(r['Lines']) || 0, total: Number(r['Total']) || 0, note: String(r['Note'] || '') };
+      dealerId: String(r['Dealer ID']), dealer: String(r['Dealer name']), source: String(r['Source'] || ''), status: String(r['Status'] || ''), lines: Number(r['Lines']) || 0, total: Number(r['Total']) || 0, note: String(r['Note'] || ''), meta: (function () { try { return JSON.parse(r['Meta'] || '{}'); } catch (e) { return {}; } })() };
   });
 }
 function canSeeQuote_(u, q) { return u.role === 'admin' || u.role === 'csomgr' || q.email === u.email; }
