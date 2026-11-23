@@ -87,6 +87,7 @@ document.documentElement.setAttribute("data-theme",t)})();
     <span class="spacer" style="flex:1"></span>
     <a class="btn" href="dealer.html" id="allDealersBtn">All dealers</a>
     <select class="sel" id="dealerSwitch" aria-label="Switch dealer" hidden></select>
+    <a class="btn btn-primary" id="quoteBtn" href="quote.html" hidden>New quotation</a>
     <button class="btn" type="button" id="copyBtn"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/></svg>Copy as table</button>
     <button class="btn" type="button" id="csvBtn"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>CSV</button>
   </div>
@@ -98,6 +99,7 @@ document.documentElement.setAttribute("data-theme",t)})();
         <button type="button" data-v="all" aria-pressed="true">All<span class="n" id="nAll"></span></button>
         <button type="button" data-v="limited" aria-pressed="false">Limited Qty<span class="n" id="nLim"></span></button>
         <button type="button" data-v="special" aria-pressed="false">Special<span class="n" id="nSp"></span></button>
+        <button type="button" data-v="base" aria-pressed="false">Base DP<span class="n" id="nBase"></span></button>
       </div>
       <select class="sel" id="cat" aria-label="Category"><option value="">All categories</option></select>
     </div>
@@ -130,7 +132,7 @@ function title(i){var c=CATALOG[i.sku];return c?c.name+(c.label?" · "+c.label:"
 
 function gateMsg(t,ok){var m=$("#gateMsg");m.textContent=t||"";m.classList.toggle("ok",!!ok)}
 function show(which){["gate","pick","app"].forEach(function(id){$("#"+id).hidden=id!==which});var signed=which!=="gate";$("#userChip").hidden=!signed;$("#searchBox").hidden=which!=="app"}
-function setUser(d){ME=d.user;CAN=d.can||{};$("#userName").textContent=ME.name||ME.email;$("#userRole").textContent={admin:"Admin",sales:"Sales",cso:"Channel sales",csomgr:"CSO manager"}[ME.role]||ME.role;
+function setUser(d){ME=d.user;CAN=d.can||{};$("#userName").textContent=ME.name||ME.email;$("#userRole").textContent={admin:"Admin",sales:"Sales",cso:"Channel sales",csomgr:"CSO manager",csa:"Sales assistant",hplead:"HP lead",dealer:"Dealer"}[ME.role]||ME.role;
   if(ME.picture)$("#userPic").src=ME.picture;else $("#userPic").hidden=true;$("#salesLink").hidden=!CAN.sales;$("#adminLink").hidden=!CAN.admin;$("#marginWrap").hidden=!CAN.admin}
 function wanted(){var m=location.search.match(/[?&]d=([^&]+)/);return m?decodeURIComponent(m[1]):""}
 
@@ -172,6 +174,7 @@ function head(){
   $("#dMeta").innerHTML=(x.favorite?'<span class="pill" style="color:#f5b301">★ Favorite</span>':"")+(x.hpLead?'<span class="pill">HP lead <b>'+esc(x.hpLead)+'</b></span>':"")+(x.csoManager?'<span class="pill">CSO manager <b>'+esc(x.csoManager)+'</b></span>':"")+(x.code?'<span class="pill">Customer <b>'+esc(x.code)+'</b></span>':"")+(x.validUntil?'<span class="pill'+(x.expired?" bad":"")+'">Valid until <b>'+esc(fmtDay(x.validUntil))+'</b></span>':"")+(D.asOf?'<span class="pill">Costing as of <b>'+esc(fmtDay(D.asOf))+'</b></span>':"")+(x.active===false?'<span class="pill bad">Inactive</span>':"")+(x.note?'<span class="pill">'+esc(x.note)+'</span>':"")+(CAN.admin&&x.emails?'<span class="pill">Visible to <b>'+esc(x.emails.join(", ")||"admins only")+'</b></span>':"");
   $("#expired").hidden=!x.expired;$("#noteText").textContent=D.note||"Confidential dealer pricing.";
   $("#allDealersBtn").hidden=LIST.length<2;$("#dealerSwitch").hidden=LIST.length<2;$("#dealerSwitch").innerHTML=LIST.map(function(d){return '<option value="'+esc(d.id)+'"'+(d.id===x.id?" selected":"")+'>'+(d.favorite?"★ ":"")+esc(d.name)+'</option>'}).join("");
+  $("#quoteBtn").hidden=!x.canQuote;$("#quoteBtn").href="quote.html?d="+encodeURIComponent(x.id);
   $("#editDealer").hidden=!CAN.admin;$("#editDealer").href="admin.html#dealers/"+encodeURIComponent(x.id);
   var cats={};D.items.forEach(function(i){cats[i.cat]=1});$("#cat").innerHTML='<option value="">All categories</option>'+sortCats(Object.keys(cats)).map(function(c){return "<option>"+esc(c)+"</option>"}).join("");
 }
@@ -183,8 +186,12 @@ $("#q").addEventListener("input",function(e){st.q=e.target.value.trim().toLowerC
 $("#showMargins").addEventListener("change",function(e){st.margins=e.target.checked;render()});
 function rows(){return D.items.filter(function(i){if(st.tier!=="all"&&i.tier!==st.tier)return false;if(st.cat&&i.cat!==st.cat)return false;
   if(st.q){var h=(i.sku+" "+i.desc+" "+title(i)).toLowerCase();if(!st.q.split(/\s+/).every(function(w){return h.indexOf(w)>=0}))return false}return true})}
+var LVL={ok:"On hand",limited:"Limited",very:"Very limited",out:"Out of stock",incoming:"Incoming",unknown:"Check stock"};
 function tierCell(i){
-  if(i.tier!=="limited")return '<span class="tag tag-sp">Special price</span>'+(i.unitsLeft!=null?'<span class="units">Up to <b>'+i.unitsLeft+'</b> units</span>':"");
+  var lv='<span class="units">'+(LVL[i.level]||"")+'</span>';
+  if(i.tier==="base")return '<span class="tag tag-muted">Base DP</span>'+lv;
+  if(ME&&ME.role==="dealer")return '<span class="tag '+(i.tier==="limited"?"tag-lim":"tag-sp")+'">'+(i.tier==="limited"?"Limited Qty Price":"Special price")+'</span>'+lv;
+  if(i.tier!=="limited")return '<span class="tag tag-sp">Special price</span>'+(i.unitsLeft!=null?'<span class="units">Up to <b>'+i.unitsLeft+'</b> units</span>':lv);
   if(i.unitsLeft===0)return '<span class="tag tag-out">Limited Qty · none left</span><span class="units">Confirm with PM before quoting</span>';
   return '<span class="tag tag-lim">Limited Qty Price</span><span class="units">'+(i.unitsLeft!=null?"<b>"+i.unitsLeft+"</b> unit"+(i.unitsLeft===1?"":"s")+" left · ":"")+'while stocks last</span>';
 }
@@ -193,7 +200,7 @@ function render(){
   var cols=['<th>Product</th>','<th>SKU</th>','<th class="c">Type</th>','<th class="r">SRP</th>','<th class="r">Base DP</th>','<th class="r">Dealer price</th>','<th>Price type</th>','<th>Note</th>'];
   if(adm)cols.push('<th class="r">Invoice cost</th>','<th class="r">Margin w/o rebate</th>','<th class="r">Margin w/ rebate</th>');
   $("#thead").innerHTML=cols.join("");
-  var list=rows();$("#nAll").textContent=D.items.length;$("#nLim").textContent=D.items.filter(function(i){return i.tier==="limited"}).length;$("#nSp").textContent=D.items.filter(function(i){return i.tier!=="limited"}).length;
+  var list=rows();$("#nAll").textContent=D.items.length;$("#nLim").textContent=D.items.filter(function(i){return i.tier==="limited"}).length;$("#nSp").textContent=D.items.filter(function(i){return i.tier==="special"}).length;$("#nBase").textContent=D.items.filter(function(i){return i.tier==="base"}).length;
   $("#count").innerHTML="<strong>"+list.length+"</strong> SKU"+(list.length===1?"":"s");
   var by={};list.forEach(function(i){(by[i.cat]=by[i.cat]||[]).push(i)});var html="";
   sortCats(Object.keys(by)).forEach(function(c){var g=by[c];html+='<tr class="grp"><td colspan="'+cols.length+'">'+esc(c)+'<span class="n">'+g.length+'</span></td></tr>';

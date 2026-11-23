@@ -179,7 +179,21 @@ var H = {
   log: ['Timestamp', 'Email', 'Name', 'Role', 'Result', 'Page'],
   edits: ['Timestamp', 'Email', 'Summary', 'Details']
 };
-var ROLES = ['admin', 'sales', 'cso', 'csomgr'];
+var ROLES = ['admin', 'csomgr', 'sales', 'csa', 'cso', 'hplead', 'dealer'];
+/* Capability matrix (server-side; the UI only mirrors it):
+ *  admin  : everything, incl. cost/margin
+ *  csomgr : sales prices, every active dealer page, quotes for any dealer, sees all quotes (no cost)
+ *  sales / csa : sales prices, every active dealer page, quotes for any active dealer (own history)
+ *  cso    : only assigned dealer pages; quotes for assigned dealers (own history)
+ *  hplead : only assigned dealer pages, view only (no quotes) until permissions are defined
+ *  dealer : only its own assigned dealer page, read-only, stock as levels only, no quotes
+ */
+var ALL_DEALERS = { admin: 1, csomgr: 1, sales: 1, csa: 1 };
+var CAN_QUOTE = { admin: 1, csomgr: 1, sales: 1, csa: 1, cso: 1 };
+var SEES_SALES = { admin: 1, csomgr: 1, sales: 1, csa: 1 };
+H.quotes = ['Quote ID', 'Created', 'Email', 'Name', 'Role', 'Dealer ID', 'Dealer name', 'Source', 'Status', 'Lines', 'Total', 'Note', 'Idempotency key'];
+H.qlines = ['Quote ID', 'Line', 'SKU', 'Description', 'Qty', 'SRP', 'Regular DP', 'SP', 'Line total', 'Price source'];
+TAB.quotes = 'Quotes'; TAB.qlines = 'QuoteLines';
 var EDITABLE_SETTINGS = ['MIN_MARGIN', 'NEW_DAYS', 'SALES_NOTE', 'DEALER_NOTE', 'PRICES_AS_OF'];
 
 /* ================================================================== entry points */
@@ -233,7 +247,7 @@ function route_(body) {
   switch (action) {
     case 'whoami': out = whoami_(ctx); break;
     case 'prices':
-      if (m.role === 'cso') { out = { ok: false, error: 'cso_dealers_only', user: user, dealers: dealersFor_(user, false) }; break; }
+      if (!SEES_SALES[m.role]) { out = { ok: false, error: 'cso_dealers_only', user: user, dealers: dealersFor_(user, false) }; break; }
       out = salesData_(ctx); break;
     case 'dealer': out = dealerData_(ctx, String(body.dealerId || '')); break;
     case 'editor': out = editorData_(ctx); break;
@@ -246,6 +260,8 @@ function route_(body) {
     case 'uploadStock': out = uploadStock_(ctx); break;
     case 'uploadRebate': out = uploadRebate_(ctx); break;
     case 'saveSettings': out = saveSettings_(ctx); break;
+    case 'createQuote': out = createQuote_(ctx); break;
+    case 'quotes': out = listQuotes_(ctx); break;
     default: out = { ok: false, error: 'unknown_action' };
   }
   log_(who.email, user.name, m.role, action + (out && out.ok === false ? ' · ' + out.error : '') + (body.dealerId ? ' ' + body.dealerId : ''), body.page);
@@ -254,8 +270,8 @@ function route_(body) {
 }
 
 function caps_(user) {
-  var all = user.role === 'admin' || user.role === 'csomgr';
-  return { sales: user.role !== 'cso', admin: user.role === 'admin', allDealers: all, dealers: all || dealersFor_(user, false).length > 0 };
+  var all = !!ALL_DEALERS[user.role];
+  return { sales: !!SEES_SALES[user.role], admin: user.role === 'admin', quote: !!CAN_QUOTE[user.role], allDealers: all, dealers: all || dealersFor_(user, false).length > 0 };
 }
 
 function whoami_(ctx) { return { dealers: dealersFor_(ctx.user, false) }; }
@@ -362,13 +378,13 @@ function dealersFor_(user, includeInactive) {
   rows_(TAB.dprices).forEach(function (r) { var id = String(r['Dealer ID']).trim(); if (id && r['SKU']) counts[id] = (counts[id] || 0) + 1; });
   return dealerRows_().filter(function (d) {
     if (user.role === 'admin') return includeInactive || d.active;
-    if (user.role === 'csomgr') return d.active;
+    if (ALL_DEALERS[user.role]) return d.active;
     return d.active && d.emails.indexOf(user.email) >= 0;
   }).map(function (d) {
     return { id: d.id, name: d.name, code: d.code, partnerId: d.partnerId, hpLead: d.hpLead, csoManager: d.csoManager, favorite: d.favorite, validUntil: d.validUntil, active: d.active, skus: counts[d.id] || 0 };
   }).sort(function (a, b) { return (b.favorite - a.favorite) || a.name.localeCompare(b.name); });
 }
-function canSeeDealer_(user, d) { return user.role === 'admin' || (d.active && (user.role === 'csomgr' || d.emails.indexOf(user.email) >= 0)); }
+function canSeeDealer_(user, d) { return user.role === 'admin' || (d.active && (!!ALL_DEALERS[user.role] || d.emails.indexOf(user.email) >= 0)); }
 
 function dealerData_(ctx, id) {
   var d = dealerRows_().filter(function (x) { return x.id === id; })[0];
@@ -376,9 +392,15 @@ function dealerData_(ctx, id) {
   if (!allowed) return { ok: false, error: 'dealer_not_allowed', dealers: dealersFor_(ctx.user, false) };
   var all = loadAll_(ctx.settings), admin = ctx.isAdmin, minM = all.opts.minMargin, vat = all.opts.vat;
   var expired = d.validUntil && d.validUntil < iso_(new Date());
-  var items = rows_(TAB.dprices).filter(function (r) { return String(r['Dealer ID']).trim() === id && r['SKU']; }).map(function (r) {
-    var sku = HXPricing.baseSku(r['SKU']), p = all.priced[sku], price = HXPricing.num(r['Special price']), cap = HXPricing.num(r['Qty cap']);
-    if (!p || price == null) return null;
+  // Every active SKU inherits Base DP; DealerPrices rows are exceptions (overrides) only.
+  var ov = {};
+  rows_(TAB.dprices).forEach(function (r) { if (String(r['Dealer ID']).trim() === id && r['SKU']) ov[HXPricing.baseSku(r['SKU'])] = r; });
+  var isDealer = ctx.user.role === 'dealer';
+  var lim = Number(ctx.settings.STOCK_LIMITED || 20), very = Number(ctx.settings.STOCK_VERY || 5);
+  var items = all.order.filter(function (s) { return all.priced[s].active && (all.priced[s].dp || ov[s]); }).map(function (sku) {
+    var r = ov[sku] || {}, p = all.priced[sku], over = HXPricing.num(r['Special price']), cap = HXPricing.num(r['Qty cap']);
+    var price = over != null ? over : p.dp;
+    if (price == null) return null;
     var reb = all.rebateBySku[sku];
     var mNo = p.cost ? 1 - p.cost / price : null;
     var rebateUsable = reb && reb.left > 0;
@@ -394,14 +416,93 @@ function dealerData_(ctx, id) {
       units = c.length ? Math.min.apply(null, c) : null;
     } else if (cap != null) units = cap;
     var o = { sku: sku, desc: p.desc, cat: p.cat, isNew: p.isNew, srp: p.srp, dp: p.dp, price: price, qtyCap: cap, note: String(r['Note'] || ''),
-      tier: limited ? 'limited' : 'special', unitsLeft: units };
+      override: over != null, tier: over == null ? 'base' : (limited ? 'limited' : 'special'), unitsLeft: units,
+      level: p.onHand == null ? 'unknown' : p.onHand <= 0 ? 'out' : p.onHand <= very ? 'very' : p.onHand < lim ? 'limited' : 'ok' };
+    if (isDealer) { o.unitsLeft = null; o.qtyCap = null; }
     if (admin) { o.cost = p.cost; o.thr = p.thr; o.sp = p.sp; o.rebate = rebateUsable ? reb.rebate : 0; o.rebateLeft = reb ? reb.left : null; o.marginNoRebate = mNo; o.marginWithRebate = mWith; o.limitBelow = limBelow; o.belowWithRebate = mWith != null && mWith < limBelow; }
     return o;
   }).filter(Boolean);
   var info = { id: d.id, name: d.name, code: d.code, partnerId: d.partnerId, hpLead: d.hpLead, csoManager: d.csoManager, favorite: d.favorite, validUntil: d.validUntil, note: d.note, expired: !!expired, active: d.active };
   if (admin) info.emails = d.emails;
+  info.canQuote = !!CAN_QUOTE[ctx.user.role];
   return { dealer: info, items: items, minMargin: minM, note: ctx.settings.DEALER_NOTE || '', asOf: ctx.settings.PRICES_AS_OF || '',
     deal: all.deal, selloutAsOf: all.selloutAsOf, dealers: dealersFor_(ctx.user, admin) };
+}
+
+/* ================================================================== quotations */
+
+/** Server-priced quote with price snapshot. Client sends SKU + qty (+ optional SP); prices come from the dealer page logic. Idempotent per key. */
+function createQuote_(ctx) {
+  var u = ctx.user, b = ctx.body;
+  if (!CAN_QUOTE[u.role]) return { ok: false, error: 'quote_not_allowed' };
+  var key = String(b.idem || '').slice(0, 64);
+  if (!/^[\w-]{8,64}$/.test(key)) return { ok: false, error: 'bad_request', detail: 'Missing idempotency key' };
+  var lines = Array.isArray(b.lines) ? b.lines.slice(0, 200) : [];
+  if (!lines.length) return { ok: false, error: 'bad_request', detail: 'Add at least one item.' };
+  var dd = dealerData_(ctx, String(b.dealerId || ''));
+  if (dd.ok === false) return dd;
+  var by = {}; dd.items.forEach(function (i) { by[i.sku] = i; });
+  var lock = LockService.getScriptLock(); if (!lock.tryLock(20000)) return { ok: false, error: 'busy' };
+  try {
+    var qsh = sheet_(TAB.quotes);
+    if (qsh.getLastRow() === 0) qsh.appendRow(H.quotes);
+    var lsh = sheet_(TAB.qlines);
+    if (lsh.getLastRow() === 0) lsh.appendRow(H.qlines);
+    // idempotency: same key -> return the quote already saved
+    var keyCol = H.quotes.length;
+    if (qsh.getLastRow() > 1) {
+      var keys = qsh.getRange(2, keyCol, qsh.getLastRow() - 1, 1).getValues();
+      for (var k = keys.length - 1; k >= 0; k--) if (String(keys[k][0]) === key) {
+        var qid = qsh.getRange(k + 2, 1).getValue();
+        return merge_(quoteById_(ctx, qid), { duplicate: true });
+      }
+    }
+    var rows = [], total = 0, n = 0;
+    var props = PropertiesService.getScriptProperties();
+    var day = Utilities.formatDate(new Date(), 'Asia/Manila', 'yyMMdd');
+    var seq = Number(props.getProperty('QSEQ_' + day) || 0) + 1; props.setProperty('QSEQ_' + day, String(seq));
+    var id = 'Q' + day + '-' + ('000' + seq).slice(-3);
+    for (var i = 0; i < lines.length; i++) {
+      var l = lines[i], sku = HXPricing.baseSku(l.sku), it = by[sku];
+      if (!it) return { ok: false, error: 'bad_request', detail: 'SKU not available for this dealer: ' + sku };
+      var qty = Math.round(Number(l.qty)); if (!(qty > 0) || qty > 100000) return { ok: false, error: 'bad_request', detail: 'Check the quantity for ' + sku };
+      var sp = HXPricing.num(l.sp), src = 'dealer price';
+      if (sp == null) sp = it.price; else if (sp !== it.price) src = 'entered by ' + u.email;
+      if (!(sp > 0)) return { ok: false, error: 'bad_request', detail: 'Check the price for ' + sku };
+      var lt = Math.round(sp * qty * 100) / 100; total += lt; n++;
+      rows.push([id, n, sku, it.desc, qty, it.srp, it.dp, sp, lt, src]);
+    }
+    total = Math.round(total * 100) / 100;
+    lsh.getRange(lsh.getLastRow() + 1, 1, rows.length, H.qlines.length).setValues(rows);
+    qsh.appendRow([id, new Date(), u.email, u.name, u.role, dd.dealer.id, dd.dealer.name, String(b.source || 'Website').slice(0, 20), 'Issued', n, total, String(b.note || '').slice(0, 300), key]);
+    return quoteById_(ctx, id);
+  } finally { lock.releaseLock(); }
+}
+
+function quoteRows_() {
+  var qs = rows_(TAB.quotes).filter(function (r) { return r['Quote ID']; });
+  return qs.map(function (r) {
+    return { id: String(r['Quote ID']), created: r['Created'] instanceof Date ? r['Created'].toISOString() : String(r['Created']), email: String(r['Email']), name: String(r['Name'] || ''),
+      dealerId: String(r['Dealer ID']), dealer: String(r['Dealer name']), source: String(r['Source'] || ''), status: String(r['Status'] || ''), lines: Number(r['Lines']) || 0, total: Number(r['Total']) || 0, note: String(r['Note'] || '') };
+  });
+}
+function canSeeQuote_(u, q) { return u.role === 'admin' || u.role === 'csomgr' || q.email === u.email; }
+
+function quoteById_(ctx, id) {
+  var q = quoteRows_().filter(function (x) { return x.id === String(id); })[0];
+  if (!q || !canSeeQuote_(ctx.user, q)) return { ok: false, error: 'not_found' };
+  q.items = rows_(TAB.qlines).filter(function (r) { return String(r['Quote ID']) === q.id; }).map(function (r) {
+    return { line: Number(r['Line']), sku: String(r['SKU']), desc: String(r['Description']), qty: Number(r['Qty']), srp: HXPricing.num(r['SRP']), dp: HXPricing.num(r['Regular DP']), sp: HXPricing.num(r['SP']), total: HXPricing.num(r['Line total']), src: String(r['Price source'] || '') };
+  });
+  return { quote: q };
+}
+
+function listQuotes_(ctx) {
+  if (!CAN_QUOTE[ctx.user.role]) return { ok: false, error: 'quote_not_allowed' };
+  if (ctx.body.quoteId) return quoteById_(ctx, ctx.body.quoteId);
+  var list = quoteRows_().filter(function (q) { return canSeeQuote_(ctx.user, q); });
+  if (ctx.body.dealerId) list = list.filter(function (q) { return q.dealerId === String(ctx.body.dealerId); });
+  return { quotes: list.reverse().slice(0, 100) };
 }
 
 /* ================================================================== admin: console data */

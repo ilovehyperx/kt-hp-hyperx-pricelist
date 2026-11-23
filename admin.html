@@ -72,6 +72,7 @@ label.f .inp,label.f .txt{font-weight:500;color:var(--ink)}
     <span style="flex:1"></span>
     <a class="btn hdr-link" href="editor.html">Pricelist editor</a>
     <a class="btn hdr-link" href="sales.html">Sales view</a>
+    <a class="btn hdr-link" href="quote.html">Quotations</a>
     <a class="btn hdr-link" href="dealer.html">Dealer pages</a>
     <div class="user-chip" id="userChip" hidden><img id="userPic" alt="" referrerpolicy="no-referrer"><span class="who"><b id="userName"></b><span>Admin</span></span><button class="btn btn-sm" id="signOut" type="button">Sign out</button></div>
     <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch theme">
@@ -118,7 +119,7 @@ label.f .inp,label.f .txt{font-weight:500;color:var(--ink)}
       <div class="row" style="margin-bottom:10px">
         <input class="inp" id="uEmail" placeholder="name@gmail.com" style="width:240px" autocomplete="off">
         <input class="inp" id="uName" placeholder="Name" style="width:180px">
-        <select class="inp" id="uRole"><option value="sales">Sales</option><option value="cso">Channel sales (CSO)</option><option value="csomgr">CSO manager</option><option value="admin">Admin</option></select>
+        <select class="inp" id="uRole"><option value="sales">Sales</option><option value="cso">Channel sales (CSO)</option><option value="csa">Sales assistant (CSA)</option><option value="csomgr">CSO manager</option><option value="hplead">HP lead</option><option value="dealer">Dealer account</option><option value="admin">Admin</option></select>
         <button class="btn btn-sm" id="uAdd" type="button">Add to list</button>
         <span style="flex:1"></span>
         <input class="inp" id="uFilter" placeholder="Filter…" style="width:160px">
@@ -130,6 +131,7 @@ label.f .inp,label.f .txt{font-weight:500;color:var(--ink)}
         <span><b>Admin</b>: everything here, the pricelist editor, every dealer page, cost and margins.</span>
         <span><b>Sales</b>: the sales special-price page, plus any dealer pages they're assigned to. No cost or margin.</span>
         <span><b>Channel sales (CSO)</b>: only the dealer pages they're assigned to. Adding an email to a dealer page adds it here as a CSO automatically.</span>
+        <span><b>Sales assistant (CSA)</b>: same as Sales — special prices, all dealer pages, quotations. <b>HP lead</b>: only dealer pages they're assigned to, view only. <b>Dealer account</b>: only its own dealer page, read-only, stock shown as levels; set it as a viewer on that dealer page.</span>
         <span><b>CSO manager</b>: the sales special-price page and every active dealer page, view only (no cost, margin or editing). Promote to Admin if they should edit.</span>
         <span>The owner account (<b id="ownerEmail"></b>) always stays an active admin, and you can't remove your own admin access from here.</span>
       </div>
@@ -254,13 +256,13 @@ function dealerCount(email){return A.dealers.filter(function(d){return d.emails.
 function renderUsers(){
   var f=($("#uFilter").value||"").toLowerCase(),owner=(A.settings.OWNER_EMAIL||"").toLowerCase();$("#ownerEmail").textContent=owner||"not set";
   var rows=USERS.map(function(u,i){return {u:u,i:i}}).filter(function(x){return !f||(x.u.email+" "+x.u.name+" "+x.u.role).toLowerCase().indexOf(f)>=0});
-  rows.sort(function(a,b){var r={admin:0,csomgr:1,sales:2,cso:3};return (r[a.u.role]-r[b.u.role])||a.u.email.localeCompare(b.u.email)});
+  rows.sort(function(a,b){var r={admin:0,csomgr:1,sales:2,csa:3,cso:4,hplead:5,dealer:6};return (r[a.u.role]-r[b.u.role])||a.u.email.localeCompare(b.u.email)});
   $("#uBody").innerHTML=rows.map(function(x){var u=x.u,locked=u.email===owner,dl=dealerCount(u.email);
     return '<tr data-i="'+x.i+'"><td class="sku">'+esc(u.email)+(locked?' <span class="lock">owner</span>':"")+(u.email===ME.email?' <span class="lock">you</span>':"")+'</td>'+
       '<td><input class="inp" data-f="name" value="'+esc(u.name)+'" style="width:180px"></td>'+
-      '<td><select class="role" data-f="role"'+(locked?" disabled":"")+'>'+[["admin","Admin"],["csomgr","CSO manager"],["sales","Sales"],["cso","Channel sales (CSO)"]].map(function(r){return '<option value="'+r[0]+'"'+(u.role===r[0]?" selected":"")+'>'+r[1]+'</option>'}).join("")+'</select></td>'+
+      '<td><select class="role" data-f="role"'+(locked?" disabled":"")+'>'+[["admin","Admin"],["csomgr","CSO manager"],["sales","Sales"],["csa","Sales assistant (CSA)"],["cso","Channel sales (CSO)"],["hplead","HP lead"],["dealer","Dealer account"]].map(function(r){return '<option value="'+r[0]+'"'+(u.role===r[0]?" selected":"")+'>'+r[1]+'</option>'}).join("")+'</select></td>'+
       '<td class="c"><input type="checkbox" data-f="active"'+(u.active?" checked":"")+(locked?" disabled":"")+'></td>'+
-      '<td style="font-size:12px;color:var(--muted)">'+(u.role==="admin"||u.role==="csomgr"?"All":esc(dl.join(", ")||"—"))+'</td>'+
+      '<td style="font-size:12px;color:var(--muted)">'+(/^(admin|csomgr|sales|csa)$/.test(u.role)?"All":esc(dl.join(", ")||"—"))+'</td>'+
       '<td style="font-size:12px;color:var(--faint)">'+esc(when(u.updatedOn))+(u.updatedBy&&u.updatedBy!=="setup"?" · "+esc(u.updatedBy):"")+'</td>'+
       '<td>'+(locked?"":'<button class="x" data-del title="Remove from list" type="button">×</button>')+'</td></tr>'}).join("")||'<tr class="empty-row"><td colspan="7">No users match.</td></tr>';
   $("#uSave").disabled=JSON.stringify(USERS)===USERS0;

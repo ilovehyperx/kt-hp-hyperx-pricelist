@@ -22,3 +22,17 @@ for a re-import so the laptop prices refresh too).
 
 ## Special Price promo
 `data/promo.json` holds the current promo: name, start/end time (Manila time) and the special price per SKU. The site shows the promo bar, the Special Price tab and the SP on cards only between `startsAt` and `endsAt`, and hides all of it automatically once the promo ends. To run the next promo, replace `data/promo.json`.
+
+## Pricelist + Pipes (signed-in pages)
+Backend: Google Apps Script web app (`apps-script/Code.gs`, deployed from ilovehyperx67's "HyperX Pricing API" project) reading the private Sheet "HyperX Sales Pricing". All pricing, cost and permission checks run server-side; costs never enter this repo.
+
+| Page | Who |
+|---|---|
+| `quote.html` | admin, CSO manager, sales, CSA, CSO: logged quotations with price snapshots (Quotes / QuoteLines tabs) |
+| `dealer.html` | dealer pages: every SKU inherits Base DP, DealerPrices rows are overrides. Dealer accounts see only their own page, read-only, stock as levels |
+| `sales.html` | internal special prices + Limited Qty |
+| `admin.html` | users & roles, dealer pages, SAP stock / HP sell-out / rebate uploads, settings, activity |
+| `editor.html` | margin rules per category × New/Existing, rounding, overrides |
+
+Roles: admin · csomgr · sales · csa · cso · hplead · dealer (Allowlist tab).
+Daily updates happen in admin.html or the Sheet. No GitHub needed. After changing `apps-script/Code.gs`: paste into the Apps Script project, Save, Deploy → Manage deployments → Edit → New version.

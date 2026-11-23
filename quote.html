@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quotation Maker · HyperX · Iontech</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<script>(function(){var t=null;try{t=localStorage.getItem("hxpl-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t)})();</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="assets/hx-app.css">
+<style>
+.qgrid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+.card{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);padding:14px 16px;margin-bottom:14px}
+.card h2{font-size:15px;font-weight:800;margin-bottom:8px}
+.inp{height:34px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);padding:0 10px;font-size:13px}
+.inp.num{width:90px;text-align:right}.inp.qty{width:70px;text-align:right}
+.sugg{position:absolute;z-index:20;top:38px;left:0;right:0;max-height:340px;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.sugg button{display:flex;gap:10px;width:100%;text-align:left;border:0;background:none;padding:7px 10px;cursor:pointer;font-size:12.5px}
+.sugg button:hover,.sugg button.on{background:var(--surface-2)}
+.sugg .s{font-weight:700;width:76px;flex:none}.sugg .m{color:var(--faint);margin-left:auto;white-space:nowrap}
+.x{border:0;background:none;color:var(--faint);cursor:pointer;font-size:18px}
+.tot{display:flex;justify-content:flex-end;gap:16px;font-size:15px;padding:10px 4px}.tot b{font-size:18px}
+.hist button{display:grid;gap:2px;width:100%;text-align:left;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:8px 10px;margin-bottom:6px;cursor:pointer}
+.hist button span{font-size:12px;color:var(--muted)}
+.status{font-size:13px;min-height:18px}.status.ok{color:var(--ok)}.status.err{color:var(--out)}
+.saved{border:1px solid var(--ok);background:var(--ok-bg);border-radius:var(--r-sm);padding:10px 12px;margin-bottom:10px;font-size:13.5px}
+@media (max-width:1000px){.qgrid{grid-template-columns:1fr}}
+@media print{body>*:not(#printArea){display:none!important}#printArea{display:block!important}}
+#printArea{display:none;font-family:Inter,Arial,sans-serif;color:#000;padding:10mm}
+#printArea table{width:100%;border-collapse:collapse;font-size:11px;margin-top:10px}#printArea th,#printArea td{border-bottom:1px solid #ccc;padding:5px;text-align:left}#printArea .r{text-align:right}
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+<header class="site-header"><div class="header-inner">
+  <a class="brand" href="index.html"><span class="wm-hx">Hyper<b>X</b></span><span class="wm-ion">IONTECH</span><span class="brand-divider"></span><span class="brand-title">Quotation Maker</span></a>
+  <span style="flex:1"></span>
+  <a class="btn hdr-link" href="dealer.html">Dealer pages</a>
+  <a class="btn hdr-link" href="sales.html" id="salesLink" hidden>Sales prices</a>
+  <a class="btn hdr-link" href="admin.html" id="adminLink" hidden>Admin</a>
+  <div class="user-chip" id="userChip" hidden><span class="who"><b id="userName"></b><span id="userRole"></span></span><button class="btn btn-sm" id="signOut" type="button">Sign out</button></div>
+</div></header>
+
+<section class="gate" id="gate"><div class="gate-card"><p class="eyebrow">Iontech sales</p><h1>Quotation Maker</h1><p>Sign in with your approved Google account.</p><div id="gsiButton"></div><p class="gate-msg" id="gateMsg"></p></div></section>
+
+<main class="container app-main" id="app" hidden>
+  <div class="qgrid">
+    <div>
+      <div class="card">
+        <div class="row" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <label style="font-size:12px;font-weight:700;color:var(--muted)">Dealer</label>
+          <select class="inp" id="dealer" style="min-width:260px"></select>
+          <div style="position:relative;flex:1;min-width:260px"><input class="inp" id="q" placeholder="Add item: type model or SKU, Enter to add" style="width:100%" autocomplete="off"><div class="sugg" id="sugg" hidden></div></div>
+        </div>
+        <p class="status" id="dealerStatus"></p>
+      </div>
+      <div class="saved" id="savedBox" hidden></div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>SKU</th><th>SKU Desc</th><th class="r">Qty</th><th class="r">SRP</th><th class="r">Regular DP</th><th class="r">SP</th><th class="r">Line total</th><th></th></tr></thead><tbody id="lines"></tbody></table></div>
+      <div class="tot"><span>Items <b id="nItems">0</b></span><span>Total <b id="total">₱0</b></span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <input class="inp" id="note" placeholder="Note (optional)" style="flex:1;min-width:200px">
+        <button class="btn" id="clearBtn" type="button">Clear</button>
+        <button class="btn btn-primary" id="saveBtn" type="button" disabled>Save quotation</button>
+      </div>
+      <p class="status" id="status"></p>
+      <p class="foot-note">SP defaults to this dealer's price (special price, or Base DP when none is set). You may type a different SP; the server records who changed it. Prices are VAT-inclusive. A saved quotation keeps its prices even if the pricelist changes later.</p>
+    </div>
+    <aside>
+      <div class="card"><h2>Recent quotations</h2><div class="hist" id="hist"><p class="sub">None yet.</p></div></div>
+    </aside>
+  </div>
+</main>
+<div id="printArea"></div>
+<div class="toast" id="toast"></div>
+<script src="assets/hx-auth.js"></script>
+<script>
+(function(){"use strict";
+var $=function(s){return document.querySelector(s)};
+var ME=null,DEALERS=[],ITEMS=[],BY={},LINES=[],IDEM=null,CUR=null;
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function peso(n){if(n==null||isNaN(n))return "—";return "₱"+Number(n).toLocaleString("en-PH",{minimumFractionDigits:Math.round(n)!==n?2:0,maximumFractionDigits:2})}
+function toast(t){var e=$("#toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove("show")},2400)}
+function st(id,t,ok){var e=$(id);e.textContent=t||"";e.className="status "+(t?(ok?"ok":"err"):"")}
+function newKey(){return "q"+Date.now().toString(36)+Math.random().toString(36).slice(2,10)}
+var DRAFT="hx-quote-draft";
+function saveDraft(){try{sessionStorage.setItem(DRAFT,JSON.stringify({d:$("#dealer").value,l:LINES,n:$("#note").value,k:IDEM}))}catch(e){}}
+
+function start(){
+  HXAuth.api("whoami").then(function(d){
+    if(!d.ok){$("#gateMsg").textContent=HXAuth.message(d.error);if(d.error==="not_allowed")HXAuth.signOut();return}
+    ME=d.user;if(!d.can||!d.can.quote){$("#gateMsg").textContent="Your account can't create quotations.";return}
+    $("#gate").hidden=true;$("#app").hidden=false;$("#userChip").hidden=false;$("#userName").textContent=ME.name||ME.email;$("#userRole").textContent=ME.role;
+    $("#salesLink").hidden=!d.can.sales;$("#adminLink").hidden=!d.can.admin;
+    DEALERS=d.dealers||[];
+    $("#dealer").innerHTML='<option value="">Choose a dealer…</option>'+DEALERS.map(function(x){return '<option value="'+esc(x.id)+'">'+(x.favorite?"★ ":"")+esc(x.name)+'</option>'}).join("");
+    var dr=null;try{dr=JSON.parse(sessionStorage.getItem(DRAFT)||"null")}catch(e){}
+    var want=(location.search.match(/[?&]d=([^&]+)/)||[])[1];
+    if(dr&&dr.l&&dr.l.length){LINES=dr.l;IDEM=dr.k;$("#note").value=dr.n||"";pick(dr.d)}else if(want)pick(decodeURIComponent(want));
+    render();history_();
+  }).catch(function(e){$("#gateMsg").textContent="Could not reach the pricing server. "+e.message});
+}
+function pick(id){$("#dealer").value=id;if(!id){ITEMS=[];BY={};return}
+  st("#dealerStatus","Loading dealer prices…",true);
+  HXAuth.api("dealer",{dealerId:id}).then(function(d){
+    if(!d.ok){st("#dealerStatus",HXAuth.message(d.error));return}
+    ITEMS=d.items;BY={};ITEMS.forEach(function(i){BY[i.sku]=i});
+    LINES=LINES.filter(function(l){return BY[l.sku]});
+    st("#dealerStatus",ITEMS.length+" SKUs · "+ITEMS.filter(function(i){return i.override}).length+" with special prices",true);render();
+  })}
+$("#dealer").addEventListener("change",function(e){if(LINES.length&&!confirm("Change dealer? Prices on this quotation will be reloaded."))return(e.target.value=CUR||"");CUR=e.target.value;LINES.forEach(function(l){delete l.sp});pick(e.target.value);IDEM=null;saveDraft()});
+
+var hits=[],on=0;
+$("#q").addEventListener("input",function(){var v=this.value.trim().toLowerCase(),sg=$("#sugg");if(!v||!ITEMS.length){sg.hidden=true;return}
+  var w=v.split(/\s+/);hits=ITEMS.filter(function(i){var h=(i.sku+" "+i.desc+" "+i.cat).toLowerCase();return w.every(function(x){return h.indexOf(x)>=0})}).slice(0,12);on=0;
+  sg.innerHTML=hits.map(function(i,k){return '<button type="button" data-sku="'+esc(i.sku)+'"'+(k?"":' class="on"')+'><span class="s">'+esc(i.sku)+'</span><span>'+esc(i.desc)+'</span><span class="m">'+peso(i.price)+(i.override?" · SP":"")+'</span></button>'}).join("")||'<p style="padding:8px 10px;margin:0;color:var(--muted)">No match</p>';sg.hidden=false});
+$("#q").addEventListener("keydown",function(e){var sg=$("#sugg");if(sg.hidden)return;if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();on=Math.max(0,Math.min(hits.length-1,on+(e.key==="ArrowDown"?1:-1)));[].forEach.call(sg.querySelectorAll("button"),function(b,i){b.classList.toggle("on",i===on)})}else if(e.key==="Enter"&&hits[on]){e.preventDefault();add(hits[on].sku)}else if(e.key==="Escape")sg.hidden=true});
+$("#sugg").addEventListener("mousedown",function(e){var b=e.target.closest("button[data-sku]");if(b){e.preventDefault();add(b.dataset.sku)}});
+$("#q").addEventListener("blur",function(){setTimeout(function(){$("#sugg").hidden=true},150)});
+function add(sku){var l=LINES.filter(function(x){return x.sku===sku})[0];if(l)l.qty++;else LINES.push({sku:sku,qty:1});$("#q").value="";$("#sugg").hidden=true;IDEM=null;render();saveDraft();$("#q").focus()}
+
+function price(l){var i=BY[l.sku];return l.sp!=null&&l.sp!==""?Number(l.sp):(i?i.price:null)}
+function render(){
+  var tot=0;$("#lines").innerHTML=LINES.map(function(l,k){var i=BY[l.sku]||{},p=price(l),lt=p*l.qty;tot+=lt||0;
+    return '<tr data-k="'+k+'"><td class="sku">'+esc(l.sku)+'</td><td>'+esc(i.desc||"")+'</td><td class="r"><input class="inp qty" data-f="qty" inputmode="numeric" value="'+l.qty+'"></td><td class="r">'+peso(i.srp)+'</td><td class="r">'+peso(i.dp)+'</td>'+
+      '<td class="r"><input class="inp num" data-f="sp" inputmode="decimal" value="'+(l.sp!=null&&l.sp!==""?l.sp:"")+'" placeholder="'+(i.price!=null?i.price:"")+'"></td><td class="r"><b>'+peso(lt)+'</b></td><td><button class="x" data-del type="button">×</button></td></tr>'}).join("")||'<tr class="empty-row"><td colspan="8">Choose a dealer, then add items with the search box.</td></tr>';
+  $("#nItems").textContent=LINES.length;$("#total").textContent=peso(Math.round(tot*100)/100);$("#saveBtn").disabled=!LINES.length||!$("#dealer").value;
+}
+$("#lines").addEventListener("change",function(e){var tr=e.target.closest("tr"),f=e.target.dataset.f;if(!f)return;var l=LINES[+tr.dataset.k],v=e.target.value.trim().replace(/[₱,\s]/g,"");
+  if(f==="qty"){var n=Math.round(+v);if(!(n>0)){toast("Quantity must be 1 or more");e.target.value=l.qty;return}l.qty=n}else{if(v!==""&&!(+v>0)){toast("Enter a price, or leave blank for the dealer price");e.target.value=l.sp||"";return}l.sp=v===""?null:+v}
+  IDEM=null;render();saveDraft()});
+$("#lines").addEventListener("click",function(e){if(!e.target.hasAttribute("data-del"))return;LINES.splice(+e.target.closest("tr").dataset.k,1);IDEM=null;render();saveDraft()});
+$("#clearBtn").addEventListener("click",function(){if(LINES.length&&!confirm("Clear this quotation?"))return;LINES=[];IDEM=null;$("#note").value="";$("#savedBox").hidden=true;render();saveDraft()});
+$("#note").addEventListener("input",saveDraft);
+
+$("#saveBtn").addEventListener("click",function(){
+  if(!IDEM)IDEM=newKey();saveDraft();var b=$("#saveBtn");b.disabled=true;st("#status","Saving…",true);
+  HXAuth.api("createQuote",{dealerId:$("#dealer").value,lines:LINES.map(function(l){return{sku:l.sku,qty:l.qty,sp:l.sp==null?null:l.sp}}),note:$("#note").value,idem:IDEM,source:"Website"}).then(function(d){
+    b.disabled=false;if(!d.ok){st("#status",HXAuth.message(d.error)+(d.detail?" — "+d.detail:""));return}
+    st("#status","",true);show(d.quote,true);LINES=[];IDEM=null;$("#note").value="";render();saveDraft();history_();
+  }).catch(function(e){b.disabled=false;st("#status","Not saved: "+e.message+". Press Save again — it won't create a duplicate.")});
+});
+function tsv(q){return [["SKU","SKU Desc","Qty","SRP","Regular DP","SP","Line total"]].concat(q.items.map(function(i){return [i.sku,i.desc,i.qty,i.srp,i.dp,i.sp,i.total]})).concat([["","","","","","Total",q.total]]).map(function(r){return r.join("\t")}).join("\n")}
+function show(q,fresh){CUR_Q=q;var box=$("#savedBox");box.hidden=false;
+  box.innerHTML=(fresh?"<b>Saved "+esc(q.id)+"</b>":"<b>"+esc(q.id)+"</b>")+" · "+esc(q.dealer)+" · "+q.lines+" item"+(q.lines===1?"":"s")+" · <b>"+peso(q.total)+"</b> · "+esc(new Date(q.created).toLocaleString("en-PH"))+(q.email!==ME.email?" · by "+esc(q.name||q.email):"")+
+  ' <span style="float:right"><button class="btn btn-sm" id="cpy" type="button">Copy as table</button> <button class="btn btn-sm" id="prt" type="button">Print / PDF</button> <button class="btn btn-sm" id="dup" type="button">Copy to new quote</button></span>';
+  $("#cpy").onclick=function(){navigator.clipboard.writeText(tsv(q)).then(function(){toast("Copied — paste into Viber, email or Excel")})};
+  $("#prt").onclick=function(){$("#printArea").innerHTML='<h2 style="margin:0">Quotation '+esc(q.id)+'</h2><p style="margin:4px 0">IONTECH · HyperX · '+esc(q.dealer)+' · '+esc(new Date(q.created).toLocaleDateString("en-PH",{year:"numeric",month:"long",day:"numeric"}))+' · Prepared by '+esc(q.name||q.email)+'</p><p style="font-size:10px;color:#555;margin:0">DRAFT LAYOUT — official quotation template to be confirmed. Prices in PHP, VAT-inclusive, subject to stock availability.</p><table><tr><th>SKU</th><th>Description</th><th class="r">Qty</th><th class="r">SRP</th><th class="r">Regular DP</th><th class="r">SP</th><th class="r">Line total</th></tr>'+q.items.map(function(i){return '<tr><td>'+esc(i.sku)+'</td><td>'+esc(i.desc)+'</td><td class="r">'+i.qty+'</td><td class="r">'+peso(i.srp)+'</td><td class="r">'+peso(i.dp)+'</td><td class="r">'+peso(i.sp)+'</td><td class="r">'+peso(i.total)+'</td></tr>'}).join("")+'<tr><td colspan="6" class="r"><b>Total</b></td><td class="r"><b>'+peso(q.total)+'</b></td></tr></table>'+(q.note?'<p>Note: '+esc(q.note)+'</p>':"");window.print()};
+  $("#dup").onclick=function(){LINES=q.items.map(function(i){return{sku:i.sku,qty:i.qty}});IDEM=null;pick(q.dealerId);render();saveDraft();toast("Copied with current dealer prices")};
+}
+var CUR_Q=null;
+function history_(){HXAuth.api("quotes",{}).then(function(d){if(!d.ok)return;
+  $("#hist").innerHTML=(d.quotes||[]).slice(0,30).map(function(q){return '<button type="button" data-id="'+esc(q.id)+'"><b>'+esc(q.id)+' · '+peso(q.total)+'</b><span>'+esc(q.dealer)+' · '+q.lines+' items · '+esc(new Date(q.created).toLocaleDateString("en-PH",{month:"short",day:"numeric"}))+(q.email!==ME.email?" · "+esc(q.name||q.email):"")+'</span></button>'}).join("")||'<p class="sub">None yet.</p>'})}
+$("#hist").addEventListener("click",function(e){var b=e.target.closest("button[data-id]");if(!b)return;HXAuth.api("quotes",{quoteId:b.dataset.id}).then(function(d){if(d.ok)show(d.quote,false);else toast(HXAuth.message(d.error))})});
+$("#signOut").addEventListener("click",function(){HXAuth.signOut();try{sessionStorage.removeItem(DRAFT)}catch(e){}location.reload()});
+HXAuth.init($("#gsiButton"),start).catch(function(e){$("#gateMsg").textContent=HXAuth.message(e.message==="not_configured"?"not_configured":e.message)});
+})();
+</script>
+</body></html>
