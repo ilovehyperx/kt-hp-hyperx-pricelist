@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stock Commitments · HyperX · Iontech</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<script>(function(){var t=null;try{t=localStorage.getItem("hxpl-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t)})();</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="assets/hx-app.css">
+<style>
+.container,.header-inner{max-width:1500px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px;overflow-x:auto}
+.tabs button{border:0;background:none;padding:10px 14px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--red-2)}
+.tabs .n{font-size:11px;border:1px solid var(--line);border-radius:999px;padding:0 6px;margin-left:5px}
+.card{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);padding:14px 16px;margin-bottom:14px}
+.inp{height:34px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);padding:0 10px;font-size:13px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+label.f{display:grid;gap:3px;font-size:11.5px;font-weight:700;color:var(--muted)}
+.sugg{position:absolute;z-index:20;top:38px;left:0;right:0;max-height:320px;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.sugg button{display:flex;gap:10px;width:100%;text-align:left;border:0;background:none;padding:7px 10px;cursor:pointer;font-size:12.5px}
+.sugg button:hover,.sugg button.on{background:var(--surface-2)}.sugg .s{font-weight:700;width:76px;flex:none}.sugg .m{color:var(--faint);margin-left:auto;white-space:nowrap}
+.st{font-size:11px;font-weight:700;border-radius:999px;padding:2px 9px;text-transform:capitalize;white-space:nowrap}
+.st.pending{color:var(--lim);background:var(--lim-bg)}.st.approved{color:var(--ok);background:var(--ok-bg)}.st.rejected,.st.cancelled{color:var(--out);background:var(--out-bg)}.st.released,.st.expired{color:var(--unk);background:var(--unk-bg)}
+.ty{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.x{border:0;background:none;color:var(--faint);cursor:pointer;font-size:18px}
+.status{font-size:13px;min-height:18px}.status.ok{color:var(--ok)}.status.err{color:var(--out)}
+.over{color:var(--out);font-weight:800}
+tr.batch td{background:var(--bg);font-weight:700;font-size:12.5px}
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+<header class="site-header"><div class="header-inner">
+  <a class="brand" href="index.html"><span class="wm-hx">Hyper<b>X</b></span><span class="wm-ion">IONTECH</span><span class="brand-divider"></span><span class="brand-title">Stock Commitments</span></a>
+  <span style="flex:1"></span>
+  <a class="btn hdr-link" href="quote.html">Quotations</a><a class="btn hdr-link" href="dealer.html">Dealer pages</a><a class="btn hdr-link" href="admin.html" id="adminLink" hidden>Admin</a>
+  <div class="user-chip" id="userChip" hidden><span class="who"><b id="userName"></b><span id="userRole"></span></span><button class="btn btn-sm" id="signOut" type="button">Sign out</button></div>
+</div></header>
+<section class="gate" id="gate"><div class="gate-card"><p class="eyebrow">Iontech sales</p><h1>Stock Commitments</h1><p>Reservations, holds and allocations. Sign in with your approved Google account.</p><div id="gsiButton"></div><p class="gate-msg" id="gateMsg"></p></div></section>
+
+<main class="container app-main" id="app" hidden>
+  <div class="page-head"><div><p class="eyebrow">Reservations · Holds · Allocations</p><h1>Stock Commitments</h1><p class="meta" id="meta"></p></div><span class="spacer"></span><button class="btn" id="refresh" type="button">Refresh</button></div>
+  <nav class="tabs"><button data-t="board" aria-selected="true">Shared board</button><button data-t="new" aria-selected="false">New request</button><button data-t="approve" aria-selected="false" id="tabApprove" hidden>Approvals<span class="n" id="nPend"></span></button></nav>
+
+  <section data-p="board">
+    <div class="toolbar"><div class="toolbar-left">
+      <select class="inp" id="fType"><option value="">All types</option><option value="reservation">Reservations</option><option value="hold">Holds</option><option value="allocation">Allocations</option></select>
+      <select class="inp" id="fStatus"><option value="live">Pending + approved</option><option value="">All (30 days)</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="expired">Expired</option><option value="released">Released</option><option value="rejected">Rejected</option></select>
+      <input class="inp" id="fQ" placeholder="Search SKU, dealer, person…" style="width:220px">
+      <label class="check"><input type="checkbox" id="fMine"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span><span class="label">Mine only</span></label>
+    </div><div class="toolbar-right"><p class="result-count" id="count"></p></div></div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Request</th><th>Type</th><th>Status</th><th>Dealer</th><th>SKU</th><th>Description</th><th class="r">Qty</th><th class="r">Available now</th><th>Until</th><th>By</th><th>Remarks</th><th></th></tr></thead><tbody id="board"></tbody></table></div>
+    <p class="foot-note">Only <b>approved</b> requests reduce available stock. Available now = SAP on hand − approved reservations, holds and allocations. Reservations expire at the end of their day (Manila); holds at the end of their hold-until date; allocations stay until released.</p>
+  </section>
+
+  <section data-p="new" hidden>
+    <div class="card">
+      <div class="row">
+        <label class="f">Type<select class="inp" id="nType"><option value="reservation">Reservation (today only)</option><option value="hold">Hold (until a date, needs approval)</option><option value="allocation">Allocation (needs approval)</option></select></label>
+        <label class="f">Dealer<select class="inp" id="nDealer" style="min-width:240px"></select></label>
+        <label class="f" id="untilWrap" hidden><span id="untilLbl">Hold until</span><input class="inp" type="date" id="nUntil"></label>
+        <label class="f" style="flex:1;min-width:200px">Remarks<input class="inp" id="nRemarks" placeholder="e.g. CONFIRMATION, PLACEMENT"></label>
+      </div>
+      <div style="position:relative;margin-top:10px"><input class="inp" id="q" placeholder="Add item: type model or SKU, Enter to add" style="width:100%" autocomplete="off"><div class="sugg" id="sugg" hidden></div></div>
+    </div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>SKU</th><th>Description</th><th class="r">On hand</th><th class="r">Available</th><th class="r">Pending (others)</th><th class="r">Qty</th><th></th></tr></thead><tbody id="nLines"></tbody></table></div>
+    <div class="row" style="margin-top:10px"><span class="status" id="nStatus"></span><span style="flex:1"></span><button class="btn btn-primary" id="nSubmit" type="button" disabled>Submit request</button></div>
+  </section>
+
+  <section data-p="approve" hidden>
+    <div class="row" style="margin-bottom:10px"><input class="inp" id="aNote" placeholder="Note for the requester (optional)" style="flex:1"><button class="btn" id="aReject" type="button">Reject selected</button><button class="btn btn-primary" id="aApprove" type="button">Approve selected</button></div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th><input type="checkbox" id="aAll"></th><th>Request</th><th>Type</th><th>Dealer</th><th>SKU</th><th>Description</th><th class="r">Qty</th><th class="r">Available</th><th class="r">All pending</th><th>Until</th><th>By</th><th>Remarks</th></tr></thead><tbody id="appr"></tbody></table></div>
+    <p class="status" id="aStatus"></p>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+<script src="assets/hx-auth.js"></script>
+<script>
+(function(){"use strict";
+var $=function(s){return document.querySelector(s)},$$=function(s){return [].slice.call(document.querySelectorAll(s))};
+var ME=null,CAN={},D=null,CAT={},LINES=[],IDEM=null;
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function toast(t){var e=$("#toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove("show")},2600)}
+function st(id,t,ok){var e=$(id);e.textContent=t||"";e.className="status "+(t?(ok?"ok":"err"):"")}
+function day(s){if(!s)return "";var d=new Date(String(s).length===10?s+"T00:00:00+08:00":s);return isNaN(d)?s:d.toLocaleDateString("en-PH",{month:"short",day:"numeric"})}
+function mdy(d){d=d||new Date();return ("0"+(d.getMonth()+1)).slice(-2)+"/"+("0"+d.getDate()).slice(-2)+"/"+d.getFullYear()}
+function n(v){return v==null?"—":Number(v).toLocaleString("en-PH")}
+
+function start(){HXAuth.api("commitments",{}).then(function(d){
+  if(!d.ok){$("#gateMsg").textContent=d.error==="not_allowed_here"?"Your account can't use stock commitments.":HXAuth.message(d.error);if(d.error==="not_allowed")HXAuth.signOut();return}
+  ME=d.user;CAN=d.can||{};$("#gate").hidden=true;$("#app").hidden=false;$("#userChip").hidden=false;$("#userName").textContent=ME.name||ME.email;$("#userRole").textContent=ME.role;
+  $("#adminLink").hidden=!CAN.admin;$("#tabApprove").hidden=!CAN.admin;
+  $("#nDealer").innerHTML='<option value="">Choose a dealer…</option>'+(d.dealers||[]).map(function(x){return '<option value="'+esc(x.id)+'">'+(x.favorite?"★ ":"")+esc(x.name)+'</option>'}).join("");
+  accept(d);catalog();
+}).catch(function(e){$("#gateMsg").textContent="Could not reach the server. "+e.message})}
+function accept(d){D=d;$("#meta").textContent=(d.stockAsOf?"SAP stock as of "+d.stockAsOf:"SAP stock date not recorded yet")+" · warehouse "+d.warehouse;render();renderNew();renderAppr()}
+function reload(extra){return HXAuth.api("commitments",Object.assign({skus:LINES.map(function(l){return l.sku})},extra||{})).then(function(d){if(d.ok)accept(d);return d})}
+$("#refresh").addEventListener("click",function(){reload().then(function(){toast("Updated")})});
+/* product list for search: from the public catalog feed (descriptions) */
+function catalog(){fetch("data/products.json").then(function(r){return r.json()}).then(function(p){(p.products||[]).forEach(function(x){(x.variants||[]).forEach(function(v){if(v.sku)CAT[String(v.sku).split("#")[0].toUpperCase()]=x.name+(v.label?" · "+v.label:"")})})}).catch(function(){})}
+
+$$(".tabs button").forEach(function(b){b.addEventListener("click",function(){$$(".tabs button").forEach(function(x){x.setAttribute("aria-selected",x===b)});$$("[data-p]").forEach(function(p){p.hidden=p.dataset.p!==b.dataset.t})})});
+
+/* ---- board ---- */
+["#fType","#fStatus","#fMine"].forEach(function(i){$(i).addEventListener("change",render)});$("#fQ").addEventListener("input",render);
+function render(){if(!D)return;var t=$("#fType").value,s=$("#fStatus").value,q=$("#fQ").value.toLowerCase(),mine=$("#fMine").checked;
+  var list=D.commitments.filter(function(c){return (!t||c.type===t)&&(!s||(s==="live"?(c.status==="pending"||c.status==="approved"):c.status===s))&&(!mine||c.mine)&&(!q||(c.sku+" "+c.desc+" "+c.dealer+" "+c.name+" "+c.email+" "+c.batch).toLowerCase().indexOf(q)>=0)});
+  $("#count").innerHTML="<strong>"+list.length+"</strong> lines";var last="",h="";
+  list.forEach(function(c){if(c.batch!==last){last=c.batch;h+='<tr class="batch"><td colspan="12">'+esc(c.batch)+' · '+esc(c.dealer)+' · '+esc(c.name||c.email)+' · '+esc(day(c.created))+' <span style="float:right">'+(c.type!=="allocation"?'<button class="btn btn-sm" data-copy="'+esc(c.batch)+'">Copy for Outlook</button> <button class="btn btn-sm" data-eml="'+esc(c.batch)+'">.eml</button>':"")+'</span></td></tr>'}
+    var stk=D.stock[c.sku]||{},canRel=(c.status==="approved"||c.status==="pending")&&(c.mine||CAN.admin);
+    h+='<tr><td class="sku">'+esc(c.id)+'</td><td class="ty">'+esc(c.type)+'</td><td><span class="st '+c.status+'">'+esc(c.status)+'</span>'+(c.decisionNote?'<span class="units">'+esc(c.decisionNote)+'</span>':"")+'</td><td>'+esc(c.dealer)+'</td><td class="sku">'+esc(c.sku)+'</td><td>'+esc(c.desc)+'</td><td class="r"><b>'+n(c.qty)+'</b></td><td class="r">'+n(stk.atp)+'</td><td>'+esc(day(c.until))+'</td><td>'+esc(c.name||c.email)+'</td><td>'+esc(c.remarks)+'</td><td>'+(canRel?'<button class="btn btn-sm" data-rel="'+esc(c.id)+'">'+(c.status==="pending"?"Cancel":"Release")+'</button>':"")+'</td></tr>'});
+  $("#board").innerHTML=h||'<tr class="empty-row"><td colspan="12">Nothing here yet.</td></tr>'}
+$("#board").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+  if(b.dataset.rel){if(!confirm((b.textContent==="Cancel"?"Cancel":"Release")+" "+b.dataset.rel+"?"))return;HXAuth.api("releaseCommitment",{ids:[b.dataset.rel]}).then(function(d){if(d.ok){accept(d);toast("Done")}else toast(HXAuth.message(d.error))})}
+  if(b.dataset.copy)copyOutlook(b.dataset.copy);if(b.dataset.eml)eml(b.dataset.eml)});
+
+/* ---- Outlook exports (formats from the KT-HP threads) ---- */
+function batchRows(id){return D.commitments.filter(function(c){return c.batch===id})}
+function mail(id){var rows=batchRows(id);if(!rows.length)return null;var c0=rows[0],th='style="border:1px solid #000;padding:4px 8px;background:#fff;font-weight:bold"',td='style="border:1px solid #000;padding:4px 8px"';
+  if(c0.type==="reservation"){var hdr=["CODE","BEGINNING INVENTORY","RESERVED","BALANCE","WAREHOUSE","CLIENT NAME","RESERVED BY","REMARKS"];
+    var body=rows.map(function(c){var s=D.stock[c.sku]||{},beg=s.atp!=null?(c.status==="approved"?s.atp+c.qty:s.atp):"";return [c.desc,beg,c.qty,beg===""?"":beg-c.qty,D.warehouse,c.dealer,(c.name||c.email).split(" ")[0].toUpperCase(),c.remarks]});
+    return {subject:"RESERVATION: KT-HP ("+mdy(new Date(c0.created))+")",intro:"",hdr:hdr,body:body,th:th,td:td}}
+  var until=c0.until?new Date(c0.until+"T00:00:00+08:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"";
+  return {subject:"HOLD STOCKS: KT-HP FOR "+c0.dealer.toUpperCase()+" ("+mdy(new Date(c0.created))+")",intro:"Hi Sir,<br>Good Day! seeking for your approval to hold below stocks until "+esc(until)+".<br><br>",hdr:["CODE","QTY","REMARKS"],body:rows.map(function(c){return [c.desc,c.qty,c.remarks]}),th:th,td:td}}
+function html(m){return m.intro+'<table style="border-collapse:collapse;font-family:Calibri,Arial;font-size:11pt"><tr>'+m.hdr.map(function(h){return "<th "+m.th+">"+h+"</th>"}).join("")+"</tr>"+m.body.map(function(r){return "<tr>"+r.map(function(v){return "<td "+m.td+">"+esc(v)+"</td>"}).join("")+"</tr>"}).join("")+"</table><br>Thank you,<br>"+esc(ME.name||ME.email)}
+function copyOutlook(id){var m=mail(id);if(!m)return;var h=html(m),t=m.hdr.join("\t")+"\n"+m.body.map(function(r){return r.join("\t")}).join("\n");
+  var done=function(){toast("Copied — paste into the Outlook thread. Subject: "+m.subject)};
+  if(window.ClipboardItem)navigator.clipboard.write([new ClipboardItem({"text/html":new Blob([h],{type:"text/html"}),"text/plain":new Blob([m.subject+"\n\n"+t],{type:"text/plain"})})]).then(done,function(){navigator.clipboard.writeText(t).then(done)});else navigator.clipboard.writeText(t).then(done)}
+function eml(id){var m=mail(id);if(!m)return;var b64=btoa(unescape(encodeURIComponent("<html><body>"+html(m)+"</body></html>"))).replace(/.{76}/g,"$&\r\n");
+  var e="X-Unsent: 1\r\nSubject: "+m.subject+"\r\nMIME-Version: 1.0\r\nContent-Type: text/html; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"+b64;
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([e],{type:"message/rfc822"}));a.download=m.subject.replace(/[\\/:*?"<>|]+/g," ")+".eml";a.click();toast("Open the .eml in Outlook, add recipients, send")}
+
+/* ---- new request ---- */
+function setType(){var t=$("#nType").value;$("#untilWrap").hidden=t==="reservation";$("#untilLbl").textContent=t==="hold"?"Hold until":"Needed by (optional)"}
+$("#nType").addEventListener("change",function(){setType();IDEM=null});setType();
+["#nDealer","#nUntil","#nRemarks"].forEach(function(i){$(i).addEventListener("change",function(){IDEM=null;renderNew()})});
+var hits=[],on=0;
+$("#q").addEventListener("input",function(){var v=this.value.trim().toLowerCase(),sg=$("#sugg");if(!v){sg.hidden=true;return}var w=v.split(/\s+/);
+  hits=Object.keys(CAT).filter(function(s){var h=(s+" "+CAT[s]).toLowerCase();return w.every(function(x){return h.indexOf(x)>=0})}).slice(0,12);on=0;
+  sg.innerHTML=hits.map(function(s,k){return '<button type="button" data-sku="'+s+'"'+(k?"":' class="on"')+'><span class="s">'+s+'</span><span>'+esc(CAT[s])+'</span></button>'}).join("")||'<p style="padding:8px 10px;margin:0;color:var(--muted)">No match — type the full SKU and press Enter</p>';sg.hidden=false});
+$("#q").addEventListener("keydown",function(e){var sg=$("#sugg");if(e.key==="Enter"){e.preventDefault();var s=hits[on]||this.value.trim().toUpperCase();if(s)add(s)}else if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();on=Math.max(0,Math.min(hits.length-1,on+(e.key==="ArrowDown"?1:-1)));[].forEach.call(sg.querySelectorAll("button"),function(b,i){b.classList.toggle("on",i===on)})}else if(e.key==="Escape")sg.hidden=true});
+$("#sugg").addEventListener("mousedown",function(e){var b=e.target.closest("button[data-sku]");if(b){e.preventDefault();add(b.dataset.sku)}});
+$("#q").addEventListener("blur",function(){setTimeout(function(){$("#sugg").hidden=true},150)});
+function add(s){if(!LINES.some(function(l){return l.sku===s}))LINES.push({sku:s,qty:1});$("#q").value="";$("#sugg").hidden=true;IDEM=null;reload();renderNew()}
+function renderNew(){$("#nLines").innerHTML=LINES.map(function(l,k){var s=(D&&D.stock[l.sku])||{},over=s.atp!=null&&l.qty>s.atp;
+  return '<tr data-k="'+k+'"><td class="sku">'+l.sku+'</td><td>'+esc(s.desc||CAT[l.sku]||"")+'</td><td class="r">'+n(s.onHand)+'</td><td class="r'+(over?" over":"")+'">'+n(s.atp)+'</td><td class="r">'+n(s.pending)+'</td><td class="r"><input class="inp" style="width:80px;text-align:right" data-q value="'+l.qty+'"></td><td><button class="x" data-del>×</button></td></tr>'}).join("")||'<tr class="empty-row"><td colspan="7">Add the SKUs to reserve, hold or allocate.</td></tr>';
+  $("#nSubmit").disabled=!LINES.length||!$("#nDealer").value}
+$("#nLines").addEventListener("change",function(e){if(!e.target.hasAttribute("data-q"))return;var k=+e.target.closest("tr").dataset.k,v=Math.round(+e.target.value);if(!(v>0)){toast("Quantity must be 1 or more");e.target.value=LINES[k].qty;return}LINES[k].qty=v;IDEM=null;renderNew()});
+$("#nLines").addEventListener("click",function(e){if(!e.target.hasAttribute("data-del"))return;LINES.splice(+e.target.closest("tr").dataset.k,1);IDEM=null;renderNew()});
+$("#nSubmit").addEventListener("click",function(){var t=$("#nType").value;if(t==="hold"&&!$("#nUntil").value){st("#nStatus","Pick the hold-until date.");return}
+  if(!IDEM)IDEM="c"+Date.now().toString(36)+Math.random().toString(36).slice(2,9);var b=$("#nSubmit");b.disabled=true;st("#nStatus","Submitting…",true);
+  HXAuth.api("requestCommitment",{type:t,dealerId:$("#nDealer").value,until:$("#nUntil").value,remarks:$("#nRemarks").value,lines:LINES,idem:IDEM}).then(function(d){b.disabled=false;
+    if(!d.ok){st("#nStatus",HXAuth.message(d.error)+(d.detail?" — "+d.detail:""));return}
+    accept(d);st("#nStatus","Submitted "+d.batch+" — pending approval. Use Copy for Outlook on the board to post it in the thread.",true);LINES=[];IDEM=null;renderNew();
+    $$(".tabs button")[0].click();$("#fQ").value=d.batch;render()}).catch(function(e){b.disabled=false;st("#nStatus","Not sent: "+e.message+". Press Submit again — it won't duplicate.")})});
+
+/* ---- approvals (admin) ---- */
+function renderAppr(){if(!CAN.admin||!D)return;var p=D.commitments.filter(function(c){return c.status==="pending"});$("#nPend").textContent=p.length;
+  $("#appr").innerHTML=p.map(function(c){var s=D.stock[c.sku]||{},over=s.atp!=null&&c.qty>s.atp;return '<tr><td><input type="checkbox" data-id="'+esc(c.id)+'"></td><td class="sku">'+esc(c.id)+'</td><td class="ty">'+esc(c.type)+'</td><td>'+esc(c.dealer)+'</td><td class="sku">'+esc(c.sku)+'</td><td>'+esc(c.desc)+'</td><td class="r"><b>'+n(c.qty)+'</b></td><td class="r'+(over?" over":"")+'">'+n(s.atp)+'</td><td class="r">'+n(s.pending)+'</td><td>'+esc(day(c.until))+'</td><td>'+esc(c.name||c.email)+'</td><td>'+esc(c.remarks)+'</td></tr>'}).join("")||'<tr class="empty-row"><td colspan="12">No pending requests.</td></tr>'}
+$("#aAll").addEventListener("change",function(e){$$("#appr input[data-id]").forEach(function(c){c.checked=e.target.checked})});
+function decide(dec){var ids=$$("#appr input[data-id]:checked").map(function(c){return c.dataset.id});if(!ids.length){toast("Tick the requests first");return}
+  st("#aStatus","Saving…",true);HXAuth.api("decideCommitment",{ids:ids,decision:dec,note:$("#aNote").value}).then(function(d){if(!d.ok){st("#aStatus",HXAuth.message(d.error));return}accept(d);$("#aAll").checked=false;
+    st("#aStatus",(dec==="approve"?"Approved ":"Rejected ")+d.decided.length+(d.conflicts.length?" · NOT approved (not enough stock): "+d.conflicts.join("; "):"")+(d.skipped.length?" · already decided: "+d.skipped.join(", "):""),!d.conflicts.length)})}
+$("#aApprove").addEventListener("click",function(){decide("approve")});$("#aReject").addEventListener("click",function(){if(confirm("Reject the selected requests?"))decide("reject")});
+
+$("#signOut").addEventListener("click",function(){HXAuth.signOut();location.reload()});
+HXAuth.init($("#gsiButton"),start).catch(function(e){$("#gateMsg").textContent=HXAuth.message(e.message==="not_configured"?"not_configured":e.message)});
+})();
+</script>
+</body></html>
