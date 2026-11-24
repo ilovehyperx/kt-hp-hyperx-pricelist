@@ -34,8 +34,8 @@
   function build() {
     var st = document.createElement("style"); st.textContent = CSS; document.head.appendChild(st);
     var w = document.createElement("div");
-    w.innerHTML = '<button type="button" class="hxc-fab" id="hxcFab" hidden>Quote table <b id="hxcN">0</b></button>' +
-      '<aside class="hxc-dr" id="hxcDr" hidden aria-label="Quote table"><div class="hxc-hd"><h3>Quote table</h3><span class="hxc-note" id="hxcBasis"></span><button class="hxc-x" type="button" data-hxc="close" aria-label="Close">×</button></div>' +
+    w.innerHTML = '<button type="button" class="hxc-fab" id="hxcFab" hidden><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2.5l2.2 11h11l2-8H6.4"/></svg>View quote <b id="hxcN">0</b></button>' +
+      '<aside class="hxc-dr" id="hxcDr" hidden aria-label="Quote table"><div class="hxc-hd"><h3>Your quote</h3><span class="hxc-note" id="hxcBasis"></span><button class="hxc-x" type="button" data-hxc="close" aria-label="Close">×</button></div>' +
       '<div class="hxc-bd"><span class="hxc-lab">Customer / account</span><input class="hxc-in" id="hxcCust" maxlength="120" placeholder="e.g. SM Megamall branch, Acme Corp">' +
       '<div id="hxcLines"></div><span class="hxc-lab">Note on the table (optional)</span><input class="hxc-in" id="hxcNote" maxlength="300" placeholder="e.g. Prices valid until Nov 30, subject to stock"></div>' +
       '<div class="hxc-ft"><div class="hxc-tot"><span id="hxcU"></span><span id="hxcT"></span></div><div class="hxc-row"><button class="hxc-b" type="button" data-hxc="clear">Clear</button><span style="flex:1"></span><button class="hxc-b p" type="button" data-hxc="make" id="hxcMake">Make me a table</button></div></div></aside>' +
@@ -55,20 +55,21 @@
     $("#hxcNote").addEventListener("change", function () { C.note = this.value.trim(); C.idem = null; save(); });
   }
   function badge() { var n = C.lines.length; $("#hxcN").textContent = units(); $("#hxcFab").hidden = !n; mark(); }
-  function mark() { var inCart = {}; C.lines.forEach(function (l) { inCart[l.sku] = 1; }); [].forEach.call(document.querySelectorAll(".hxc-add[data-sku]"), function (b) { var on = !!inCart[b.dataset.sku]; b.classList.toggle("in", on); b.textContent = on ? "✓ In table" : "+ Table"; }); }
+  function mark() { var inCart = {}; C.lines.forEach(function (l) { inCart[l.sku] = 1; }); [].forEach.call(document.querySelectorAll(".hxc-add[data-sku]"), function (b) { var on = !!inCart[b.dataset.sku]; b.classList.toggle("in", on); b.textContent = on ? "✓ In quote" : "+ Add"; }); }
   function draw() {
     $("#hxcBasis").textContent = OPT.basis || ""; var d = OPT.dealer && OPT.dealer();
     $("#hxcCust").value = C.customer || (d ? d.name : ""); $("#hxcNote").value = C.note || "";
     $("#hxcLines").innerHTML = C.lines.map(function (l, i) {
       return '<div class="hxc-l" data-i="' + i + '"><div>' + esc(l.desc) + '<small>' + esc(l.sku) + (l.srp ? ' · SRP ' + peso(l.srp) : '') + '</small></div><input data-f="qty" inputmode="numeric" value="' + l.qty + '" aria-label="Quantity"><input data-f="price" inputmode="decimal" value="' + (l.price == null ? "" : l.price) + '" aria-label="Unit price"><button class="hxc-x" style="font-size:18px" type="button" data-hxc="del" data-i="' + i + '" aria-label="Remove">×</button></div>';
-    }).join("") || '<p class="hxc-empty">Nothing yet — tap “+ Table” on any SKU.</p>';
+    }).join("") || '<p class="hxc-empty">Your quote is empty — pick a variant and tap “Add to quote” on any product.</p>';
     $("#hxcU").textContent = C.lines.length + " SKU" + (C.lines.length === 1 ? "" : "s") + " · " + units() + " units";
     $("#hxcT").textContent = peso(total()); $("#hxcMake").disabled = !C.lines.length;
   }
   function open() { draw(); $("#hxcDr").hidden = false; }
   function add(it) {
     var l = C.lines.filter(function (x) { return x.sku === it.sku; })[0];
-    if (l) { l.qty++; toast(it.sku + " × " + l.qty); } else { C.lines.push({ sku: it.sku, desc: it.desc, price: it.price == null ? null : +it.price, srp: it.srp == null ? null : +it.srp, qty: 1 }); toast("Added " + it.sku + " to the quote table"); }
+    var n = Math.max(1, Math.round(+it.qty) || 1);
+    if (l) { l.qty += n; toast(it.sku + " × " + l.qty + " in your quote"); } else { C.lines.push({ sku: it.sku, desc: it.desc, price: it.price == null ? null : +it.price, srp: it.srp == null ? null : +it.srp, qty: n }); toast("Added " + n + " × " + it.sku + " to your quote"); }
     C.idem = null; save(); if (!$("#hxcDr").hidden) draw();
   }
 
@@ -137,7 +138,7 @@
     if (a === "cpimg") blob(function (bl) { if (!g.ClipboardItem) { toast("This browser can't copy images — use Download image"); return; } navigator.clipboard.write([new ClipboardItem({ "image/png": bl })]).then(function () { toast("Image copied — paste into Viber or email"); }, function () { toast("Copy blocked — use Download image"); }); });
     if (a === "dlimg") blob(function (bl) { var u = URL.createObjectURL(bl), l = document.createElement("a"); l.href = u; l.download = (meta().title.replace(/[^\w]+/g, "-") || "quote") + ".png"; l.click(); toast("Image downloaded"); });
   }
-  function btn(it) { return '<button type="button" class="hxc-add" data-sku="' + esc(it.sku) + '" data-desc="' + esc(it.desc) + '" data-price="' + (it.price == null ? "" : it.price) + '" data-srp="' + (it.srp == null ? "" : it.srp) + '">+ Table</button>'; }
+  function btn(it) { return '<button type="button" class="hxc-add" data-sku="' + esc(it.sku) + '" data-desc="' + esc(it.desc) + '" data-price="' + (it.price == null ? "" : it.price) + '" data-srp="' + (it.srp == null ? "" : it.srp) + '">+ Add</button>'; }
   function init(o) { OPT = o || {}; KEY = "hx-cart:" + (OPT.context || "default"); if (!$("#hxcFab")) build(); load(); badge(); }
   function setContext(ctx) { KEY = "hx-cart:" + ctx; OPT.context = ctx; load(); badge(); if (!$("#hxcDr").hidden) draw(); }
   g.HXCart = { init: init, add: add, btn: btn, mark: mark, open: open, setContext: setContext, _text: text, _html: html };

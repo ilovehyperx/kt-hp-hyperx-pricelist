@@ -191,10 +191,11 @@ img{max-width:100%;display:block}
 .chip svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.4}
 
 .products.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
-.padd{position:absolute;top:10px;right:10px;z-index:3;width:36px;height:36px;border-radius:50%;border:0;background:#e3192b;color:#fff;font:700 22px/1 Inter,system-ui,sans-serif;display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35);transition:transform .12s}
-.padd:hover{transform:scale(1.08)}.padd.in{background:#fff;color:#e3192b}
-.vpop{position:absolute;top:52px;right:10px;z-index:4;min-width:230px;max-width:290px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 34px rgba(0,0,0,.35);padding:8px}
-.vpop b{display:block;font-size:12px;margin:2px 4px 6px;color:var(--muted)}.vpop .vr{display:flex;align-items:center;gap:8px;padding:4px;font-size:12.5px}.vpop .vr span{flex:1}
+.buy{display:grid;grid-template-columns:1fr auto;gap:6px}
+.buy select{grid-column:1/-1;width:100%;height:36px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--ink);padding:0 8px;font:600 13px Inter,system-ui,sans-serif}
+.qty{display:flex;align-items:center;border:1px solid var(--line);border-radius:9px;overflow:hidden;height:38px}.qty button{width:30px;height:100%;border:0;background:var(--surface-2);color:var(--ink);font:700 16px Inter,sans-serif;cursor:pointer}.qty input{width:38px;height:100%;border:0;background:transparent;color:var(--ink);text-align:center;font:600 14px Inter,sans-serif}
+.addq{height:38px;border:0;border-radius:9px;background:#e3192b;color:#fff;font:700 13.5px Inter,system-ui,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;width:100%}.addq:hover{filter:brightness(1.08)}.addq.ok{background:#1f8f4e}
+.buy-row{display:grid;grid-template-columns:auto 1fr;gap:6px;grid-column:1/-1}
 .card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;min-width:0;transition:border-color .15s,transform .15s}
 .card:hover{border-color:color-mix(in srgb,var(--red-2) 45%,var(--line))}
 .card-media{position:relative;border:0;padding:0;background:var(--plate);aspect-ratio:4/3;cursor:pointer;display:grid;place-items:center;overflow:hidden;width:100%}
@@ -724,7 +725,7 @@ function card(p){
   var skuTxt=skus.length?(skus.length>2?skus.slice(0,2).join(" · ")+" +"+(skus.length-2):skus.join(" · ")):"SKU to confirm";
   var sw=p.variants.length>1?'<div class="swatches">'+p.variants.slice(0,6).map(function(v){return '<span class="sw">'+esc(v.label.split(" · ")[0])+'</span>'}).join("")+(p.variants.length>6?'<span class="sw">+'+(p.variants.length-6)+'</span>':"")+'</div>':"";
   var addable=p.variants.some(function(v){return v.sku});
-  return '<article class="card" data-id="'+p.id+'">'+(addable?'<button type="button" class="padd" data-padd="'+p.id+'" title="Add to quote table" aria-label="Add '+esc(p.name)+' to quote table">+</button>':"")+
+  return '<article class="card" data-id="'+p.id+'">'+
    '<button type="button" class="card-media" data-open="'+p.id+'" aria-label="View details for '+esc(p.name)+'">'+media(p)+
      '<span class="media-badges">'+(sp?'<span class="mbadge sp">Special price</span>':"")+(p.ltb?'<span class="mbadge ltb">Last-time-buy</span>':"")+(p.badge?'<span class="mbadge">'+esc(p.badge)+'</span>':"")+'</span>'+
      (p.variants.length>1?'<span class="vcount">'+p.variants.length+' variants</span>':"")+'</button>'+
@@ -738,6 +739,7 @@ function card(p){
        '<div class="price srp"><span class="lbl">SRP</span><span class="val'+(srp?"":" na")+'">'+(srp?rangeText(srp):(p.priceNote||"Ask your AM"))+'</span><span class="sub">Suggested retail</span></div>'+
        (sp?'<div class="price sp"><span class="lbl">SPECIAL PRICE</span><span class="val">'+rangeText(sp)+'</span><span class="was">DP '+rangeText(dp)+'</span>'+(save?'<span class="save">Save up to '+peso(save)+'</span>':"")+'</div>'
           :'<div class="price dp"><span class="lbl">DP</span><span class="val'+(dp?"":" na")+'">'+(dp?rangeText(dp):"Ask your AM")+'</span><span class="sub">Dealer price</span></div>')+'</div>'+
+     (addable?buyBox(p):"")+
      '<div class="card-actions"><button type="button" class="btn btn-sm" data-open="'+p.id+'">View details</button><button type="button" class="btn btn-sm copy-spec" data-copy="'+p.id+'" title="Copy model, SKUs, SRP and DP to paste in a chat or email">Copy</button></div></div>'+
    '</div></article>'}
 
@@ -986,15 +988,15 @@ function xCells(p,v){if(!XS)return "";var x=xRow(p,v),add="";if(!x)return '<td c
 /* ---------- quote table (+) for everyone; logged to Pipes only for signed-in Iontech sales ---------- */
 if(typeof HXCart!=="undefined")HXCart.init({context:"pricelist",basis:"DP / special price",canLog:function(){return !!XS},page:"pricelist"});
 function cartItem(p,v){var pr=vPrice(p,v),sp=vSP(p,v);return {sku:base(v.sku),desc:p.name+(v.label&&p.variants.length>1?" · "+v.label:""),price:sp!=null?sp:pr.dp,srp:pr.srp}}
-function closeVpop(){var o=document.querySelector(".vpop");if(o)o.remove()}
-document.addEventListener("click",function(e){var b=e.target.closest("[data-padd]");
-  if(!b){if(!e.target.closest(".vpop"))closeVpop();return}
-  e.preventDefault();e.stopPropagation();var p=DATA.products.filter(function(x){return x.id===b.dataset.padd})[0];if(!p||typeof HXCart==="undefined")return;
-  var vs=p.variants.filter(function(v){return v.sku});
-  if(vs.length===1){HXCart.add(cartItem(p,vs[0]));b.classList.add("in");b.textContent="✓";return}
-  var open=document.querySelector(".vpop");closeVpop();if(open&&open.parentNode===null&&open.dataset.p===p.id)return;
-  var d=document.createElement("div");d.className="vpop";d.dataset.p=p.id;d.innerHTML='<b>Add which variant?</b>'+vs.map(function(v){var it=cartItem(p,v);return '<div class="vr"><span>'+esc(v.label||it.sku)+'<br><small class="sku">'+esc(it.sku)+' · '+(it.price!=null?peso(it.price):"—")+'</small></span>'+HXCart.btn(it)+'</div>'}).join("");
-  b.closest(".card").appendChild(d);HXCart.mark()},true);
+function buyBox(p){var vs=p.variants.filter(function(v){return v.sku});
+  return '<div class="buy" data-buy="'+p.id+'">'+(vs.length>1?'<select aria-label="Variant">'+vs.map(function(v,k){var it=cartItem(p,v);return '<option value="'+k+'">'+esc(v.label||it.sku)+' · '+(it.price!=null?peso(it.price):"price TBA")+(vLevel(p,v)==="out"?" · out of stock":"")+'</option>'}).join("")+'</select>':"")+
+    '<div class="buy-row"><div class="qty"><button type="button" data-q="-1" aria-label="Less">−</button><input inputmode="numeric" value="1" aria-label="Quantity"><button type="button" data-q="1" aria-label="More">+</button></div><button type="button" class="addq" data-addq>Add to quote</button></div></div>'}
+document.addEventListener("click",function(e){var bx=e.target.closest("[data-buy]");if(!bx)return;var inp=bx.querySelector(".qty input");
+  if(e.target.dataset.q){inp.value=Math.max(1,(Math.round(+inp.value)||1)+(+e.target.dataset.q));return}
+  if(!e.target.closest("[data-addq]")||typeof HXCart==="undefined")return;
+  var p=DATA.products.filter(function(x){return x.id===bx.dataset.buy})[0];if(!p)return;var vs=p.variants.filter(function(v){return v.sku}),sel=bx.querySelector("select"),v=vs[sel?+sel.value:0];
+  var q=Math.max(1,Math.round(+inp.value)||1),it=cartItem(p,v);it.qty=q;HXCart.add(it);
+  var btn=bx.querySelector("[data-addq]");btn.classList.add("ok");btn.textContent="✓ Added "+q;clearTimeout(btn._t);btn._t=setTimeout(function(){btn.classList.remove("ok");btn.textContent="Add to quote"},1600);inp.value=1});
 function xMark(){if(typeof HXCart!=="undefined"&&XS)setTimeout(HXCart.mark,0)}
 function xRefresh(){xMark();var keep=!$("#detailModal").hidden&&/^#p-/.test(location.hash);renderNav();renderWelcome();setView(state.view);if(keep)openDetail(location.hash.slice(3),false)}
 function xLoad(){return HXAuth.api("stock",{}).then(function(d){
