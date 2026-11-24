@@ -374,7 +374,13 @@ $("#uSave").addEventListener("click",function(){var b=$("#uSave");b.disabled=tru
   call("saveUsers",{users:USERS},"Users saved").then(function(){msg("#uMsg","Saved.",true)},function(){}).then(function(){b.textContent="Save users";renderUsers()})});
 
 /* ================= DEALERS ================= */
-var DSEG="fav",BULK={base:"thr",pct:"",round:"0"};
+var DSEG="fav",BULK={base:"thr",pct:"",round:"0"},PSORT={k:"",d:1},PCOLS=[],PHIDE={};try{PHIDE=JSON.parse(localStorage.getItem("hx-dp-hide")||"{}")||{}}catch(e){PHIDE={}}
+var PCOLS_ALL=[["cat","Category"],["rel","Released"],["cost","Inv. cost"],["dp","Base DP"],["thr","Threshold"],["sp","Sales SP"],["mno","Margin w/o rebate"],["mw","Margin w/ rebate"],["tag","Tag"],["cap","Qty cap"],["note","Note"]];
+document.addEventListener("click",function(){var x=document.getElementById("pCols");if(x)x.hidden=true});
+function bulkPrice(c,base,mp,dg){if(!c)return null;if(base==="margin")return c.cost?E.roundUp(c.cost/(1-mp),dg):null;
+  if(base==="mreb"){var ec=c.rebate&&c.rebateLeft>0&&c.ndp!=null?(c.ndp-c.rebate)*A.opts.vat:c.cost;return ec?E.roundUp(ec/(1-mp),dg):null}
+  return c[base]!=null?c[base]:null}
+function dedupePrices(){var seen={},n=0;CUR.prices=CUR.prices.filter(function(p){if(seen[p.sku]){n++;return false}seen[p.sku]=1;return true});return n}
 function renderDealerList(){
   var f=($("#dSearch").value||"").toLowerCase(),lead=$("#dLead").value;
   var leads={};A.dealers.forEach(function(d){if(d.hpLead)leads[d.hpLead]=1});
@@ -406,15 +412,33 @@ function margins(p){var c=CAT[p.sku];if(!c||!c.cost||!p.price)return {no:null,w:
   var useReb=c.rebate&&c.rebateLeft>0;return {no:1-c.cost/p.price,w:1-(useReb?(c.ndp-c.rebate)*A.opts.vat:c.cost)/p.price}}
 function renderDealer(){
   if(!CUR){return}
+  var dup=dedupePrices();if(dup)setTimeout(function(){toast("Removed "+dup+" duplicate SKU row"+(dup===1?"":"s"))},0);
   var minM=A.opts.minMargin;
-  var priceRows=CUR.prices.map(function(p,i){var c=CAT[p.sku]||{},m=margins(p),lb=c.limitBelow!=null?c.limitBelow:minM,lim=m.no!=null&&m.no<lb;
-    return '<tr data-i="'+i+'"><td class="sku">'+esc(p.sku)+'</td><td class="d" style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+esc(c.desc)+'">'+esc(c.desc||"Unknown SKU")+(c.isNew?' <span class="tag tag-new">New</span>':"")+'</td>'+
-      '<td class="r">'+money(c.cost,2)+'</td><td class="r">'+money(c.dp)+'</td><td class="r">'+money(c.thr)+'</td><td class="r">'+money(c.sp)+'</td>'+
-      '<td class="r"><input class="inp num" data-f="price" inputmode="decimal" value="'+esc(p.price==null?"":p.price)+'"></td>'+
-      '<td class="r '+(m.no==null?"":m.no<0?"neg":lim?"warn":"okc")+'">'+pct(m.no)+'</td><td class="r '+(m.w!=null&&m.w<lb?"neg":"")+'">'+pct(m.w)+'</td>'+
-      '<td>'+(m.no==null?"":lim?'<span class="tag tag-lim">Limited Qty</span>':'<span class="tag tag-sp">Special</span>')+(c.rebate?'<span class="units">rebate ₱'+money(c.rebate)+' · '+c.rebateLeft+' left</span>':"")+'</td>'+
-      '<td class="r"><input class="inp sm" data-f="qtyCap" inputmode="numeric" value="'+esc(p.qtyCap==null?"":p.qtyCap)+'" placeholder="—"></td>'+
-      '<td><input class="inp" data-f="note" value="'+esc(p.note||"")+'" style="width:150px"></td><td><button class="x" data-del type="button" title="Remove SKU">×</button></td></tr>'}).join("");
+  var newer=function(c){return c.release||c.opgAdded||""};
+  var COLS=[
+    {k:"sku",t:"SKU",must:1,sort:function(p,c){return p.sku},td:function(p,c){return '<td class="sku">'+esc(p.sku)+'</td>'}},
+    {k:"desc",t:"Description",must:1,sort:function(p,c){return (c.desc||"").toLowerCase()},td:function(p,c){return '<td class="d" style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+esc(c.desc)+'">'+esc(c.desc||"Unknown SKU")+(c.isNew?' <span class="tag tag-new">New</span>':"")+'</td>'}},
+    {k:"cat",t:"Category",sort:function(p,c){return (c.cat||"~").toLowerCase()},td:function(p,c){return '<td style="white-space:nowrap">'+esc(c.cat||"—")+'</td>'}},
+    {k:"rel",t:"Released",sort:function(p,c){return newer(c)},td:function(p,c){var d=newer(c);return '<td style="white-space:nowrap;font-size:12px">'+(d?esc(fmtDay(d)):'<span class="sub">—</span>')+'</td>'}},
+    {k:"cost",t:"Inv. cost",r:1,sort:function(p,c){return c.cost},td:function(p,c){return '<td class="r">'+money(c.cost,2)+'</td>'}},
+    {k:"dp",t:"Base DP",r:1,sort:function(p,c){return c.dp},td:function(p,c){return '<td class="r">'+money(c.dp)+'</td>'}},
+    {k:"thr",t:"Threshold",r:1,sort:function(p,c){return c.thr},td:function(p,c){return '<td class="r">'+money(c.thr)+'</td>'}},
+    {k:"sp",t:"Sales SP",r:1,sort:function(p,c){return c.sp},td:function(p,c){return '<td class="r">'+money(c.sp)+'</td>'}},
+    {k:"price",t:"Dealer price",r:1,must:1,sort:function(p,c){return p.price},td:function(p,c){return '<td class="r"><input class="inp num" data-f="price" inputmode="decimal" value="'+esc(p.price==null?"":p.price)+'"></td>'}},
+    {k:"mno",t:"Margin w/o rebate",r:1,sort:function(p,c){return margins(p).no},td:function(p,c,m,lim){return '<td class="r '+(m.no==null?"":m.no<0?"neg":lim?"warn":"okc")+'">'+pct(m.no)+'</td>'}},
+    {k:"mw",t:"w/ rebate",r:1,sort:function(p,c){return margins(p).w},td:function(p,c,m,lim,lb){return '<td class="r '+(m.w!=null&&m.w<lb?"neg":"")+'">'+pct(m.w)+'</td>'}},
+    {k:"tag",t:"Tag",td:function(p,c,m,lim){return '<td>'+(m.no==null?"":lim?'<span class="tag tag-lim">Limited Qty</span>':'<span class="tag tag-sp">Special</span>')+(c.rebate?'<span class="units">rebate ₱'+money(c.rebate)+' · '+c.rebateLeft+' left</span>':"")+'</td>'}},
+    {k:"cap",t:"Qty cap",r:1,td:function(p){return '<td class="r"><input class="inp sm" data-f="qtyCap" inputmode="numeric" value="'+esc(p.qtyCap==null?"":p.qtyCap)+'" placeholder="—"></td>'}},
+    {k:"note",t:"Note",td:function(p){return '<td><input class="inp" data-f="note" value="'+esc(p.note||"")+'" style="width:150px"></td>'}}];
+  PCOLS=COLS;var vis=COLS.filter(function(c){return c.must||!PHIDE[c.k]});
+  var idx=CUR.prices.map(function(p,i){return i}),sc=COLS.filter(function(c){return c.k===PSORT.k})[0];
+  if(sc&&sc.sort){var dir=PSORT.d;idx.sort(function(a,b){var pa=CUR.prices[a],pb=CUR.prices[b],x=sc.sort(pa,CAT[pa.sku]||{}),y=sc.sort(pb,CAT[pb.sku]||{});
+    var ex=x==null||x==="",ey=y==null||y==="";if(ex!==ey)return ex?1:-1;if(x<y)return -dir;if(x>y)return dir;return (CAT[pa.sku]||{}).desc>(CAT[pb.sku]||{}).desc?1:-1})}
+  var lastCat=null,ncol=vis.length+1;
+  var priceRows=idx.map(function(i){var p=CUR.prices[i],c=CAT[p.sku]||{},m=margins(p),lb=c.limitBelow!=null?c.limitBelow:minM,lim=m.no!=null&&m.no<lb;
+    var head="";if(PSORT.k==="cat"&&c.cat!==lastCat){lastCat=c.cat;var n=CUR.prices.filter(function(q){return (CAT[q.sku]||{}).cat===c.cat}).length;head='<tr class="grp"><td colspan="'+ncol+'" style="background:var(--soft,rgba(127,127,127,.08));font-weight:700;font-size:12px;letter-spacing:.04em;text-transform:uppercase">'+esc(c.cat||"No category")+' <span class="sub" style="font-weight:400;text-transform:none">· '+n+' SKU'+(n===1?"":"s")+'</span></td></tr>'}
+    return head+'<tr data-i="'+i+'">'+vis.map(function(col){return col.td(p,c,m,lim,lb)}).join("")+'<td><button class="x" data-del type="button" title="Remove SKU">×</button></td></tr>'}).join("");
+  var thead=vis.map(function(c){var on=PSORT.k===c.k;return '<th'+(c.r?' class="r"':"")+(c.sort?' data-psort="'+c.k+'" style="cursor:pointer;user-select:none;white-space:nowrap" title="Sort"':"")+'>'+c.t+(on?(PSORT.d>0?" ▲":" ▼"):"")+'</th>'}).join("")+'<th></th>';
   $("#dEditor").innerHTML=
    '<div class="card"><div class="row" style="justify-content:space-between"><h2>'+(CUR.id?(CUR.favorite?"★ ":"")+esc(CUR.name)+' <span class="lock">'+esc(CUR.id)+'</span>':"New dealer page")+'</h2>'+
      (CUR.id?'<div class="row"><a class="btn btn-sm" href="'+esc(link())+'" target="_blank" rel="noopener">Open page</a><button class="btn btn-sm" id="dCopy" type="button">Copy link</button></div>':"")+'</div>'+
@@ -433,12 +457,16 @@ function renderDealer(){
      '<label class="f" style="margin-top:12px">Note shown on the page<input class="inp" id="fNote" value="'+esc(CUR.note)+'" placeholder="e.g. Q4 volume deal · min 10 units per SKU"></label></div>'+
    '<div class="card"><div class="row" style="justify-content:space-between;margin-bottom:10px"><div><h2>Special prices for this dealer</h2><p class="sub" style="margin:0">Type the price you dictate. Under the category&#39;s Limited-below margin ('+pct(minM)+' unless set; monitors 0%) without the rebate shows the dealer a <b>Limited Qty Price</b> with units left (rebate units, stock and your qty cap, whichever is lowest).</p></div></div>'+
      '<div class="row" style="margin-bottom:10px"><div class="add-sku"><input class="inp" id="skuQ" placeholder="Add SKU: type model or SKU…" autocomplete="off"><div class="sugg" id="sugg" hidden></div></div>'+
+       '<button class="btn btn-sm" id="addAll" type="button" title="Adds every active SKU not yet on this page, priced with the rule on the right">+ All active SKUs</button>'+
        '<button class="btn btn-sm" id="addLim" type="button" title="Adds every SKU that currently has a rebate-backed Limited Qty sales price">+ All rebate SKUs</button>'+
        '<span style="flex:1"></span><span style="font-size:12.5px;color:var(--muted)">Set all prices to</span>'+
-       '<select class="inp" id="bulkBase"><option value="thr">Threshold</option><option value="sp">Sales special price</option><option value="dp">Base DP</option><option value="margin">Margin on cost…</option></select>'+
+       '<select class="inp" id="bulkBase"><option value="thr">Threshold</option><option value="sp">Sales special price</option><option value="dp">Base DP</option><option value="margin">Margin on cost…</option><option value="mreb">Margin incl. rebate…</option></select>'+
        '<input class="inp sm" id="bulkPct" placeholder="%" inputmode="decimal" hidden><select class="inp" id="bulkRound" hidden>'+DIGITS.map(function(d){return '<option value="'+d.v+'"'+(d.v===0?" selected":"")+'>round up '+d.t+'</option>'}).join("")+'</select>'+
        '<button class="btn btn-sm" id="bulkGo" type="button">Apply</button></div>'+
-     '<div class="tbl-wrap" style="max-height:460px"><table class="tbl dense"><thead><tr><th>SKU</th><th>Description</th><th class="r">Inv. cost</th><th class="r">Base DP</th><th class="r">Threshold</th><th class="r">Sales SP</th><th class="r">Dealer price</th><th class="r">Margin w/o rebate</th><th class="r">w/ rebate</th><th>Tag</th><th class="r">Qty cap</th><th>Note</th><th></th></tr></thead><tbody id="pBody">'+(priceRows||'<tr class="empty-row"><td colspan="13">No SKUs yet. Add them with the search box above.</td></tr>')+'</tbody></table></div>'+
+     '<div class="row" style="margin-bottom:10px;gap:8px"><span style="font-size:12.5px;color:var(--muted)">'+CUR.prices.length+' SKU'+(CUR.prices.length===1?"":"s")+' · sort by</span><select class="inp" id="pSort" style="width:auto">'+[["","As added"],["rel:-1","Newest first"],["rel:1","Oldest first"],["desc:1","Name A→Z"],["desc:-1","Name Z→A"],["cat:1","Category"],["price:-1","Dealer price high→low"],["price:1","Dealer price low→high"],["cost:-1","Inv. cost high→low"],["mno:1","Margin low→high"],["mno:-1","Margin high→low"]].map(function(o){var cur=PSORT.k?PSORT.k+":"+PSORT.d:"";return '<option value="'+o[0]+'"'+(o[0]===cur?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select>'+
+       '<span style="flex:1"></span><div style="position:relative"><button class="btn btn-sm" id="pColsBtn" type="button">Columns ▾</button><div id="pCols" hidden style="position:absolute;right:0;top:110%;z-index:30;background:var(--card,#1b1c20);border:1px solid var(--line);border-radius:12px;padding:8px 12px;box-shadow:0 10px 30px rgba(0,0,0,.35);min-width:200px">'+
+       PCOLS_ALL.map(function(c){return '<label class="check" style="display:flex;margin:5px 0"><input type="checkbox" data-pcol="'+c[0]+'"'+(PHIDE[c[0]]?"":" checked")+'><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span><span class="label">'+c[1]+'</span></label>'}).join("")+'<button class="btn btn-sm" id="pColsReset" type="button" style="margin-top:6px;width:100%">Show all</button></div></div></div>'+
+     '<div class="tbl-wrap" style="max-height:460px"><table class="tbl dense"><thead><tr>'+thead+'</tr></thead><tbody id="pBody">'+(priceRows||'<tr class="empty-row"><td colspan="'+ncol+'">No SKUs yet. Add them with the search box above.</td></tr>')+'</tbody></table></div>'+
      '<div class="row" style="margin-top:12px"><span class="msg" id="dMsg"></span><span style="flex:1"></span>'+(CUR.id?'<button class="btn btn-sm" id="dRevert" type="button"'+(dirtyDealer()?"":" disabled")+'>Discard changes</button>':"")+'<button class="btn btn-primary" id="dSave" type="button"'+(dirtyDealer()?"":" disabled")+'>'+(CUR.id?"Save dealer page":"Create dealer page")+'</button></div></div>';
   wireDealer();
 }
@@ -455,17 +483,28 @@ function wireDealer(){
     renderDealer()});
   $("#pBody").addEventListener("click",function(e){if(!e.target.hasAttribute("data-del"))return;CUR.prices.splice(+e.target.closest("tr").dataset.i,1);renderDealer()});
   $("#addLim").addEventListener("click",function(){var n=0;A.catalog.forEach(function(c){if(c.active&&c.limited&&c.rebate&&c.rebateLeft>0&&!CUR.prices.some(function(p){return p.sku===c.sku})){CUR.prices.push({sku:c.sku,price:c.sp,qtyCap:null,note:""});n++}});toast(n?"Added "+n+" SKUs at the sales special price":"Nothing new to add");renderDealer()});
-  var syncBulk=function(){var m=BULK.base==="margin";$("#bulkBase").value=BULK.base;$("#bulkPct").value=BULK.pct;$("#bulkRound").value=BULK.round;$("#bulkPct").hidden=!m;$("#bulkRound").hidden=!m};syncBulk();
+  var syncBulk=function(){var m=BULK.base==="margin"||BULK.base==="mreb";$("#bulkBase").value=BULK.base;$("#bulkPct").value=BULK.pct;$("#bulkRound").value=BULK.round;$("#bulkPct").hidden=!m;$("#bulkRound").hidden=!m};syncBulk();
   $("#bulkBase").addEventListener("change",function(e){BULK.base=e.target.value;syncBulk()});
   $("#bulkPct").addEventListener("input",function(e){BULK.pct=e.target.value});$("#bulkRound").addEventListener("change",function(e){BULK.round=e.target.value});
   $("#bulkGo").addEventListener("click",function(){if(!CUR.prices.length)return;var base=$("#bulkBase").value,mp=parseFloat($("#bulkPct").value)/100,dg=+$("#bulkRound").value;
-    if(base==="margin"&&(isNaN(mp)||mp<=-0.5||mp>=0.95)){toast("Enter a margin %, e.g. 4");return}
-    CUR.prices.forEach(function(p){var c=CAT[p.sku];if(!c)return;p.price=base==="margin"?(c.cost?E.roundUp(c.cost/(1-mp),dg):p.price):(c[base]!=null?c[base]:p.price)});renderDealer()});
+    if((base==="margin"||base==="mreb")&&(isNaN(mp)||mp<=-0.5||mp>=0.95)){toast("Enter a margin %, e.g. 4");return}
+    CUR.prices.forEach(function(p){var v=bulkPrice(CAT[p.sku],base,mp,dg);if(v!=null)p.price=v});renderDealer()});
+  $("#addAll").addEventListener("click",function(){var base=$("#bulkBase").value,mp=parseFloat($("#bulkPct").value)/100,dg=+$("#bulkRound").value;
+    if((base==="margin"||base==="mreb")&&(isNaN(mp)||mp<=-0.5||mp>=0.95)){toast("Set the margin % first, e.g. 4");return}
+    var have={};CUR.prices.forEach(function(p){have[p.sku]=1});var n=0;
+    A.catalog.forEach(function(c){if(!c.active||have[c.sku])return;var v=bulkPrice(c,base,mp,dg);if(v==null)v=c.thr;CUR.prices.push({sku:c.sku,price:v,qtyCap:null,note:""});have[c.sku]=1;n++});
+    toast(n?"Added "+n+" SKUs ("+$("#bulkBase").selectedOptions[0].textContent.replace("…","")+(base==="margin"||base==="mreb"?" "+$("#bulkPct").value+"%":"")+") — existing prices kept":"Every active SKU is already listed");renderDealer()});
+  $("#pSort").addEventListener("change",function(e){var v=e.target.value.split(":");PSORT={k:v[0]||"",d:+v[1]||1};renderDealer()});
+  $$("[data-psort]").forEach(function(th){th.addEventListener("click",function(){var k=th.dataset.psort;PSORT=PSORT.k===k?{k:k,d:-PSORT.d}:{k:k,d:/price|cost|dp|thr|sp|rel/.test(k)?-1:1};renderDealer()})});
+  $("#pColsBtn").addEventListener("click",function(e){e.stopPropagation();$("#pCols").hidden=!$("#pCols").hidden});
+  $("#pCols").addEventListener("click",function(e){e.stopPropagation()});
+  $("#pCols").addEventListener("change",function(e){var k=e.target.dataset.pcol;if(!k)return;if(e.target.checked)delete PHIDE[k];else PHIDE[k]=1;try{localStorage.setItem("hx-dp-hide",JSON.stringify(PHIDE))}catch(x){}renderDealer();$("#pCols").hidden=false});
+  $("#pColsReset").addEventListener("click",function(){PHIDE={};try{localStorage.removeItem("hx-dp-hide")}catch(x){}renderDealer();$("#pCols").hidden=false});
   var q=$("#skuQ"),sg=$("#sugg"),hits=[],on=0;
   function sugg(){var v=q.value.trim().toLowerCase();if(!v){sg.hidden=true;return}
     hits=A.catalog.filter(function(c){return c.active&&!CUR.prices.some(function(p){return p.sku===c.sku})&&(c.sku+" "+c.desc+" "+c.cat).toLowerCase().indexOf(v)>=0}).slice(0,12);on=0;
     sg.innerHTML=hits.map(function(c,i){return '<button type="button" data-sku="'+esc(c.sku)+'"'+(i===0?' class="on"':"")+'><span class="s">'+esc(c.sku)+'</span><span>'+esc(c.desc)+'</span><span class="m">Thr ₱'+money(c.thr)+'</span></button>'}).join("")||'<p class="sub" style="padding:8px 10px;margin:0">No match</p>';sg.hidden=false}
-  function add(sku){var c=CAT[sku];if(!c)return;CUR.prices.push({sku:sku,price:c.thr,qtyCap:null,note:""});renderDealer();$("#skuQ").focus()}
+  function add(sku){var c=CAT[sku];if(!c)return;if(CUR.prices.some(function(p){return p.sku===sku})){toast(sku+" is already on this page");q.value="";sg.hidden=true;var tr=null;CUR.prices.forEach(function(p,i){if(p.sku===sku)tr=document.querySelector('#pBody tr[data-i="'+i+'"]')});if(tr){tr.scrollIntoView({block:"center"});var inp=tr.querySelector("[data-f=price]");if(inp){inp.focus();inp.select()}}return}CUR.prices.push({sku:sku,price:c.thr,qtyCap:null,note:""});renderDealer();$("#skuQ").focus()}
   q.addEventListener("input",sugg);
   q.addEventListener("keydown",function(e){if(sg.hidden)return;if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();on=Math.max(0,Math.min(hits.length-1,on+(e.key==="ArrowDown"?1:-1)));$$("button",sg).forEach(function(b,i){b.classList.toggle("on",i===on)})}
     else if(e.key==="Enter"&&hits[on]){e.preventDefault();add(hits[on].sku)}else if(e.key==="Escape")sg.hidden=true});
