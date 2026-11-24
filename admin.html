@@ -93,6 +93,7 @@ label.f .inp,label.f .txt{font-weight:500;color:var(--ink)}
   <div class="page-head"><div><p class="eyebrow">HyperX · Iontech</p><h1>Admin console</h1><p class="meta" id="meta"></p></div></div>
   <nav class="tabs" role="tablist">
     <button role="tab" data-tab="dealers" aria-selected="true">Dealer pages<span class="n" id="tnD"></span></button>
+    <button role="tab" data-tab="requests" aria-selected="false">Access requests<span class="n" id="tnR"></span></button>
     <button role="tab" data-tab="users" aria-selected="false">Users &amp; admins<span class="n" id="tnU"></span></button>
     <button role="tab" data-tab="data" aria-selected="false">Data uploads</button>
     <button role="tab" data-tab="settings" aria-selected="false">Settings</button>
@@ -110,6 +111,16 @@ label.f .inp,label.f .txt{font-weight:500;color:var(--ink)}
       </div>
       <div id="dEditor"><div class="card"><p class="sub">Pick a dealer on the left, or create a new one.</p></div></div>
     </div>
+  </section>
+
+  <!-- ===== Access requests ===== -->
+  <section data-panel="requests" hidden>
+    <div class="card">
+      <h2>Access requests</h2>
+      <p class="sub">People who registered at <a href="register.html" target="_blank">register.html</a>. Pick their role and the HP partner pages they should see, then Approve: they're added to Users and to each page's assigned emails in one step. Share the link with new sales and CSOs.</p>
+      <div id="rqList"></div>
+    </div>
+    <div class="card"><h2>Decided</h2><div class="tbl-wrap" style="max-height:300px"><table class="tbl dense"><thead><tr><th>Email</th><th>Name</th><th>Status</th><th>Role</th><th>Dealer pages</th><th>By</th><th>When</th></tr></thead><tbody id="rqDone"></tbody></table></div></div>
   </section>
 
   <!-- ===== Users ===== -->
@@ -251,7 +262,7 @@ function accept(d){
   $("#meta").innerHTML=d.catalog.length+" SKUs · "+d.users.length+" users · "+d.dealers.length+" dealer pages"+(d.deal?" · rebate deal "+esc(d.deal.id)+" to "+esc(fmtDay(d.deal.end)):"")+(d.selloutAsOf?" · sell-out to "+esc(fmtDay(d.selloutAsOf)):"");
   $("#tnD").textContent=d.dealers.length;$("#tnU").textContent=d.users.length;
   var lds={};d.dealers.forEach(function(x){if(x.hpLead)lds[x.hpLead]=1});$("#leadList").innerHTML=Object.keys(lds).sort().map(function(l){return '<option value="'+esc(l)+'">'}).join("");
-  renderUsers();renderDealerList();renderData();renderSettings();renderActivity();
+  renderUsers();renderRequests();renderDealerList();renderData();renderSettings();renderActivity();
   if(CUR&&CUR.id){var fresh=d.dealers.filter(function(x){return x.id===CUR.id})[0];if(fresh&&!dirtyDealer()){CUR=clone(fresh);CUR0=JSON.stringify(CUR)}renderDealerList();renderDealer()}
 }
 
@@ -262,6 +273,32 @@ function route(){var h=location.hash.replace(/^#/,"").split("/");showTab(["deale
 
 /* ================= USERS ================= */
 function dealerCount(email){return A.dealers.filter(function(d){return d.emails.indexOf(email)>=0}).map(function(d){return d.name})}
+/* ---------- access requests ---------- */
+var RQSEL={};
+function rqSuggest(r){var lines=String(r.partners||"").toLowerCase().split(/\n|,|;/).map(function(x){return x.replace(/\(.*?\)/g," ").trim()}).filter(function(x){return x.length>2});
+  var codes=(String(r.partners||"").match(/\b[A-Z]-?\d{2,}\b/gi)||[]).map(function(c){return c.toUpperCase()});
+  return A.dealers.filter(function(d){var n=(d.name||"").toLowerCase();return codes.indexOf(String(d.code||"").toUpperCase())>=0||lines.some(function(l){return n.indexOf(l)>=0||l.indexOf(n)>=0&&n.length>3})}).map(function(d){return d.id})}
+function renderRequests(){var R=A.registrations||[],pend=R.filter(function(r){return r.status==="pending"});$("#tnR").textContent=pend.length||"";
+  var roles=A.roleNames||{},opt=function(sel){return Object.keys(roles).concat(["admin"]).map(function(k){return '<option value="'+k+'"'+(k===sel?" selected":"")+'>'+esc(roles[k]||"Admin")+'</option>'}).join("")};
+  $("#rqList").innerHTML=pend.map(function(r){if(!RQSEL[r.email])RQSEL[r.email]=rqSuggest(r);var sel=RQSEL[r.email];
+    return '<div class="card" style="box-shadow:none;margin:10px 0 0" data-rq="'+esc(r.email)+'"><div class="row" style="justify-content:space-between"><div><b>'+esc(r.name)+'</b> · '+esc(r.email)+(r.mobile?' · '+esc(r.mobile):"")+'<div class="sub" style="margin:2px 0 0">Asked for <b>'+esc(roles[r.role]||r.role)+'</b> · '+esc(fmtDay((r.requestedOn||"").slice(0,10)))+(r.note?' · “'+esc(r.note)+'”':"")+'</div></div>'+
+      '<label class="f" style="margin:0">Grant role<select class="inp" data-f="role">'+opt(r.role)+'</select></label></div>'+
+      '<p class="sub" style="white-space:pre-line;margin:10px 0 6px"><b>Partners they handle:</b> '+esc(r.partners||"—")+'</p>'+
+      '<div class="row" style="margin-bottom:6px"><input class="inp" data-f="q" placeholder="Find dealer pages to assign…" style="flex:1"><span class="sub" style="margin:0"><b data-n>'+sel.length+'</b> page(s) selected</span></div>'+
+      '<div data-dl style="max-height:190px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:6px 10px">'+rqDealers(r.email,"")+'</div>'+
+      '<div class="row" style="margin-top:10px"><input class="inp" data-f="note" placeholder="Note (optional)" style="flex:1"><button class="btn btn-sm" data-act="reject" type="button">Reject</button><button class="btn btn-primary btn-sm" data-act="approve" type="button">Approve</button></div></div>'}).join("")||'<p class="sub">No pending requests.</p>';
+  $("#rqDone").innerHTML=R.filter(function(r){return r.status!=="pending"}).sort(function(a,b){return String(b.decidedOn).localeCompare(String(a.decidedOn))}).map(function(r){var names=String(r.dealerIds||"").split(/,\s*/).filter(Boolean).map(function(id){var d=A.dealers.filter(function(x){return x.id===id})[0];return d?d.name:id});
+    return '<tr><td>'+esc(r.email)+'</td><td>'+esc(r.name)+'</td><td>'+esc(r.status)+'</td><td>'+esc(r.grantedRole)+'</td><td>'+esc(names.join(", "))+'</td><td>'+esc(r.decidedBy)+'</td><td>'+esc(fmtDay((r.decidedOn||"").slice(0,10)))+'</td></tr>'}).join("")||'<tr class="empty-row"><td colspan="7">None yet.</td></tr>'}
+function rqDealers(email,q){var sel=RQSEL[email]||[];q=(q||"").toLowerCase();
+  var list=A.dealers.filter(function(d){return sel.indexOf(d.id)>=0||!q||(d.name+" "+(d.code||"")+" "+d.id).toLowerCase().indexOf(q)>=0}).sort(function(a,b){return (sel.indexOf(b.id)>=0)-(sel.indexOf(a.id)>=0)||(b.favorite?1:0)-(a.favorite?1:0)||a.name.localeCompare(b.name)}).slice(0,q?60:40);
+  return list.map(function(d){return '<label class="check" style="display:flex;margin:3px 0"><input type="checkbox" data-d="'+esc(d.id)+'"'+(sel.indexOf(d.id)>=0?" checked":"")+'><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span><span class="label">'+(d.favorite?"★ ":"")+esc(d.name)+' <span class="sub">'+esc(d.code||d.id)+(d.emails.length?" · "+d.emails.length+" assigned":"")+'</span></span></label>'}).join("")+(q?"":'<p class="sub" style="margin:4px 0">Type to find more dealers. No page yet? Create it under Dealer pages first.</p>')}
+$("#rqList").addEventListener("input",function(e){if(e.target.dataset.f!=="q")return;var c=e.target.closest("[data-rq]");c.querySelector("[data-dl]").innerHTML=rqDealers(c.dataset.rq,e.target.value)});
+$("#rqList").addEventListener("change",function(e){var id=e.target.dataset.d;if(!id)return;var c=e.target.closest("[data-rq]"),em=c.dataset.rq,sel=RQSEL[em]=RQSEL[em]||[],i=sel.indexOf(id);
+  if(e.target.checked&&i<0)sel.push(id);if(!e.target.checked&&i>=0)sel.splice(i,1);c.querySelector("[data-n]").textContent=sel.length});
+$("#rqList").addEventListener("click",function(e){var b=e.target.closest("button[data-act]");if(!b)return;var c=b.closest("[data-rq]"),em=c.dataset.rq,dec=b.dataset.act,role=c.querySelector('[data-f="role"]').value;
+  if(dec==="reject"&&!confirm("Reject "+em+"?"))return;if(dec==="approve"&&role==="admin"&&!confirm("Give "+em+" full ADMIN access (costs, margins, all settings)?"))return;
+  b.disabled=true;call("decideRegistration",{email:em,decision:dec,role:role,dealerIds:RQSEL[em]||[],note:c.querySelector('[data-f="note"]').value}).then(function(){delete RQSEL[em];toast(dec==="approve"?"Approved "+em+" — they can sign in now":"Rejected "+em)},function(){b.disabled=false})});
+
 function renderUsers(){
   var f=($("#uFilter").value||"").toLowerCase(),owner=(A.settings.OWNER_EMAIL||"").toLowerCase();$("#ownerEmail").textContent=owner||"not set";
   var rows=USERS.map(function(u,i){return {u:u,i:i}}).filter(function(x){return !f||(x.u.email+" "+x.u.name+" "+x.u.role).toLowerCase().indexOf(f)>=0});

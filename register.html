@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Request access · HyperX · Iontech</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<script>(function(){var t=null;try{t=localStorage.getItem("hxpl-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t)})();</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="assets/hx-app.css">
+<style>
+.reg{max-width:620px;margin:40px auto;padding:0 18px}
+.card{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:16px}
+label.f{display:grid;gap:5px;font-size:12px;font-weight:700;color:var(--muted);margin-top:14px}
+.inp,.txt{border:1px solid var(--line);border-radius:10px;background:var(--surface-2);padding:9px 11px;font-size:14px;color:var(--ink);font-family:inherit}
+.txt{min-height:90px;resize:vertical}
+.hint{font-size:12px;color:var(--faint);font-weight:500}
+.status{font-size:13.5px;margin-top:12px;min-height:18px}.status.ok{color:var(--ok)}.status.err{color:var(--out)}
+.pill{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px}
+.pill.pending{color:var(--lim);background:var(--lim-bg)}.pill.approved{color:var(--ok);background:var(--ok-bg)}.pill.rejected{color:var(--out);background:var(--out-bg)}
+.links{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+<header class="site-header"><div class="header-inner">
+  <a class="brand" href="index.html"><span class="wm-hx">Hyper<b>X</b></span><span class="wm-ion">IONTECH</span><span class="brand-divider"></span><span class="brand-title">Request access</span></a>
+  <span style="flex:1"></span>
+  <div class="user-chip" id="userChip" hidden><span class="who"><b id="userName"></b><span id="userMail"></span></span><button class="btn btn-sm" id="signOut" type="button">Sign out</button></div>
+</div></header>
+<main class="reg">
+  <div class="card" id="step1">
+    <p class="eyebrow">Iontech sales · HyperX</p>
+    <h1 style="margin:4px 0 8px">Register for access</h1>
+    <p class="muted">For Iontech sales, channel sales officers (CSOs), sales assistants and HP leads. Sign in with the Google account you'll use, tell us which HP partners you handle, and the HyperX brand manager will set up your access and dealer pages.</p>
+    <div id="gsiButton" style="margin-top:16px"></div>
+    <p class="status" id="s1"></p>
+  </div>
+
+  <div class="card" id="formCard" hidden>
+    <h2 style="margin:0">Your details</h2>
+    <label class="f">Full name<input class="inp" id="fName" maxlength="80" autocomplete="name"></label>
+    <label class="f">Role<select class="inp" id="fRole"></select></label>
+    <label class="f">Mobile / Viber <span class="hint">optional</span><input class="inp" id="fMobile" maxlength="30" inputmode="tel"></label>
+    <label class="f">HP partners / dealers you handle <span class="hint">one per line, with the customer code if you know it, e.g. "PC Express (N-005)"</span><textarea class="txt" id="fPartners" maxlength="1000"></textarea></label>
+    <label class="f">Note for the brand manager <span class="hint">optional</span><input class="inp" id="fNote" maxlength="300"></label>
+    <div class="links"><button class="btn btn-primary" id="fSend" type="button">Send request</button></div>
+    <p class="status" id="s2"></p>
+  </div>
+
+  <div class="card" id="doneCard" hidden></div>
+</main>
+<div class="toast" id="toast"></div>
+<script src="assets/hx-auth.js"></script>
+<script>
+(function(){"use strict";
+var $=function(s){return document.querySelector(s)},R=null;
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function st(id,t,ok){var e=$(id);e.textContent=t||"";e.className="status "+(t?(ok?"ok":"err"):"")}
+function fmt(s){var d=new Date(s);return isNaN(d)?"":d.toLocaleDateString("en-PH",{month:"short",day:"numeric",year:"numeric"})}
+var PAGES={admin:[["admin.html","Admin console"],["sales.html","Special prices"],["dealer.html","Dealer pages"]],csomgr:[["sales.html","Special prices"],["dealer.html","Dealer pages"],["quote.html","Quotations"]],sales:[["sales.html","Special prices"],["dealer.html","Dealer pages"],["quote.html","Quotations"]],csa:[["sales.html","Special prices"],["dealer.html","Dealer pages"],["quote.html","Quotations"]],cso:[["dealer.html","My dealer pages"],["quote.html","Quotations"],["stock.html","Stock commitments"]],hplead:[["dealer.html","Dealer pages"]],dealer:[["dealer.html","My price list"]]};
+function show(d){R=d;$("#userChip").hidden=false;$("#userName").textContent=d.name||d.email;$("#userMail").textContent=d.email;st("#s1","");
+  var done=$("#doneCard");
+  if(d.member){$("#formCard").hidden=true;done.hidden=false;
+    done.innerHTML='<span class="pill approved">Access active</span><h2 style="margin:10px 0 6px">You’re all set</h2><p class="muted">Signed in as '+esc(d.email)+' ('+esc(d.member.role)+').</p><div class="links">'+(PAGES[d.member.role]||[]).map(function(p){return '<a class="btn" href="'+p[0]+'">'+p[1]+'</a>'}).join("")+'</div>';return}
+  $("#fRole").innerHTML='<option value="">Choose…</option>'+Object.keys(d.roles||{}).map(function(k){return '<option value="'+k+'">'+esc(d.roles[k])+'</option>'}).join("");
+  var q=d.request;
+  if(q&&q.status!=="rejected"){done.hidden=false;
+    done.innerHTML='<span class="pill '+esc(q.status)+'">'+(q.status==="pending"?"Waiting for approval":esc(q.status))+'</span><h2 style="margin:10px 0 6px">Request received</h2><p class="muted">Sent '+esc(fmt(q.requestedOn))+' as <b>'+esc((d.roles||{})[q.role]||q.role)+'</b>. The HyperX brand manager will add you and set up your dealer pages. Once approved, sign in on any page with '+esc(d.email)+'.</p><p class="muted" style="white-space:pre-line"><b>Partners:</b> '+esc(q.partners||"—")+'</p><div class="links"><button class="btn btn-sm" id="editReq" type="button">Edit request</button></div>';
+    $("#formCard").hidden=true;$("#editReq").onclick=function(){fill(q);$("#formCard").hidden=false;done.hidden=true};return}
+  if(q&&q.status==="rejected"){done.hidden=false;done.innerHTML='<span class="pill rejected">Not approved</span><p class="muted" style="margin-top:10px">Your earlier request was not approved. Please contact the HyperX brand manager.</p>';$("#formCard").hidden=true;return}
+  done.hidden=true;$("#formCard").hidden=false;$("#fName").value=$("#fName").value||d.name||""}
+function fill(q){$("#fName").value=q.name||"";$("#fRole").value=q.role||"";$("#fMobile").value=q.mobile||"";$("#fPartners").value=q.partners||"";$("#fNote").value=q.note||""}
+$("#fSend").addEventListener("click",function(){var b=this,p={name:$("#fName").value.trim(),role:$("#fRole").value,mobile:$("#fMobile").value.trim(),partners:$("#fPartners").value.trim(),note:$("#fNote").value.trim()};
+  if(!p.name||!p.role){st("#s2","Fill in your name and role.");return}if(!p.partners&&p.role!=="csomgr"){st("#s2","List the HP partners / dealers you handle.");return}
+  b.disabled=true;st("#s2","Sending…",true);HXAuth.api("register",p).then(function(d){b.disabled=false;if(!d.ok){st("#s2",HXAuth.message(d.error)+(d.detail?" — "+d.detail:""));return}st("#s2","");show(d)}).catch(function(e){b.disabled=false;st("#s2","Not sent: "+e.message+". Try again.")})});
+function start(){st("#s1","Checking…",true);HXAuth.api("registration",{}).then(function(d){if(!d.ok){st("#s1",HXAuth.message(d.error));return}show(d)}).catch(function(e){st("#s1","Could not reach the server. "+e.message)})}
+$("#signOut").addEventListener("click",function(){HXAuth.signOut();location.reload()});
+HXAuth.init($("#gsiButton"),start).catch(function(e){st("#s1",HXAuth.message(e.message))});
+})();
+</script>
+</body></html>

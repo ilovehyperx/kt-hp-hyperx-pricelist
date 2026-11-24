@@ -34,8 +34,8 @@ var HXAuth = (function () {
   }
 
   /** Renders the Google button into `el` and calls cb(token) after sign-in. Reuses a still-valid token. */
-  function init(el, cb) {
-    onToken = cb;
+  function init(el, cb, opts) {
+    onToken = cb; opts = opts || {};
     return loadConfig().then(function () {
       if (!configured()) throw new Error('not_configured');
       var t = saved();
@@ -50,7 +50,7 @@ var HXAuth = (function () {
           ux_mode: 'popup'
         });
         if (el) google.accounts.id.renderButton(el, { theme: 'filled_black', size: 'large', shape: 'pill', text: 'signin_with', logo_alignment: 'left', width: 280 });
-        if (!t) google.accounts.id.prompt();
+        if (!t && !opts.noPrompt) google.accounts.id.prompt();
       });
     });
   }
@@ -73,7 +73,7 @@ var HXAuth = (function () {
   }
 
   var MESSAGES = {
-    not_allowed: 'This Google account is not on the Iontech sales list yet. Ask the HyperX brand manager to add it.',
+    not_allowed: 'This Google account is not on the Iontech sales list yet. Request access on the Register page (link below).',
     admin_only: 'This page is for the HyperX brand manager only.',
     expired: 'Your sign-in expired. Please sign in again.',
     invalid_token: 'Sign-in could not be verified. Please sign in again.',
@@ -95,5 +95,5 @@ var HXAuth = (function () {
   };
   function message(code) { return MESSAGES[code] || ('Something went wrong (' + code + ').'); }
 
-  return { init: init, api: api, signOut: signOut, message: message, loadConfig: loadConfig };
+  return { init: init, api: api, signOut: signOut, message: message, loadConfig: loadConfig, hasSession: function () { return !!saved(); } };
 })();
