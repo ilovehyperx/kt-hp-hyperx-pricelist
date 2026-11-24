@@ -106,6 +106,7 @@ document.documentElement.setAttribute("data-theme",t)})();
 
 <script src="assets/hx-auth.js"></script>
 <script src="assets/hx-xlsx.js"></script>
+<script src="assets/hx-cart.js"></script>
 <script>
 (function(){
 "use strict";
@@ -179,7 +180,9 @@ function rows(){
     if(st.q){var hay=(i.sku+" "+i.desc+" "+title(i)+" "+i.cat).toLowerCase();if(!st.q.split(/\s+/).every(function(w){return hay.indexOf(w)>=0}))return false}
     return true});
 }
-function tierCell(i){
+function xtags(i){return (i.eol?'<span class="tag tag-out" title="Not in the latest HP OPG">EOL</span>':"")+(i.exclusive?'<span class="units" title="Dealer-exclusive SKU">Exclusive: '+esc(i.exclusive.join(", "))+'</span>':"")}
+function tierCell(i){return tierCell0(i)+xtags(i)}
+function tierCell0(i){
   if(i.tier!=="limited")return '<span class="tag tag-sp">Special price</span>';
   var u=i.unitsLeft;
   if(u===0)return '<span class="tag tag-out">Limited Qty · none left</span><span class="units">Confirm with PM before quoting</span>';
@@ -194,7 +197,7 @@ function stockCells(i){var a=i.atp,oh=i.onHand,c=i.committed||0;
 function render(){
   if(!DATA)return;
   var admin=ME&&ME.role==="admin"&&st.margins;
-  var cols=['<th>Product</th>','<th>SKU</th>','<th class="c">Type</th>','<th class="r">SRP</th>','<th class="r">Base DP</th>','<th class="r">Special price</th>','<th>Price type</th>','<th class="r" title="SAP unrestricted stock">On hand</th>','<th class="r" title="On hand minus approved reservations, holds and allocations">Available</th>','<th title="Open HP orders from the OSS report">Incoming</th>'];
+  var cols=['<th>Product</th>','<th>SKU</th>','<th class="c">Type</th>','<th class="r">SRP</th>','<th class="r">Base DP</th>','<th class="r">Special price</th>','<th>Price type</th>','<th class="r" title="SAP unrestricted stock">On hand</th>','<th class="r" title="On hand minus approved reservations, holds and allocations">Available</th>','<th title="Open HP orders from the OSS report">Incoming</th>','<th></th>'];
   if(admin)cols.push('<th class="r">Invoice cost</th>','<th class="r">Rebate/unit</th>','<th class="r">Margin w/o rebate</th>','<th class="r">Margin w/ rebate</th>');
   $("#thead").innerHTML=cols.join("");
   var all=DATA.items, list=rows();
@@ -210,12 +213,13 @@ function render(){
         '<td class="sku">'+esc(i.sku)+'</td>'+
         '<td class="c">'+(i.isNew?'<span class="tag tag-new">New</span>':'<span class="tag tag-muted">Existing</span>')+'</td>'+
         '<td class="r">'+peso(i.srp)+'</td><td class="r">'+pesoAuto(i.dp)+'</td>'+
-        '<td class="r sp-val">'+peso(i.sp)+'</td><td>'+tierCell(i)+'</td>'+stockCells(i)+
+        '<td class="r sp-val">'+peso(i.sp)+'</td><td>'+tierCell(i)+'</td>'+stockCells(i)+'<td>'+HXCart.btn({sku:i.sku,desc:title(i),price:i.sp,srp:i.srp})+'</td>'+
         (admin?'<td class="r">'+peso(i.cost,true)+'</td><td class="r">'+(i.rebate?peso(i.rebate)+(i.rebateLeft!=null?' <span class="units">'+i.rebateLeft+' claimable</span>':""):"—")+'</td>'+
           '<td class="r '+(i.marginNoRebate<0?"neg":i.marginNoRebate<DATA.minMargin?"warn":"okc")+'">'+pct(i.marginNoRebate)+'</td><td class="r">'+pct(i.marginWithRebate)+'</td>':"")+
         '</tr>'})});
   setTimeout(wireImgs,0);
   $("#tbody").innerHTML=html||'<tr class="empty-row"><td colspan="'+cols.length+'">No SKUs match. Clear a filter or try another search.</td></tr>';
+  if(window.HXCart){if(!render.cart){render.cart=1;HXCart.init({context:"sales",basis:"Special price",canLog:function(){return true},page:"sales"})}HXCart.mark()}
 }
 
 /* photos: fall back through the other gallery images, then hide */

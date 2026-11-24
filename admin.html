@@ -95,6 +95,7 @@ label.f .inp,label.f .txt{font-weight:500;color:var(--ink)}
     <button role="tab" data-tab="dealers" aria-selected="true">Dealer pages<span class="n" id="tnD"></span></button>
     <button role="tab" data-tab="requests" aria-selected="false">Access requests<span class="n" id="tnR"></span></button>
     <button role="tab" data-tab="users" aria-selected="false">Users &amp; admins<span class="n" id="tnU"></span></button>
+    <button role="tab" data-tab="pipes" aria-selected="false">Pipes</button>
     <button role="tab" data-tab="data" aria-selected="false">Data uploads</button>
     <button role="tab" data-tab="settings" aria-selected="false">Settings</button>
     <button role="tab" data-tab="activity" aria-selected="false">Activity</button>
@@ -111,6 +112,17 @@ label.f .inp,label.f .txt{font-weight:500;color:var(--ink)}
       </div>
       <div id="dEditor"><div class="card"><p class="sub">Pick a dealer on the left, or create a new one.</p></div></div>
     </div>
+  </section>
+
+  <!-- ===== Pipes ===== -->
+  <section data-panel="pipes" hidden>
+    <div class="card">
+      <div class="row" style="justify-content:space-between"><div><h2>Pipes</h2><p class="sub" style="margin:0">Every “Make me a table” from the quote cart by signed-in sales and CSOs (last 120 days).</p></div><button class="btn btn-sm" id="pRefresh" type="button">Refresh</button></div>
+      <div class="row" style="margin:12px 0"><input class="inp" id="pQ" placeholder="Search customer, dealer, SKU, person…" style="flex:1;min-width:200px"><select class="inp" id="pWho"><option value="">Everyone</option></select><select class="inp" id="pDays"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="120">Last 120 days</option></select></div>
+      <div class="row" id="pSum" style="gap:18px;margin-bottom:10px"></div>
+      <div class="tbl-wrap" style="max-height:460px"><table class="tbl dense"><thead><tr><th>ID</th><th>When</th><th>Who</th><th>Customer / account</th><th>Dealer page</th><th>Items</th><th class="r">Units</th><th class="r">Total</th><th>Basis</th></tr></thead><tbody id="pBody"></tbody></table></div>
+    </div>
+    <div class="card"><h2>Most-quoted SKUs</h2><div class="tbl-wrap" style="max-height:320px"><table class="tbl dense"><thead><tr><th>SKU</th><th>Product</th><th class="r">Tables</th><th class="r">Units quoted</th><th class="r">Value</th><th>Quoted by</th></tr></thead><tbody id="pSku"></tbody></table></div></div>
   </section>
 
   <!-- ===== Access requests ===== -->
@@ -174,6 +186,12 @@ label.f .inp,label.f .txt{font-weight:500;color:var(--ink)}
         <span style="flex:1"></span><button class="btn btn-primary btn-sm" id="stGo" type="button">Upload stock</button>
       </div>
       <p class="msg" id="stMsg"></p>
+    </div>
+    <div class="card">
+      <h2>HP OPG (orderable list)</h2>
+      <p class="sub">Choose the latest OPG from HP (.xlsx or .csv). SKUs on your pricelist that appear in it get today as their <b>OPG added</b> date (only if blank) — that drives the New tag. Pricelist SKUs <b>missing</b> from the OPG are marked <b>EOL</b> until they show up again. Last upload: <b id="opgNow">—</b>.</p>
+      <div class="row"><label class="btn btn-primary btn-sm" style="cursor:pointer">Choose OPG file<input type="file" id="opgFile" accept=".xlsx,.csv,.txt" hidden></label></div>
+      <p class="msg" id="opgMsg"></p><div id="opgOut" class="sub" style="white-space:pre-line"></div>
     </div>
     <div class="card">
       <h2>HP incoming (OSS report)</h2>
@@ -267,7 +285,19 @@ function accept(d){
 }
 
 /* ---------- tabs + hash routing (#dealers/D-0001) ---------- */
-function showTab(t){$$(".tabs button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.tab===t)});$$("[data-panel]").forEach(function(p){p.hidden=p.dataset.panel!==t})}
+/* ---------- pipes ---------- */
+var PIPES=null;
+function loadPipes(){$("#pBody").innerHTML='<tr class="empty-row"><td colspan="9">Loading…</td></tr>';HXAuth.api("pipes",{}).then(function(d){if(!d.ok){toast(HXAuth.message(d.error));return}PIPES=d.pipes||[];
+  var who={};PIPES.forEach(function(p){who[p.email]=p.name||p.email});var cur=$("#pWho").value;$("#pWho").innerHTML='<option value="">Everyone</option>'+Object.keys(who).sort().map(function(e){return '<option value="'+esc(e)+'"'+(e===cur?" selected":"")+'>'+esc(who[e])+'</option>'}).join("");renderPipes()})}
+function renderPipes(){if(!PIPES)return;var q=$("#pQ").value.toLowerCase(),w=$("#pWho").value,since=Date.now()-(+$("#pDays").value)*864e5;
+  var L=PIPES.filter(function(p){return (!w||p.email===w)&&(!p.created||new Date(p.created).getTime()>=since)&&(!q||(p.id+" "+p.customer+" "+p.dealer+" "+p.name+" "+p.email+" "+p.lines.map(function(l){return l.sku+" "+l.desc}).join(" ")).toLowerCase().indexOf(q)>=0)});
+  var tot=0,u=0;L.forEach(function(p){tot+=p.total;u+=p.units});
+  $("#pSum").innerHTML='<span><b>'+L.length+'</b> tables</span><span><b>'+u.toLocaleString()+'</b> units</span><span><b>₱'+Math.round(tot).toLocaleString()+'</b> quoted</span><span><b>'+Object.keys(L.reduce(function(a,p){a[p.email]=1;return a},{})).length+'</b> people</span>';
+  $("#pBody").innerHTML=L.map(function(p){var d=new Date(p.created);return '<tr><td class="sku">'+esc(p.id)+'</td><td style="white-space:nowrap">'+esc(isNaN(d)?"":d.toLocaleString("en-PH",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}))+'</td><td>'+esc(p.name||p.email)+'<span class="sub" style="display:block;margin:0">'+esc(p.role)+'</span></td><td>'+esc(p.customer)+(p.note?'<span class="sub" style="display:block;margin:0">'+esc(p.note)+'</span>':"")+'</td><td>'+esc(p.dealer||"—")+'</td><td style="font-size:12px">'+p.lines.map(function(l){return esc(l.sku)+' ×'+l.qty+(l.price!=null?' @ ₱'+Number(l.price).toLocaleString():"")}).join("<br>")+'</td><td class="r">'+p.units+'</td><td class="r"><b>₱'+Math.round(p.total).toLocaleString()+'</b></td><td>'+esc(p.basis)+'</td></tr>'}).join("")||'<tr class="empty-row"><td colspan="9">No tables in this range yet.</td></tr>';
+  var by={};L.forEach(function(p){p.lines.forEach(function(l){var o=by[l.sku]=by[l.sku]||{sku:l.sku,desc:l.desc,t:0,u:0,v:0,who:{}};o.t++;o.u+=l.qty;o.v+=(l.price||0)*l.qty;o.who[p.name||p.email]=1})});
+  $("#pSku").innerHTML=Object.keys(by).map(function(k){return by[k]}).sort(function(a,b){return b.u-a.u}).slice(0,50).map(function(o){return '<tr><td class="sku">'+esc(o.sku)+'</td><td>'+esc(o.desc)+'</td><td class="r">'+o.t+'</td><td class="r"><b>'+o.u+'</b></td><td class="r">₱'+Math.round(o.v).toLocaleString()+'</td><td>'+esc(Object.keys(o.who).join(", "))+'</td></tr>'}).join("")||'<tr class="empty-row"><td colspan="6">—</td></tr>'}
+["#pQ"].forEach(function(i){$(i).addEventListener("input",renderPipes)});["#pWho","#pDays"].forEach(function(i){$(i).addEventListener("change",renderPipes)});$("#pRefresh").addEventListener("click",loadPipes);
+function showTab(t){if(t==="pipes"&&!PIPES)setTimeout(loadPipes,0);$$(".tabs button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.tab===t)});$$("[data-panel]").forEach(function(p){p.hidden=p.dataset.panel!==t})}
 $$(".tabs button").forEach(function(b){b.addEventListener("click",function(){history.replaceState(null,"","#"+b.dataset.tab);showTab(b.dataset.tab)})});
 function route(){var h=location.hash.replace(/^#/,"").split("/");showTab(["dealers","users","data","settings","activity"].indexOf(h[0])>=0?h[0]:"dealers");if(h[0]==="dealers"&&h[1])editDealer(decodeURIComponent(h[1]))}
 
@@ -278,13 +308,24 @@ var RQSEL={};
 function rqSuggest(r){var lines=String(r.partners||"").toLowerCase().split(/\n|,|;/).map(function(x){return x.replace(/\(.*?\)/g," ").trim()}).filter(function(x){return x.length>2});
   var codes=(String(r.partners||"").match(/\b[A-Z]-?\d{2,}\b/gi)||[]).map(function(c){return c.toUpperCase()});
   return A.dealers.filter(function(d){var n=(d.name||"").toLowerCase();return codes.indexOf(String(d.code||"").toUpperCase())>=0||lines.some(function(l){return n.indexOf(l)>=0||l.indexOf(n)>=0&&n.length>3})}).map(function(d){return d.id})}
+function rqMatch(t){t=String(t||"").toLowerCase();var code=(t.match(/\b[a-z]-?\d{2,}\b/)||[""])[0].toUpperCase(),n=t.replace(/\(.*?\)/g," ").trim();
+  var d=A.dealers.filter(function(x){return code&&String(x.code||"").toUpperCase()===code})[0]||A.dealers.filter(function(x){var nm=(x.name||"").toLowerCase();return n.length>2&&(nm.indexOf(n)>=0||(n.indexOf(nm)>=0&&nm.length>3))})[0];return d?d.id:""}
+function dealerOpts(sel){return A.dealers.filter(function(d){return d.active}).slice().sort(function(a,b){return (b.favorite?1:0)-(a.favorite?1:0)||a.name.localeCompare(b.name)}).map(function(d){return '<option value="'+esc(d.id)+'"'+(d.id===sel?" selected":"")+'>'+(d.favorite?"★ ":"")+esc(d.name)+'</option>'}).join("")}
+function asgBlock(d){if(!d.id)return "";var L=(A.assignments||[]).filter(function(a){return a.dealerId===d.id});
+  var em=d.emails.filter(function(e){return !L.some(function(a){return a.email===e})}).map(function(e){return {email:e,accounts:""}});L=L.concat(em);if(!L.length)return "";
+  return '<div style="margin-top:12px"><span class="f" style="font-size:11.5px;font-weight:700;color:var(--muted)">Accounts each person manages on this page</span><table class="tbl dense" style="margin-top:4px"><tbody>'+
+    L.map(function(a){var u=(A.users||[]).filter(function(x){return x.email===a.email})[0];return '<tr data-asg="'+esc(a.email)+'"><td style="white-space:nowrap">'+esc(u&&u.name||a.email)+'<span class="sub" style="display:block;margin:0">'+esc(a.email)+(u?" · "+esc(u.role):"")+'</span></td><td><textarea class="inp" rows="2" style="width:100%" data-asg-acc>'+esc(a.accounts)+'</textarea></td><td><button class="btn btn-sm" type="button" data-asg-save>Save</button></td></tr>'}).join("")+'</tbody></table></div>'}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-asg-save]");if(!b)return;var tr=b.closest("tr");b.disabled=true;
+  call("saveAssignment",{email:tr.dataset.asg,dealerId:CUR.id,accounts:tr.querySelector("[data-asg-acc]").value},"Accounts saved").then(function(){editDealer(CUR.id,true)},function(){b.disabled=false})});
 function renderRequests(){var R=A.registrations||[],pend=R.filter(function(r){return r.status==="pending"});$("#tnR").textContent=pend.length||"";
   var roles=A.roleNames||{},opt=function(sel){return Object.keys(roles).concat(["admin"]).map(function(k){return '<option value="'+k+'"'+(k===sel?" selected":"")+'>'+esc(roles[k]||"Admin")+'</option>'}).join("")};
-  $("#rqList").innerHTML=pend.map(function(r){if(!RQSEL[r.email])RQSEL[r.email]=rqSuggest(r);var sel=RQSEL[r.email];
+  $("#rqList").innerHTML=pend.map(function(r){if(!RQSEL[r.email])RQSEL[r.email]=r.entries&&r.entries.length?[]:rqSuggest(r);var sel=RQSEL[r.email];
     return '<div class="card" style="box-shadow:none;margin:10px 0 0" data-rq="'+esc(r.email)+'"><div class="row" style="justify-content:space-between"><div><b>'+esc(r.name)+'</b> · '+esc(r.email)+(r.mobile?' · '+esc(r.mobile):"")+'<div class="sub" style="margin:2px 0 0">Asked for <b>'+esc(roles[r.role]||r.role)+'</b> · '+esc(fmtDay((r.requestedOn||"").slice(0,10)))+(r.note?' · “'+esc(r.note)+'”':"")+'</div></div>'+
       '<label class="f" style="margin:0">Grant role<select class="inp" data-f="role">'+opt(r.role)+'</select></label></div>'+
-      '<p class="sub" style="white-space:pre-line;margin:10px 0 6px"><b>Partners they handle:</b> '+esc(r.partners||"—")+'</p>'+
-      '<div class="row" style="margin-bottom:6px"><input class="inp" data-f="q" placeholder="Find dealer pages to assign…" style="flex:1"><span class="sub" style="margin:0"><b data-n>'+sel.length+'</b> page(s) selected</span></div>'+
+      (r.entries&&r.entries.length?'<table class="tbl dense" style="margin:10px 0"><thead><tr><th>Partner (as typed)</th><th>Accounts they manage</th><th>Dealer page</th></tr></thead><tbody>'+r.entries.map(function(en,k){var m=rqMatch(en.partner);
+        return '<tr data-en="'+k+'"><td>'+esc(en.partner)+'</td><td><textarea class="inp" data-f="acc" rows="2" style="width:100%;min-width:200px">'+esc(en.accounts||"")+'</textarea></td><td><select class="inp" data-f="dl" style="max-width:240px"><option value="">— not linked —</option>'+dealerOpts(m)+'</select></td></tr>'}).join("")+'</tbody></table>'
+        :'<p class="sub" style="white-space:pre-line;margin:10px 0 6px"><b>Partners they handle:</b> '+esc(r.partners||"—")+'</p>')+
+      '<div class="row" style="margin-bottom:6px"><input class="inp" data-f="q" placeholder="'+(r.entries&&r.entries.length?"Extra dealer pages (no accounts)…":"Find dealer pages to assign…")+'" style="flex:1"><span class="sub" style="margin:0"><b data-n>'+sel.length+'</b> extra page(s)</span></div>'+
       '<div data-dl style="max-height:190px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:6px 10px">'+rqDealers(r.email,"")+'</div>'+
       '<div class="row" style="margin-top:10px"><input class="inp" data-f="note" placeholder="Note (optional)" style="flex:1"><button class="btn btn-sm" data-act="reject" type="button">Reject</button><button class="btn btn-primary btn-sm" data-act="approve" type="button">Approve</button></div></div>'}).join("")||'<p class="sub">No pending requests.</p>';
   $("#rqDone").innerHTML=R.filter(function(r){return r.status!=="pending"}).sort(function(a,b){return String(b.decidedOn).localeCompare(String(a.decidedOn))}).map(function(r){var names=String(r.dealerIds||"").split(/,\s*/).filter(Boolean).map(function(id){var d=A.dealers.filter(function(x){return x.id===id})[0];return d?d.name:id});
@@ -297,7 +338,8 @@ $("#rqList").addEventListener("change",function(e){var id=e.target.dataset.d;if(
   if(e.target.checked&&i<0)sel.push(id);if(!e.target.checked&&i>=0)sel.splice(i,1);c.querySelector("[data-n]").textContent=sel.length});
 $("#rqList").addEventListener("click",function(e){var b=e.target.closest("button[data-act]");if(!b)return;var c=b.closest("[data-rq]"),em=c.dataset.rq,dec=b.dataset.act,role=c.querySelector('[data-f="role"]').value;
   if(dec==="reject"&&!confirm("Reject "+em+"?"))return;if(dec==="approve"&&role==="admin"&&!confirm("Give "+em+" full ADMIN access (costs, margins, all settings)?"))return;
-  b.disabled=true;call("decideRegistration",{email:em,decision:dec,role:role,dealerIds:RQSEL[em]||[],note:c.querySelector('[data-f="note"]').value}).then(function(){delete RQSEL[em];toast(dec==="approve"?"Approved "+em+" — they can sign in now":"Rejected "+em)},function(){b.disabled=false})});
+  b.disabled=true;call("decideRegistration",{email:em,decision:dec,role:role,dealerIds:RQSEL[em]||[],note:c.querySelector('[data-f="note"]').value,
+    assign:[].map.call(c.querySelectorAll("tr[data-en]"),function(tr){var r=(A.registrations||[]).filter(function(x){return x.email===em})[0],en=(r&&r.entries||[])[+tr.dataset.en]||{};return {dealerId:tr.querySelector('[data-f="dl"]').value,accounts:tr.querySelector('[data-f="acc"]').value,partner:en.partner}}).filter(function(a){return a.dealerId})}).then(function(){delete RQSEL[em];toast(dec==="approve"?"Approved "+em+" — they can sign in now":"Rejected "+em)},function(){b.disabled=false})});
 
 function renderUsers(){
   var f=($("#uFilter").value||"").toLowerCase(),owner=(A.settings.OWNER_EMAIL||"").toLowerCase();$("#ownerEmail").textContent=owner||"not set";
@@ -379,7 +421,7 @@ function renderDealer(){
        '<label class="f">CSO manager<input class="inp" id="fMgr" value="'+esc(CUR.csoManager)+'" placeholder="Name or email (to be added)"></label>'+
        '<label class="f">Favorite<select class="inp" id="fFav"><option value="1"'+(CUR.favorite?" selected":"")+'>★ Yes — pin to the top</option><option value="0"'+(CUR.favorite?"":" selected")+'>No</option></select></label>'+
        '<label class="f">Status<select class="inp" id="fActive"><option value="1"'+(CUR.active?" selected":"")+'>Active — viewers can open it</option><option value="0"'+(CUR.active?"":" selected")+'>Inactive — hidden from viewers</option></select></label></div>'+
-     '<label class="f" style="margin-top:12px">Who can see this page (Google emails, comma or new line)<textarea class="txt" id="fEmails" rows="2" placeholder="cso.name@gmail.com, other.cso@gmail.com">'+esc(CUR.emails.join(", "))+'</textarea></label>'+
+     '<label class="f" style="margin-top:12px">Who can see this page (Google emails, comma or new line)<textarea class="txt" id="fEmails" rows="2" placeholder="cso.name@gmail.com, other.cso@gmail.com">'+esc(CUR.emails.join(", "))+'</textarea></label>'+asgBlock(CUR)+
      '<p class="sub" style="margin:4px 0 0;font-size:12px">Emails not yet on the user list are added as Channel sales (CSO) when you save. Admins can always see every dealer page.</p>'+
      '<label class="f" style="margin-top:12px">Note shown on the page<input class="inp" id="fNote" value="'+esc(CUR.note)+'" placeholder="e.g. Q4 volume deal · min 10 units per SKU"></label></div>'+
    '<div class="card"><div class="row" style="justify-content:space-between;margin-bottom:10px"><div><h2>Special prices for this dealer</h2><p class="sub" style="margin:0">Type the price you dictate. Under the category&#39;s Limited-below margin ('+pct(minM)+' unless set; monitors 0%) without the rebate shows the dealer a <b>Limited Qty Price</b> with units left (rebate units, stock and your qty cap, whichever is lowest).</p></div></div>'+
@@ -439,7 +481,7 @@ function saveDealer(){
 function renderData(){
   $("#soStat").innerHTML="<dt>Rows on file</dt><dd>"+A.sellout.rows+"</dd><dt>Latest sell-out date counted</dt><dd>"+esc(fmtDay(A.selloutAsOf)||"—")+"</dd>";
   $("#rbNow").textContent=A.deal?A.deal.id+" · "+A.rebate+" SKUs · "+fmtDay(A.deal.start)+" – "+fmtDay(A.deal.end):"none";
-  $("#incNow").textContent=(A.settings&&A.settings.INCOMING_AS_OF)||"not uploaded yet";
+  $("#incNow").textContent=(A.settings&&A.settings.INCOMING_AS_OF)||"not uploaded yet";$("#opgNow").textContent=(A.settings&&A.settings.OPG_AS_OF)||"not uploaded yet";
 }
 function upload(btn,action,payload,msgId,done){var b=$(btn);b.disabled=true;var t=b.textContent;b.textContent="Uploading…";
   call(action,payload).then(function(d){msg(msgId,done(d.uploaded||{}),true)},function(){msg(msgId,"Upload failed — see the message above.")}).then(function(){b.disabled=false;b.textContent=t})}
@@ -447,6 +489,18 @@ $("#soGo").addEventListener("click",function(){var t=$("#soText").value;if(!t.tr
   upload("#soGo","uploadSellout",{text:t,mode:$("input[name=soMode]:checked").value},"#soMsg",function(u){$("#soText").value="";return "Saved "+u.rows+" rows"+(u.skipped?" ("+u.skipped+" duplicates skipped)":"")+". Rebate units left are updated."})});
 $("#stGo").addEventListener("click",function(){var t=$("#stText").value;if(!t.trim()){msg("#stMsg","Paste the SAP list first.");return}
   upload("#stGo","uploadStock",{text:t,zeroMissing:$("#stZero").checked},"#stMsg",function(u){$("#stText").value="";return u.matched+" SAP lines matched, "+u.changed+" SKUs changed."+(u.unknown&&u.unknown.length?" Not in the pricelist: "+u.unknown.slice(0,8).join(", ")+(u.unknown.length>8?"…":""):"")})});
+/* OPG: collect every HP product number in the file (5 characters + A? suffix, e.g. 4P5M9AA, BN7S3AA#ABA) */
+function opgSkus(rows){var seen={},out=[];rows.forEach(function(r){r.forEach(function(c){String(c==null?"":c).toUpperCase().split(/[^0-9A-Z#]+/).forEach(function(t){var b=t.split("#")[0];if(/^[0-9A-Z]{5}A[A-Z]$/.test(b)&&/\d/.test(b)&&!seen[b]){seen[b]=1;out.push(b)}})})});return out}
+$("#opgFile").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;e.target.value="";msg("#opgMsg","Reading "+f.name+"…",true);$("#opgOut").textContent="";
+  var send=function(skus){if(skus.length<5){msg("#opgMsg","Found only "+skus.length+" HP SKUs in that file — is it the OPG?");return}
+    if(!confirm("Found "+skus.length+" HP SKUs in "+f.name+". Pricelist SKUs not in this file will be marked EOL. Continue?"))return;
+    msg("#opgMsg","Saving…",true);call("uploadOpg",{skus:skus}).then(function(d){var o=d.opg||{};$("#opgNow").textContent=(d.settings&&d.settings.OPG_AS_OF)||"just now";
+      msg("#opgMsg","Done: "+o.total+" SKUs in the OPG.",true);
+      $("#opgOut").textContent=(o.added.length?"New OPG date today: "+o.added.join(", ")+"\n":"")+(o.eol.length?"Now EOL (not in this OPG): "+o.eol.join(", ")+"\n":"")+(o.back.length?"Back from EOL: "+o.back.join(", ")+"\n":"")+
+        (o.notListed.length?o.notListed.length+(o.notListed.length>=200?"+":"")+" OPG SKUs aren't on your pricelist yet (add them in the Sheet with NDP/SRP to price them)":"")||"No changes."})};
+  if(/\.xlsx$/i.test(f.name)){HXXlsx.load().then(function(){return f.arrayBuffer()}).then(function(buf){var wb=new ExcelJS.Workbook();return wb.xlsx.load(buf).then(function(){var rows=[];
+    wb.worksheets.forEach(function(ws){ws.eachRow({includeEmpty:false},function(r){var v=[];r.eachCell(function(c){var x=c.value;if(x&&typeof x==="object")x=x.result!=null?x.result:x.text!=null?x.text:(x.richText?x.richText.map(function(t){return t.text}).join(""):"");v.push(x)});rows.push(v)})});send(opgSkus(rows))})}).catch(function(err){msg("#opgMsg","Could not read the file: "+err.message)})}
+  else{var rd=new FileReader();rd.onload=function(){send(opgSkus(String(rd.result).split(/\r?\n/).map(function(l){return [l]})))};rd.readAsText(f)}});
 $("#incFile").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;var rd=new FileReader();
   rd.onload=function(){msg("#incMsg","Uploading "+f.name+"…",true);call("uploadIncoming",{text:rd.result}).then(function(d){var u=d.uploaded||{};$("#incNow").textContent=(d.settings&&d.settings.INCOMING_AS_OF)||"just now";
     msg("#incMsg","Saved "+u.lines+" open HyperX lines · "+u.skus+" SKUs · "+(u.units||0).toLocaleString()+" units incoming."+(u.delivered?" "+u.delivered+" delivered lines skipped.":""),true)},function(){msg("#incMsg","Upload failed — see the message above.")});e.target.value=""};rd.readAsText(f)});

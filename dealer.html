@@ -143,6 +143,7 @@ tr.dirty td{background:color-mix(in srgb,var(--lim-bg) 70%,transparent)}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="assets/hx-auth.js"></script>
 <script src="assets/hx-xlsx.js"></script>
+<script src="assets/hx-cart.js"></script>
 <script>
 (function(){
 "use strict";
@@ -199,7 +200,9 @@ function openDealer(id){
 }
 function head(){
   var x=D.dealer;$("#dName").textContent=x.name;document.title=x.name+" · Dealer Pricing · HyperX";
-  $("#dMeta").innerHTML=(x.favorite?'<span class="pill" style="color:#f5b301">★ Favorite</span>':"")+(x.hpLead?'<span class="pill">HP lead <b>'+esc(x.hpLead)+'</b></span>':"")+(x.csoManager?'<span class="pill">CSO manager <b>'+esc(x.csoManager)+'</b></span>':"")+(x.code?'<span class="pill">Customer <b>'+esc(x.code)+'</b></span>':"")+(x.validUntil?'<span class="pill'+(x.expired?" bad":"")+'">Valid until <b>'+esc(fmtDay(x.validUntil))+'</b></span>':"")+(D.asOf?'<span class="pill">Costing as of <b>'+esc(fmtDay(D.asOf))+'</b></span>':"")+(x.active===false?'<span class="pill bad">Inactive</span>':"")+(x.note?'<span class="pill">'+esc(x.note)+'</span>':"")+(CAN.admin&&x.emails?'<span class="pill">Visible to <b>'+esc(x.emails.join(", ")||"admins only")+'</b></span>':"");
+  $("#dMeta").innerHTML=(x.favorite?'<span class="pill" style="color:#f5b301">★ Favorite</span>':"")+(x.hpLead?'<span class="pill">HP lead <b>'+esc(x.hpLead)+'</b></span>':"")+(x.csoManager?'<span class="pill">CSO manager <b>'+esc(x.csoManager)+'</b></span>':"")+(x.code?'<span class="pill">Customer <b>'+esc(x.code)+'</b></span>':"")+(x.validUntil?'<span class="pill'+(x.expired?" bad":"")+'">Valid until <b>'+esc(fmtDay(x.validUntil))+'</b></span>':"")+(D.asOf?'<span class="pill">Costing as of <b>'+esc(fmtDay(D.asOf))+'</b></span>':"")+(x.active===false?'<span class="pill bad">Inactive</span>':"")+(x.note?'<span class="pill">'+esc(x.note)+'</span>':"")+(CAN.admin&&x.emails?'<span class="pill">Visible to <b>'+esc(x.emails.join(", ")||"admins only")+'</b></span>':"")
+    +(x.myAccounts?'<span class="pill">Your accounts <b>'+esc(x.myAccounts)+'</b></span>':"")
+    +(CAN.admin&&x.assignments&&x.assignments.length?x.assignments.filter(function(a){return a.accounts}).map(function(a){return '<span class="pill">'+esc(a.email.split("@")[0])+' · <b>'+esc(a.accounts)+'</b></span>'}).join(""):"");
   $("#expired").hidden=!x.expired;$("#noteText").textContent=D.note||"Confidential dealer pricing.";
   $("#allDealersBtn").hidden=LIST.length<2;$("#dealerSwitch").hidden=LIST.length<2;$("#dealerSwitch").innerHTML=LIST.map(function(d){return '<option value="'+esc(d.id)+'"'+(d.id===x.id?" selected":"")+'>'+(d.favorite?"★ ":"")+esc(d.name)+'</option>'}).join("");
   $("#quoteBtn").hidden=!x.canQuote;$("#quoteBtn").href="quote.html?d="+encodeURIComponent(x.id);
@@ -225,7 +228,8 @@ function tierCell(i){
 }
 function render(){
   if(!D)return;var adm=CAN.admin&&st.margins;
-  var cols=['<th>Product</th>','<th>SKU</th>','<th class="c">Type</th>','<th class="r">SRP</th>','<th class="r">Base DP</th>','<th class="r">Dealer price</th>','<th>Price type</th>','<th>Note</th>'];
+  var CQ=D.dealer&&D.dealer.canQuote&&window.HXCart;
+  var cols=['<th>Product</th>','<th>SKU</th>','<th class="c">Type</th>','<th class="r">SRP</th>','<th class="r">Base DP</th>','<th class="r">Dealer price</th>','<th>Price type</th>','<th>Note</th>'].concat(CQ?['<th></th>']:[]);
   if(EDIT){adm=false;cols=['<th>Product</th>','<th>SKU</th>','<th class="r">SRP</th>','<th class="r">Base DP</th>','<th class="r">Dealer price</th>','<th class="r">Qty cap</th>','<th>Note</th>','<th class="r">Cost</th>','<th class="r">Margin</th>','<th>Result</th>']}
   else if(adm)cols.push('<th class="r">Invoice cost</th>','<th class="r">Margin w/o rebate</th>','<th class="r">Margin w/ rebate</th>');
   $("#thead").innerHTML=cols.join("");
@@ -236,9 +240,10 @@ function render(){
     g.sort(function(a,b){return title(a).localeCompare(title(b))}).forEach(function(i){
       if(EDIT){html+=edRow(i);return}
       html+='<tr><td class="desc">'+esc(title(i))+(CATALOG[i.sku]?'<small>'+esc(i.desc)+'</small>':"")+'</td><td class="sku">'+esc(i.sku)+'</td><td class="c">'+(i.isNew?'<span class="tag tag-new">New</span>':'<span class="tag tag-muted">Existing</span>')+'</td>'+
-        '<td class="r">'+peso(i.srp)+'</td><td class="r">'+peso(i.dp)+'</td><td class="r sp-val">'+peso(i.price)+'</td><td>'+tierCell(i)+'</td><td>'+esc(i.note||"")+'</td>'+
+        '<td class="r">'+peso(i.srp)+'</td><td class="r">'+peso(i.dp)+'</td><td class="r sp-val">'+peso(i.price)+'</td><td>'+tierCell(i)+(i.eol?'<span class="tag tag-out">EOL</span>':"")+(i.exclusive?'<span class="units">Exclusive to this dealer</span>':"")+'</td><td>'+esc(i.note||"")+'</td>'+(CQ?'<td>'+HXCart.btn({sku:i.sku,desc:title(i),price:i.price,srp:i.srp})+'</td>':"")+
         (adm?'<td class="r">'+peso(i.cost,2)+'</td><td class="r '+(i.marginNoRebate<0?"neg":i.marginNoRebate<(i.limitBelow!=null?i.limitBelow:D.minMargin)?"warn":"okc")+'">'+pct(i.marginNoRebate)+'</td><td class="r '+(i.belowWithRebate?"neg":"")+'">'+pct(i.marginWithRebate)+'</td>':"")+'</tr>'})});
   $("#tbody").innerHTML=html||'<tr class="empty-row"><td colspan="'+cols.length+'">'+(D.items.length?"No SKUs match these filters.":"No special prices have been set for this dealer yet.")+'</td></tr>';
+  if(CQ){var ctx="dealer:"+D.dealer.id;if(render.ctx!==ctx){if(!render.ctx)HXCart.init({context:ctx,basis:"Dealer price",dealer:function(){return D&&D.dealer?{id:D.dealer.id,name:D.dealer.name}:null},canLog:function(){return true},page:"dealer"});else HXCart.setContext(ctx);render.ctx=ctx}HXCart.mark()}
 }
 /* ---------- inline editing (admin) ---------- */
 function val(i){var e=ED[i.sku];return {price:e&&"price" in e?e.price:(i.override?i.price:""),cap:e&&"cap" in e?e.cap:(i.qtyCap==null?"":i.qtyCap),note:e&&"note" in e?e.note:(i.note||"")}}

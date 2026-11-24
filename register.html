@@ -20,6 +20,11 @@ label.f{display:grid;gap:5px;font-size:12px;font-weight:700;color:var(--muted);m
 .pill{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px}
 .pill.pending{color:var(--lim);background:var(--lim-bg)}.pill.approved{color:var(--ok);background:var(--ok-bg)}.pill.rejected{color:var(--out);background:var(--out-bg)}
 .links{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.ent{display:grid;grid-template-columns:1fr 1.4fr auto;gap:8px;align-items:start;margin-top:8px}
+.ent .inp{width:100%;box-sizing:border-box}.ent textarea.inp{min-height:40px;resize:vertical}
+.ent .x{border:0;background:none;color:var(--faint);font-size:20px;cursor:pointer;padding:6px}
+.enth{display:grid;grid-template-columns:1fr 1.4fr auto;gap:8px;font-size:11.5px;font-weight:700;color:var(--muted);margin-top:16px}
+@media(max-width:560px){.ent,.enth{grid-template-columns:1fr}.enth span:nth-child(2){display:none}}
 </style>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
@@ -43,7 +48,9 @@ label.f{display:grid;gap:5px;font-size:12px;font-weight:700;color:var(--muted);m
     <label class="f">Full name<input class="inp" id="fName" maxlength="80" autocomplete="name"></label>
     <label class="f">Role<select class="inp" id="fRole"></select></label>
     <label class="f">Mobile / Viber <span class="hint">optional</span><input class="inp" id="fMobile" maxlength="30" inputmode="tel"></label>
-    <label class="f">HP partners / dealers you handle <span class="hint">one per line, with the customer code if you know it, e.g. "PC Express (N-005)"</span><textarea class="txt" id="fPartners" maxlength="1000"></textarea></label>
+    <div class="enth"><span>HP partner / dealer <span class="hint">with customer code if known</span></span><span>Accounts you manage under it <span class="hint">stores, branches, end customers</span></span><span></span></div>
+    <div id="ents"></div>
+    <button class="btn btn-sm" id="addEnt" type="button" style="margin-top:8px">+ Add another partner</button>
     <label class="f">Note for the brand manager <span class="hint">optional</span><input class="inp" id="fNote" maxlength="300"></label>
     <div class="links"><button class="btn btn-primary" id="fSend" type="button">Send request</button></div>
     <p class="status" id="s2"></p>
@@ -67,13 +74,19 @@ function show(d){R=d;$("#userChip").hidden=false;$("#userName").textContent=d.na
   $("#fRole").innerHTML='<option value="">Choose…</option>'+Object.keys(d.roles||{}).map(function(k){return '<option value="'+k+'">'+esc(d.roles[k])+'</option>'}).join("");
   var q=d.request;
   if(q&&q.status!=="rejected"){done.hidden=false;
-    done.innerHTML='<span class="pill '+esc(q.status)+'">'+(q.status==="pending"?"Waiting for approval":esc(q.status))+'</span><h2 style="margin:10px 0 6px">Request received</h2><p class="muted">Sent '+esc(fmt(q.requestedOn))+' as <b>'+esc((d.roles||{})[q.role]||q.role)+'</b>. The HyperX brand manager will add you and set up your dealer pages. Once approved, sign in on any page with '+esc(d.email)+'.</p><p class="muted" style="white-space:pre-line"><b>Partners:</b> '+esc(q.partners||"—")+'</p><div class="links"><button class="btn btn-sm" id="editReq" type="button">Edit request</button></div>';
+    done.innerHTML='<span class="pill '+esc(q.status)+'">'+(q.status==="pending"?"Waiting for approval":esc(q.status))+'</span><h2 style="margin:10px 0 6px">Request received</h2><p class="muted">Sent '+esc(fmt(q.requestedOn))+' as <b>'+esc((d.roles||{})[q.role]||q.role)+'</b>. The HyperX brand manager will add you and set up your dealer pages. Once approved, sign in on any page with '+esc(d.email)+'.</p><p class="muted" style="white-space:pre-line"><b>Partners and accounts:</b>\n'+esc(q.partners||"—")+'</p><div class="links"><button class="btn btn-sm" id="editReq" type="button">Edit request</button></div>';
     $("#formCard").hidden=true;$("#editReq").onclick=function(){fill(q);$("#formCard").hidden=false;done.hidden=true};return}
   if(q&&q.status==="rejected"){done.hidden=false;done.innerHTML='<span class="pill rejected">Not approved</span><p class="muted" style="margin-top:10px">Your earlier request was not approved. Please contact the HyperX brand manager.</p>';$("#formCard").hidden=true;return}
   done.hidden=true;$("#formCard").hidden=false;$("#fName").value=$("#fName").value||d.name||""}
-function fill(q){$("#fName").value=q.name||"";$("#fRole").value=q.role||"";$("#fMobile").value=q.mobile||"";$("#fPartners").value=q.partners||"";$("#fNote").value=q.note||""}
-$("#fSend").addEventListener("click",function(){var b=this,p={name:$("#fName").value.trim(),role:$("#fRole").value,mobile:$("#fMobile").value.trim(),partners:$("#fPartners").value.trim(),note:$("#fNote").value.trim()};
-  if(!p.name||!p.role){st("#s2","Fill in your name and role.");return}if(!p.partners&&p.role!=="csomgr"){st("#s2","List the HP partners / dealers you handle.");return}
+function entRow(e){var d=document.createElement("div");d.className="ent";d.innerHTML='<input class="inp" data-e="partner" maxlength="120" placeholder="e.g. PC Express (N-005)" value="'+esc(e&&e.partner||"")+'"><textarea class="inp" data-e="accounts" maxlength="600" placeholder="e.g. SM Megamall, Robinsons Galleria, Acme Corp">'+esc(e&&e.accounts||"")+'</textarea><button type="button" class="x" title="Remove">×</button>';return d}
+function setEnts(list){var w=$("#ents");w.innerHTML="";(list&&list.length?list:[{},{}]).forEach(function(e){w.appendChild(entRow(e))})}
+function getEnts(){return [].map.call(document.querySelectorAll("#ents .ent"),function(r){return {partner:r.querySelector('[data-e="partner"]').value.trim(),accounts:r.querySelector('[data-e="accounts"]').value.trim()}}).filter(function(e){return e.partner})}
+$("#addEnt").addEventListener("click",function(){var r=entRow();$("#ents").appendChild(r);r.querySelector("input").focus()});
+$("#ents").addEventListener("click",function(e){if(e.target.classList.contains("x")){var rows=document.querySelectorAll("#ents .ent");if(rows.length>1)e.target.closest(".ent").remove();else e.target.closest(".ent").querySelectorAll(".inp").forEach(function(i){i.value=""})}});
+setEnts();
+function fill(q){$("#fName").value=q.name||"";$("#fRole").value=q.role||"";$("#fMobile").value=q.mobile||"";setEnts(q.entries&&q.entries.length?q.entries:(q.partners||"").split("\n").filter(Boolean).map(function(l){var m=l.split(" — accounts: ");return {partner:m[0],accounts:m[1]||""}}));$("#fNote").value=q.note||""}
+$("#fSend").addEventListener("click",function(){var b=this,p={name:$("#fName").value.trim(),role:$("#fRole").value,mobile:$("#fMobile").value.trim(),entries:getEnts(),note:$("#fNote").value.trim()};
+  if(!p.name||!p.role){st("#s2","Fill in your name and role.");return}if(!p.entries.length&&p.role!=="csomgr"){st("#s2","Add at least one HP partner / dealer you handle.");return}
   b.disabled=true;st("#s2","Sending…",true);HXAuth.api("register",p).then(function(d){b.disabled=false;if(!d.ok){st("#s2",HXAuth.message(d.error)+(d.detail?" — "+d.detail:""));return}st("#s2","");show(d)}).catch(function(e){b.disabled=false;st("#s2","Not sent: "+e.message+". Try again.")})});
 function start(){st("#s1","Checking…",true);HXAuth.api("registration",{}).then(function(d){if(!d.ok){st("#s1",HXAuth.message(d.error));return}show(d)}).catch(function(e){st("#s1","Could not reach the server. "+e.message)})}
 $("#signOut").addEventListener("click",function(){HXAuth.signOut();location.reload()});

@@ -35,6 +35,13 @@ document.documentElement.setAttribute("data-theme",t)})();
 .rules td.cat{font-weight:700;white-space:nowrap}
 .rules td.n{color:var(--faint);font-size:12px}
 .rules tr.all td{background:var(--surface-2)}
+.rules .ck{width:28px}.rules tr.off td{opacity:.55}
+th[data-sort]{cursor:pointer;user-select:none}th[data-sort]:hover{color:var(--ink)}th[data-sort].on{color:var(--red-2)}th[data-sort].on::after{content:" ▼";font-size:9px}th[data-sort].on.asc::after{content:" ▲"}
+.exb{border:1px dashed var(--line);border-radius:6px;background:transparent;font-size:11.5px;padding:3px 7px;cursor:pointer;color:var(--muted);white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+.exb.set{border-style:solid;border-color:var(--red-2);color:var(--ink);font-weight:700}
+.expop{position:fixed;z-index:80;width:300px;max-height:380px;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 18px 44px rgba(0,0,0,.3);padding:10px}
+.expop .lst{overflow:auto;flex:1;margin:8px 0}.expop label{display:flex;gap:7px;align-items:center;font-size:12.5px;padding:3px 2px;cursor:pointer}
+.opg{font-size:11px;font-weight:700;border-radius:999px;padding:1px 8px;white-space:nowrap}.opg.eol{color:var(--out);background:var(--out-bg)}.opg.in{color:var(--faint)}
 .rules .sep{border-left:1px solid var(--line)}
 .pin{width:64px;height:30px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);text-align:right;padding:0 6px;font-variant-numeric:tabular-nums;font-weight:700}
 .pin:focus{outline:2px solid var(--red-2);outline-offset:0;border-color:transparent}
@@ -124,7 +131,7 @@ tr.inactive td{opacity:.45}
     <div style="overflow:auto;padding:0 8px">
       <table class="rules">
         <thead>
-          <tr><th class="l" rowspan="2">Category</th><th rowspan="2">SKUs</th>
+          <tr><th class="ck" rowspan="2" title="Tick the categories that 'Set ticked categories' should change"><input type="checkbox" id="ckAll" aria-label="Tick all categories"></th><th class="l" rowspan="2">Category</th><th rowspan="2">SKUs</th>
             <th class="segh sep" colspan="5">Existing products</th><th class="segh new sep" colspan="5">New products</th></tr>
           <tr><th class="sep">Base DP</th><th title="Base DP rounds to the nearest step">DP round</th><th>Threshold</th><th title="Threshold rounds UP to the step">Thr. round ↑</th><th title="Special prices under this margin (without rebate) are tagged Limited Qty. Blank = the global setting.">Limited below</th>
               <th class="sep">Base DP</th><th>DP round</th><th>Threshold</th><th>Thr. round ↑</th><th>Limited below</th></tr>
@@ -135,7 +142,7 @@ tr.inactive td{opacity:.45}
     <div class="rules-foot">
       <span>Rounding steps: <b>₱0.01</b> · <b>₱0.10</b> · <b>₱1</b> · <b>₱10</b> (Excel ROUND / ROUNDUP with 2, 1, 0, −1). Base DP uses nearest; Threshold rounds up.</span>
       <span>Special price for rebate SKUs = ROUNDUP((NDP − rebate) × 1.12 ÷ (1 − threshold margin)) while rebate units are left. Under the category's <b>Limited below</b> margin without the rebate (blank = <b id="minM">5%</b>) → <b>Limited Qty Price</b>.</span>
-      <span><b>New</b> = Auto by date: released or added to the OPG within the last <b id="newDays">90</b> days (change in Admin → Settings). Pick New or Existing on a SKU to override.</span>
+      <span><b>New</b> = Auto by date: released or added to the OPG within the last <b id="newDays">90</b> days (change in Admin → Settings). Pick New or Existing on a SKU to override. The OPG date fills itself when you upload the HP OPG (Admin → Data uploads); SKUs missing from the latest OPG show <b>EOL</b> until they come back.</span>
     </div>
   </details>
 
@@ -163,11 +170,11 @@ tr.inactive td{opacity:.45}
   <div class="tbl-wrap" style="max-height:calc(100vh - 230px)">
     <table class="tbl dense">
       <thead><tr>
-        <th>SKU</th><th>Description</th><th title="Auto = New when released or added to the OPG within the window">New?</th><th>Released</th><th>OPG added</th>
-        <th class="r">NDP</th><th class="r">Inv. cost</th><th class="r">SRP</th>
-        <th class="r">Base DP</th><th class="r" title="Type a price to fix Base DP for this SKU; clear it to go back to the rule">DP override</th><th class="r">DP %</th>
-        <th class="r">Threshold</th><th class="r" title="Type a price to fix the Threshold for this SKU">Thr. override</th><th class="r">Thr. %</th>
-        <th class="r">Rebate</th><th class="r">Special price</th><th class="r">Margin w/o rebate</th><th>Sales tag</th><th class="r">On hand</th><th class="c">Active</th>
+        <th data-sort="sku">SKU</th><th data-sort="desc">Description</th><th title="Auto = New when released or added to the OPG within the window">New?</th><th>Released</th><th title="Set automatically when you upload the HP OPG in Admin → Data uploads. Missing from the latest OPG = EOL.">OPG</th>
+        <th class="r" data-sort="ndp" title="Click to sort high → low, again for low → high">NDP</th><th class="r" data-sort="cost">Inv. cost</th><th class="r" data-sort="srp">SRP</th>
+        <th class="r" data-sort="dp">Base DP</th><th class="r" title="Type a price to fix Base DP for this SKU; clear it to go back to the rule">DP override</th><th class="r" data-sort="dpm">DP %</th>
+        <th class="r" data-sort="thr">Threshold</th><th class="r" title="Type a price to fix the Threshold for this SKU">Thr. override</th><th class="r" data-sort="thm">Thr. %</th>
+        <th class="r" data-sort="rebate">Rebate</th><th class="r" data-sort="sp">Special price</th><th class="r" data-sort="mno">Margin w/o rebate</th><th>Sales tag</th><th class="r" data-sort="onHand">On hand</th><th title="Dealer-exclusive SKU: only these HP partners' pages show it">Exclusive to</th><th class="c">Active</th>
       </tr></thead>
       <tbody id="tbody"><tr><td class="loading" colspan="20">Loading…</td></tr></tbody>
     </table>
@@ -191,7 +198,12 @@ var $=function(s){return document.querySelector(s)}, $$=function(s,r){return Arr
 var E=HXPricing;
 var CAT_ORDER=["PC Headset","Console","Mobile Audio","Microphone","Mouse","Keyboard","Accessory","Monitor"];
 var DIGITS=[{v:2,t:"₱0.01"},{v:1,t:"₱0.10"},{v:0,t:"₱1"},{v:-1,t:"₱10"}];
-var SRV=null, RULES=[], ITEMS=[], BASE={}, ME=null, st={cat:"",nw:"all",show:"all",q:"",inactive:false};
+var SRV=null, RULES=[], ITEMS=[], BASE={}, ME=null, st={cat:"",nw:"all",show:"all",q:"",inactive:false,sort:null,asc:false};
+/* categories ticked for "Set ticked categories" — monitors have their own margin structure, so they start unticked */
+var CK={};try{CK=JSON.parse(localStorage.getItem("hx-editor-ck")||"null")||{}}catch(e){CK={}}
+function saveCk(){try{localStorage.setItem("hx-editor-ck",JSON.stringify(CK))}catch(e){}}
+function ckDefaults(){cats().forEach(function(c){if(!(c in CK))CK[c]=c!=="Monitor"})}
+var DEALERS=[],DNAME={};
 
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function money(n,dec){if(n==null||n===""||isNaN(n))return "—";var d=dec==null?(Math.round(n)!==n?2:0):dec;return Number(n).toLocaleString("en-PH",{minimumFractionDigits:d,maximumFractionDigits:d})}
@@ -211,6 +223,7 @@ function load(){
   }).catch(function(e){gateMsg("Could not reach the pricing server. "+e.message);showGate()});
 }
 function accept(d){
+  DEALERS=d.dealers||[];DNAME={};DEALERS.forEach(function(x){DNAME[x.id]=x.name});
   SRV=d;RULES=clone(d.rules);ITEMS=d.items.map(function(i){i=clone(i);i.active=i.active!==false;resolveNew(i);return i});
   BASE={rules:clone(RULES),items:{}};ITEMS.forEach(function(i){BASE.items[i.sku]=clone(i)});
   BASE.priced=priceAll(BASE.rules,ITEMS.map(function(i){return BASE.items[i.sku]}));
@@ -241,26 +254,31 @@ function pctIn(cat,seg,key){var r=rule(cat,seg),b=baseRule(cat,seg),blank=r[key]
   return '<span class="pctwrap"><input class="pin'+(chg?" chg":"")+'" inputmode="decimal" data-cat="'+esc(cat)+'" data-seg="'+seg+'" data-k="'+key+'" value="'+(blank?"":+(r[key]*100).toFixed(3))+'"'+(key==="limitBelow"?' placeholder="'+(+(E.pct(SRV.opts.minMargin)*100).toFixed(2))+'"':"")+' aria-label="'+esc(cat+" "+seg+" "+key)+'"><i>%</i></span>'}
 function digIn(cat,seg,key){var r=rule(cat,seg),b=baseRule(cat,seg),chg=b&&b[key]!==r[key];
   return '<select class="rsel'+(chg?" chg":"")+'" data-cat="'+esc(cat)+'" data-seg="'+seg+'" data-k="'+key+'">'+DIGITS.map(function(d){return '<option value="'+d.v+'"'+(+r[key]===d.v?" selected":"")+'>'+d.t+'</option>'}).join("")+'</select>'}
-function buildRules(){
+function buildRules(){ckDefaults();
   var cnt={};ITEMS.forEach(function(i){var k=i.cat+"|"+(i.isNew?"New":"Existing");cnt[k]=(cnt[k]||0)+1;cnt[i.cat]=(cnt[i.cat]||0)+1});
   var html=cats().map(function(c){
-    return '<tr><td class="cat l">'+esc(c)+'</td><td class="n">'+(cnt[c]||0)+' <span title="Existing / New">('+(cnt[c+"|Existing"]||0)+'/'+(cnt[c+"|New"]||0)+')</span></td>'+
+    return '<tr class="'+(CK[c]?"":"off")+'"><td class="ck"><input type="checkbox" data-ck="'+esc(c)+'"'+(CK[c]?" checked":"")+' aria-label="Include '+esc(c)+' in Set ticked categories"></td><td class="cat l">'+esc(c)+'</td><td class="n">'+(cnt[c]||0)+' <span title="Existing / New">('+(cnt[c+"|Existing"]||0)+'/'+(cnt[c+"|New"]||0)+')</span></td>'+
       '<td class="sep">'+pctIn(c,"Existing","dpMargin")+'</td><td>'+digIn(c,"Existing","dpDigits")+'</td><td>'+pctIn(c,"Existing","thrMargin")+'</td><td>'+digIn(c,"Existing","thrDigits")+'</td><td>'+pctIn(c,"Existing","limitBelow")+'</td>'+
       '<td class="sep">'+pctIn(c,"New","dpMargin")+'</td><td>'+digIn(c,"New","dpDigits")+'</td><td>'+pctIn(c,"New","thrMargin")+'</td><td>'+digIn(c,"New","thrDigits")+'</td><td>'+pctIn(c,"New","limitBelow")+'</td></tr>'}).join("");
-  html+='<tr class="all"><td class="cat l">Set all categories</td><td class="n"></td>'+
+  var tick=cats().filter(function(c){return CK[c]});
+  html+='<tr class="all"><td class="ck"></td><td class="cat l">Set ticked categories<span class="mini" style="display:block;font-weight:500">'+(tick.length?esc(tick.join(", ")):"none ticked")+'</span></td><td class="n"></td>'+
     ["Existing","New"].map(function(s){return '<td class="sep"><span class="pctwrap"><input class="pin" data-all="'+s+'" data-k="dpMargin" placeholder="—"><i>%</i></span></td><td><select class="rsel" data-all="'+s+'" data-k="dpDigits"><option value="">—</option>'+DIGITS.map(function(d){return '<option value="'+d.v+'">'+d.t+'</option>'}).join("")+'</select></td><td><span class="pctwrap"><input class="pin" data-all="'+s+'" data-k="thrMargin" placeholder="—"><i>%</i></span></td><td><select class="rsel" data-all="'+s+'" data-k="thrDigits"><option value="">—</option>'+DIGITS.map(function(d){return '<option value="'+d.v+'">'+d.t+'</option>'}).join("")+'</select></td><td></td>'}).join("")+'</tr>';
   $("#rulesBody").innerHTML=html;
 }
 $("#rulesBody").addEventListener("change",function(e){
-  var el=e.target,k=el.dataset.k;if(!k)return;
+  var el=e.target,k=el.dataset.k;
+  if(el.dataset.ck){CK[el.dataset.ck]=el.checked;saveCk();buildRules();return}
+  if(!k)return;
   var isPct=/Margin$|limitBelow/.test(k),val=isPct?parseFloat(el.value)/100:parseInt(el.value,10);
   if(k==="limitBelow"&&el.value.trim()===""&&!el.dataset.all){rule(el.dataset.cat,el.dataset.seg)[k]=null;buildRules();render();return}
   if(el.value===""||isNaN(val))return;
   if(isPct&&(val<-0.5||val>=0.95)){toast("Margin must be between −50% and 94.99%");buildRules();return}
-  if(el.dataset.all){cats().forEach(function(c){rule(c,el.dataset.all)[k]=val});}
+  if(el.dataset.all){var tk=cats().filter(function(c){return CK[c]});if(!tk.length){toast("Tick at least one category first");buildRules();return}tk.forEach(function(c){rule(c,el.dataset.all)[k]=val});toast("Applied to "+tk.join(", "));}
   else rule(el.dataset.cat,el.dataset.seg)[k]=val;
   buildRules();render();
 });
+
+document.addEventListener("change",function(e){if(e.target.id!=="ckAll")return;cats().forEach(function(c){CK[c]=e.target.checked&&(c!=="Monitor"||confirm("Include Monitor too? Monitors use their own margin structure."))});saveCk();buildRules()});
 
 /* ---------- condensed grid ---------- */
 function wireSeg(id,key){$$("#"+id+" button").forEach(function(b){b.addEventListener("click",function(){st[key]=b.dataset.v;$$("#"+id+" button").forEach(function(x){x.setAttribute("aria-pressed",x===b)});render()})})}
@@ -269,10 +287,34 @@ $("#cat").addEventListener("change",function(e){st.cat=e.target.value;render()})
 $("#q").addEventListener("input",function(e){st.q=e.target.value.trim().toLowerCase();render()});
 $("#showInactive").addEventListener("change",function(e){st.inactive=e.target.checked;render()});
 
-function itemChanged(i){var b=BASE.items[i.sku];return !!b&&(b.newMode!==i.newMode||String(b.release||"")!==String(i.release||"")||String(b.opgAdded||"")!==String(i.opgAdded||"")||String(b.dpOverride==null?"":b.dpOverride)!==String(i.dpOverride==null?"":i.dpOverride)||String(b.thrOverride==null?"":b.thrOverride)!==String(i.thrOverride==null?"":i.thrOverride)||b.active!==i.active)}
+function itemChanged(i){var b=BASE.items[i.sku];return !!b&&(b.newMode!==i.newMode||String(b.release||"")!==String(i.release||"")||String(b.opgAdded||"")!==String(i.opgAdded||"")||String(b.dpOverride==null?"":b.dpOverride)!==String(i.dpOverride==null?"":i.dpOverride)||String(b.thrOverride==null?"":b.thrOverride)!==String(i.thrOverride==null?"":i.thrOverride)||b.active!==i.active||(b.exclusive||[]).join(",")!==(i.exclusive||[]).join(","))}
 function rulesChanged(){return RULES.filter(function(r){var b=baseRule(r.cat,r.seg);return !b||["dpMargin","dpDigits","thrMargin","thrDigits"].some(function(k){return Math.abs((+b[k]||0)-(+r[k]||0))>1e-9})||String(b.limitBelow==null?"":b.limitBelow)!==String(r.limitBelow==null?"":r.limitBelow)})}
 function dirtyCount(){return rulesChanged().length+ITEMS.filter(itemChanged).length}
 function deltaTag(now,was){if(now==null||was==null)return "";var d=Math.round((now-was)*100)/100;if(!d)return "";return '<span class="delta '+(d>0?"up":"dn")+'">'+(d>0?"+":"−")+"₱"+money(Math.abs(d))+'</span>'}
+
+/* ---------- column sort: first click high → low, second low → high, third back to A–Z ---------- */
+function sortVal(k,i,p){switch(k){case "sku":return i.sku;case "desc":return i.desc;case "ndp":return p.ndp;case "cost":return p.cost;case "srp":return p.srp;case "dp":return p.dp;case "dpm":return p.dpMarginActual;
+  case "thr":return p.thr;case "thm":return p.cost&&p.thr?1-p.cost/p.thr:null;case "rebate":return p.rebate||0;case "sp":return p.sp;case "mno":return p.marginNoRebate;case "onHand":return p.onHand==null?null:+p.onHand}}
+function sorter(P){var k=st.sort;if(!k)return function(a,b){return a.desc.localeCompare(b.desc)};var dir=st.asc?1:-1;
+  return function(a,b){var x=sortVal(k,a,P[a.sku]),y=sortVal(k,b,P[b.sku]);if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;
+    return (typeof x==="string"?x.localeCompare(y):(x-y))*dir||a.desc.localeCompare(b.desc)}}
+document.addEventListener("click",function(e){var th=e.target.closest("th[data-sort]");if(!th)return;var k=th.dataset.sort;
+  if(st.sort!==k){st.sort=k;st.asc=(k==="sku"||k==="desc")}else if(!st.asc&&k!=="sku"&&k!=="desc"){st.asc=true}else{st.sort=null;st.asc=false}render()});
+
+/* ---------- dealer exclusives ---------- */
+function exBtn(i){var ex=i.exclusive||[];return '<button type="button" class="exb'+(ex.length?" set":"")+'" data-ex="'+esc(i.sku)+'" title="'+esc(ex.length?ex.map(function(id){return DNAME[id]||id}).join(", "):"Available to all dealers")+'">'+(ex.length?(ex.length===1?esc(DNAME[ex[0]]||ex[0]):ex.length+" dealers"):"All dealers")+' ▾</button>'}
+var EXP=null;
+function closeEx(){if(EXP){EXP.remove();EXP=null}}
+document.addEventListener("click",function(e){var b=e.target.closest("button[data-ex]");
+  if(!b){if(EXP&&!e.target.closest(".expop"))closeEx();return}
+  closeEx();var it=ITEMS.filter(function(x){return x.sku===b.dataset.ex})[0];if(!it)return;var sel=(it.exclusive||[]).slice(),r=b.getBoundingClientRect();
+  EXP=document.createElement("div");EXP.className="expop";EXP.style.top=Math.min(window.innerHeight-390,r.bottom+4)+"px";EXP.style.left=Math.max(8,Math.min(window.innerWidth-310,r.right-300))+"px";
+  EXP.innerHTML='<b style="font-size:13px">'+esc(it.sku)+' exclusive to…</b><span class="mini">No dealer ticked = every dealer sees it. Ticked = only those partners\u2019 pages (and the public site hides its DP).</span><input class="sel" placeholder="Search HP partners…" style="margin-top:8px"><div class="lst"></div><div class="row" style="display:flex;gap:6px;justify-content:flex-end"><button type="button" class="btn btn-sm" data-x="clear">All dealers</button><button type="button" class="btn btn-primary btn-sm" data-x="ok">Done</button></div>';
+  document.body.appendChild(EXP);var q=EXP.querySelector("input"),lst=EXP.querySelector(".lst");
+  function draw(){var t=q.value.toLowerCase();lst.innerHTML=DEALERS.filter(function(d){return sel.indexOf(d.id)>=0||!t||(d.name+" "+(d.code||"")).toLowerCase().indexOf(t)>=0}).sort(function(a,b){return (sel.indexOf(b.id)>=0)-(sel.indexOf(a.id)>=0)}).slice(0,80).map(function(d){return '<label><input type="checkbox" data-d="'+esc(d.id)+'"'+(sel.indexOf(d.id)>=0?" checked":"")+'>'+(d.favorite?"★ ":"")+esc(d.name)+'</label>'}).join("")||'<span class="mini">No match</span>'}
+  draw();q.focus();q.addEventListener("input",draw);
+  lst.addEventListener("change",function(ev){var id=ev.target.dataset.d,k=sel.indexOf(id);if(ev.target.checked&&k<0)sel.push(id);if(!ev.target.checked&&k>=0)sel.splice(k,1)});
+  EXP.addEventListener("click",function(ev){var x=ev.target.dataset.x;if(!x)return;it.exclusive=x==="clear"?[]:sel;closeEx();render()})});
 
 function render(){
   if(!SRV)return;
@@ -292,12 +334,12 @@ function render(){
   var html="";
   cats().forEach(function(c){
     var g=list.filter(function(i){return i.cat===c});if(!g.length)return;
-    html+='<tr class="grp"><td colspan="20">'+esc(c)+'<span class="n">'+g.length+' SKUs</span></td></tr>';
+    html+='<tr class="grp"><td colspan="21">'+esc(c)+'<span class="n">'+g.length+' SKUs</span></td></tr>';
     [["New",true],["Existing",false]].forEach(function(sg){
       var s=g.filter(function(i){return i.isNew===sg[1]});if(!s.length)return;
       var r=rule(c,sg[0]);
-      html+='<tr class="sub"><td colspan="20">'+sg[0]+' · '+s.length+' · DP '+pct(r.dpMargin)+' (round '+DIGITS.filter(function(d){return d.v===+r.dpDigits})[0].t+') · Threshold '+pct(r.thrMargin)+' (round '+DIGITS.filter(function(d){return d.v===+r.thrDigits})[0].t+')</td></tr>';
-      s.sort(function(a,b){return a.desc.localeCompare(b.desc)}).forEach(function(i){
+      html+='<tr class="sub"><td colspan="21">'+sg[0]+' · '+s.length+' · DP '+pct(r.dpMargin)+' (round '+DIGITS.filter(function(d){return d.v===+r.dpDigits})[0].t+') · Threshold '+pct(r.thrMargin)+' (round '+DIGITS.filter(function(d){return d.v===+r.thrDigits})[0].t+')</td></tr>';
+      s.sort(sorter(P)).forEach(function(i){
         var p=P[i.sku],b=B[i.sku],chg=itemChanged(i);
         var tag=p.limited?(p.unitsLeft===0?'<span class="tag tag-out">Limited · 0 left</span>':'<span class="tag tag-lim">Limited'+(p.unitsLeft!=null?" · "+p.unitsLeft:"")+'</span>'+(p.noRebateCover?'<span class="mini">no rebate cover</span>':"")):'<span class="tag tag-sp">Special</span>';
         var mcls=p.marginNoRebate==null?"":p.marginNoRebate<0?"neg":p.marginNoRebate<p.limitBelow?"warn":"okc";
@@ -305,7 +347,7 @@ function render(){
           '<td class="sku">'+esc(i.sku)+'</td><td class="d" title="'+esc(i.desc)+'">'+esc(i.desc)+'</td>'+
           '<td><select class="rsel" data-f="newMode" aria-label="New or existing">'+[["Auto","Auto · "+(i.isNew?"New":"Existing")],["Y","New"],["N","Existing"]].map(function(o){return '<option value="'+o[0]+'"'+(i.newMode===o[0]?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></td>'+
           '<td><input type="date" class="oin" style="width:128px;text-align:left" data-f="release" value="'+esc(i.release||"")+'"></td>'+
-          '<td><input type="date" class="oin" style="width:128px;text-align:left" data-f="opgAdded" value="'+esc(i.opgAdded||"")+'"></td>'+
+          '<td>'+(i.eol?'<span class="opg eol" title="Not in the latest HP OPG">EOL</span>':i.opgAdded?'<span class="opg in" title="Added to the OPG">'+esc(i.opgAdded)+'</span>':'<span class="opg in">—</span>')+'</td>'+
           '<td class="r">'+money(p.ndp,2)+'</td><td class="r">'+money(p.cost,2)+'</td><td class="r">'+money(p.srp)+'</td>'+
           '<td class="r"><b>'+money(p.dp)+'</b>'+deltaTag(p.dp,b.dp)+'</td>'+
           '<td class="r"><input class="oin'+(p.dpOverridden?" set":"")+'" data-f="dpOverride" inputmode="decimal" value="'+esc(i.dpOverride==null?"":i.dpOverride)+'" placeholder="'+money(p.dpCalc)+'"></td>'+
@@ -317,8 +359,10 @@ function render(){
           '<td class="r sp-val">'+money(p.sp)+deltaTag(p.sp,b.sp)+'</td>'+
           '<td class="r '+mcls+'">'+pct(p.marginNoRebate)+'</td><td>'+tag+'</td>'+
           '<td class="r">'+(p.onHand==null?"—":money(p.onHand))+'</td>'+
+          '<td>'+exBtn(i)+'</td>'+
           '<td class="c"><input type="checkbox" class="nchk" data-f="active"'+(i.active?" checked":"")+' aria-label="Active"></td></tr>'})})});
-  $("#tbody").innerHTML=html||'<tr class="empty-row"><td colspan="20">Nothing matches these filters.</td></tr>';
+  $("#tbody").innerHTML=html||'<tr class="empty-row"><td colspan="21">Nothing matches these filters.</td></tr>';
+  $$("th[data-sort]").forEach(function(th){th.classList.toggle("on",th.dataset.sort===st.sort);th.classList.toggle("asc",th.dataset.sort===st.sort&&st.asc)});
   var n=dirtyCount();$("#dirty").hidden=!n;$("#dirty").textContent=n+" unsaved change"+(n===1?"":"s");$("#saveBtn").disabled=!n;$("#discardBtn").disabled=!n;
 }
 $("#tbody").addEventListener("change",function(e){
@@ -333,7 +377,7 @@ $("#tbody").addEventListener("change",function(e){
 
 /* ---------- save / discard / export ---------- */
 $("#saveBtn").addEventListener("click",function(){
-  var rc=rulesChanged(),ic=ITEMS.filter(itemChanged).map(function(i){return {sku:i.sku,newMode:i.newMode,release:i.release||"",opgAdded:i.opgAdded||"",dpOverride:i.dpOverride,thrOverride:i.thrOverride,active:i.active}});
+  var rc=rulesChanged(),ic=ITEMS.filter(itemChanged).map(function(i){return {sku:i.sku,newMode:i.newMode,release:i.release||"",opgAdded:i.opgAdded||"",dpOverride:i.dpOverride,thrOverride:i.thrOverride,active:i.active,exclusive:i.exclusive||[]}});
   if(!rc.length&&!ic.length)return;
   var btn=$("#saveBtn");btn.disabled=true;btn.textContent="Saving…";
   HXAuth.api("save",{rules:rc,items:ic,pricesAsOf:new Date().toLocaleDateString("en-CA",{timeZone:"Asia/Manila"})}).then(function(d){
