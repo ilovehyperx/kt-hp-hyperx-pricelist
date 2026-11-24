@@ -161,7 +161,7 @@ function title(i){var c=CATALOG[i.sku];return c?c.name+(c.label?" · "+c.label:"
 
 function gateMsg(t,ok){var m=$("#gateMsg");m.textContent=t||"";m.classList.toggle("ok",!!ok)}
 function show(which){["gate","pick","app"].forEach(function(id){$("#"+id).hidden=id!==which});var signed=which!=="gate";$("#userChip").hidden=!signed;$("#searchBox").hidden=which!=="app"}
-function setUser(d){ME=d.user;CAN=d.can||{};$("#userName").textContent=ME.name||ME.email;$("#userRole").textContent={admin:"Admin",sales:"Sales",cso:"Channel sales",csomgr:"CSO manager",csa:"Sales assistant",hplead:"HP lead",dealer:"Dealer"}[ME.role]||ME.role;
+function setUser(d){ME=d.user;CAN=d.can||{};$("#userName").textContent=ME.name||ME.email;$("#userRole").textContent={admin:"Admin",sales:"Sales",cso:"Channel sales",csomgr:"CSO manager",sm:"Sales manager",csa:"Sales assistant",hplead:"HP lead",dealer:"Dealer"}[ME.role]||ME.role;if(ME.group)$("#userRole").textContent+=" · "+ME.group;
   if(ME.picture)$("#userPic").src=ME.picture;else $("#userPic").hidden=true;$("#salesLink").hidden=!CAN.sales;$("#adminLink").hidden=!CAN.admin;$("#marginWrap").hidden=!CAN.admin}
 function wanted(){var m=location.search.match(/[?&]d=([^&]+)/);return m?decodeURIComponent(m[1]):""}
 

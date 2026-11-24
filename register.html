@@ -47,6 +47,7 @@ label.f{display:grid;gap:5px;font-size:12px;font-weight:700;color:var(--muted);m
     <h2 style="margin:0">Your details</h2>
     <label class="f">Full name<input class="inp" id="fName" maxlength="80" autocomplete="name"></label>
     <label class="f">Role<select class="inp" id="fRole"></select></label>
+    <label class="f">Group<select class="inp" id="fGroup"><option value="">Choose…</option><option value="GMA 1">GMA 1 · Manila</option><option value="GMA 2">GMA 2 · Manila</option><option value="Prov 1">Prov 1 · Luzon</option><option value="Prov 2">Prov 2 · Visayas</option><option value="Prov 3">Prov 3 · Mindanao</option><option value="Corp">Corp · Corporate accounts</option></select></label>
     <label class="f">Mobile / Viber <span class="hint">optional</span><input class="inp" id="fMobile" maxlength="30" inputmode="tel"></label>
     <div class="enth"><span>HP partner / dealer <span class="hint">with customer code if known</span></span><span>Accounts you manage under it <span class="hint">stores, branches, end customers</span></span><span></span></div>
     <div id="ents"></div>
@@ -66,7 +67,7 @@ var $=function(s){return document.querySelector(s)},R=null;
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function st(id,t,ok){var e=$(id);e.textContent=t||"";e.className="status "+(t?(ok?"ok":"err"):"")}
 function fmt(s){var d=new Date(s);return isNaN(d)?"":d.toLocaleDateString("en-PH",{month:"short",day:"numeric",year:"numeric"})}
-var PAGES={admin:[["admin.html","Admin console"],["sales.html","Special prices"],["dealer.html","Dealer pages"]],csomgr:[["sales.html","Special prices"],["dealer.html","Dealer pages"],["quote.html","Quotations"]],sales:[["sales.html","Special prices"],["dealer.html","Dealer pages"],["quote.html","Quotations"]],csa:[["sales.html","Special prices"],["dealer.html","Dealer pages"],["quote.html","Quotations"]],cso:[["dealer.html","My dealer pages"],["quote.html","Quotations"],["stock.html","Stock commitments"]],hplead:[["dealer.html","Dealer pages"]],dealer:[["dealer.html","My price list"]]};
+var PAGES={admin:[["admin.html","Admin console"],["sales.html","Special prices"],["dealer.html","Dealer pages"]],csomgr:[["sales.html","Special prices"],["dealer.html","Dealer pages"],["quote.html","Quotations"]],sales:[["sales.html","Special prices"],["dealer.html","Dealer pages"],["quote.html","Quotations"]],csa:[["sales.html","Special prices"],["dealer.html","My dealer pages"],["quote.html","Quotations"]],sm:[["sales.html","Special prices"],["dealer.html","Group dealer pages"],["quote.html","Quotations"]],cso:[["dealer.html","My dealer pages"],["quote.html","Quotations"],["stock.html","Stock commitments"]],hplead:[["dealer.html","Dealer pages"]],dealer:[["dealer.html","My price list"]]};
 function show(d){R=d;$("#userChip").hidden=false;$("#userName").textContent=d.name||d.email;$("#userMail").textContent=d.email;st("#s1","");
   var done=$("#doneCard");
   if(d.member){$("#formCard").hidden=true;done.hidden=false;
@@ -84,9 +85,9 @@ function getEnts(){return [].map.call(document.querySelectorAll("#ents .ent"),fu
 $("#addEnt").addEventListener("click",function(){var r=entRow();$("#ents").appendChild(r);r.querySelector("input").focus()});
 $("#ents").addEventListener("click",function(e){if(e.target.classList.contains("x")){var rows=document.querySelectorAll("#ents .ent");if(rows.length>1)e.target.closest(".ent").remove();else e.target.closest(".ent").querySelectorAll(".inp").forEach(function(i){i.value=""})}});
 setEnts();
-function fill(q){$("#fName").value=q.name||"";$("#fRole").value=q.role||"";$("#fMobile").value=q.mobile||"";setEnts(q.entries&&q.entries.length?q.entries:(q.partners||"").split("\n").filter(Boolean).map(function(l){var m=l.split(" — accounts: ");return {partner:m[0],accounts:m[1]||""}}));$("#fNote").value=q.note||""}
-$("#fSend").addEventListener("click",function(){var b=this,p={name:$("#fName").value.trim(),role:$("#fRole").value,mobile:$("#fMobile").value.trim(),entries:getEnts(),note:$("#fNote").value.trim()};
-  if(!p.name||!p.role){st("#s2","Fill in your name and role.");return}if(!p.entries.length&&p.role!=="csomgr"){st("#s2","Add at least one HP partner / dealer you handle.");return}
+function fill(q){$("#fName").value=q.name||"";$("#fRole").value=q.role||"";$("#fGroup").value=q.group||"";$("#fMobile").value=q.mobile||"";setEnts(q.entries&&q.entries.length?q.entries:(q.partners||"").split("\n").filter(Boolean).map(function(l){var m=l.split(" — accounts: ");return {partner:m[0],accounts:m[1]||""}}));$("#fNote").value=q.note||""}
+$("#fSend").addEventListener("click",function(){var b=this,p={name:$("#fName").value.trim(),role:$("#fRole").value,group:$("#fGroup").value,mobile:$("#fMobile").value.trim(),entries:getEnts(),note:$("#fNote").value.trim()};
+  if(!p.name||!p.role||!p.group){st("#s2","Fill in your name, role and group.");return}if(!p.entries.length&&p.role!=="csomgr"&&p.role!=="sm"){st("#s2","Add at least one HP partner / dealer you handle.");return}
   b.disabled=true;st("#s2","Sending…",true);HXAuth.api("register",p).then(function(d){b.disabled=false;if(!d.ok){st("#s2",HXAuth.message(d.error)+(d.detail?" — "+d.detail:""));return}st("#s2","");show(d)}).catch(function(e){b.disabled=false;st("#s2","Not sent: "+e.message+". Try again.")})});
 function start(){st("#s1","Checking…",true);HXAuth.api("registration",{}).then(function(d){if(!d.ok){st("#s1",HXAuth.message(d.error));return}show(d)}).catch(function(e){st("#s1","Could not reach the server. "+e.message)})}
 $("#signOut").addEventListener("click",function(){HXAuth.signOut();location.reload()});

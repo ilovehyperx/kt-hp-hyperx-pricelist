@@ -143,20 +143,22 @@ label.f .inp,label.f .txt{font-weight:500;color:var(--ink)}
       <div class="row" style="margin-bottom:10px">
         <input class="inp" id="uEmail" placeholder="name@gmail.com" style="width:240px" autocomplete="off">
         <input class="inp" id="uName" placeholder="Name" style="width:180px">
-        <select class="inp" id="uRole"><option value="sales">Sales</option><option value="cso">Channel sales (CSO)</option><option value="csa">Sales assistant (CSA)</option><option value="csomgr">CSO manager</option><option value="hplead">HP lead</option><option value="dealer">Dealer account</option><option value="admin">Admin</option></select>
+        <select class="inp" id="uRole"><option value="sales">Sales</option><option value="cso">Channel sales (CSO)</option><option value="csa">Sales assistant (CSA)</option><option value="sm">Sales manager (SM)</option><option value="csomgr">CSO manager</option><option value="hplead">HP lead</option><option value="dealer">Dealer account</option><option value="admin">Admin</option></select>
+        <select class="inp" id="uGroup"></select>
+        <select class="inp" id="uGF" title="Show one group"></select>
         <button class="btn btn-sm" id="uAdd" type="button">Add to list</button>
         <span style="flex:1"></span>
         <input class="inp" id="uFilter" placeholder="Filter…" style="width:160px">
         <button class="btn btn-primary btn-sm" id="uSave" type="button" disabled>Save users</button>
       </div>
-      <div class="tbl-wrap"><table class="tbl dense"><thead><tr><th>Email</th><th>Name</th><th>Role</th><th class="c">Active</th><th>Dealer pages</th><th>Last changed</th><th></th></tr></thead><tbody id="uBody"></tbody></table></div>
+      <div class="tbl-wrap"><table class="tbl dense"><thead><tr><th>Email</th><th>Name</th><th>Role</th><th>Group</th><th class="c">Active</th><th>Dealer pages</th><th>Last changed</th><th></th></tr></thead><tbody id="uBody"></tbody></table></div>
       <p class="msg" id="uMsg"></p>
       <div class="roles-help">
         <span><b>Admin</b>: everything here, the pricelist editor, every dealer page, cost and margins.</span>
         <span><b>Sales</b>: the sales special-price page, plus any dealer pages they're assigned to. No cost or margin.</span>
         <span><b>Channel sales (CSO)</b>: only the dealer pages they're assigned to. Adding an email to a dealer page adds it here as a CSO automatically.</span>
-        <span><b>Sales assistant (CSA)</b>: same as Sales — special prices, all dealer pages, quotations. <b>HP lead</b>: only dealer pages they're assigned to, view only. <b>Dealer account</b>: only its own dealer page, read-only, stock shown as levels; set it as a viewer on that dealer page.</span>
-        <span><b>CSO manager</b>: the sales special-price page and every active dealer page, view only (no cost, margin or editing). Promote to Admin if they should edit.</span>
+        <span><b>Sales assistant (CSA)</b>: special prices + only the dealer pages they're assigned to, quotations. <b>HP lead</b>: only dealer pages they're assigned to, view only. <b>Dealer account</b>: only its own dealer page, read-only, stock shown as levels; set it as a viewer on that dealer page.</span>
+        <span><b>Sales manager (SM)</b>: special prices + every active dealer page tagged with their Group (set Group on each dealer page), and sees the quotes/pipes of everyone in that Group. Groups: GMA 1 &amp; GMA 2 (Manila), Prov 1 (Luzon), Prov 2 (Visayas), Prov 3 (Mindanao), Corp (corporate accounts).<br><b>CSO manager</b>: the sales special-price page and every active dealer page, view only (no cost, margin or editing). Promote to Admin if they should edit.</span>
         <span>The owner account (<b id="ownerEmail"></b>) always stays an active admin, and you can't remove your own admin access from here.</span>
       </div>
     </div>
@@ -321,7 +323,7 @@ function renderRequests(){var R=A.registrations||[],pend=R.filter(function(r){re
   var roles=A.roleNames||{},opt=function(sel){return Object.keys(roles).concat(["admin"]).map(function(k){return '<option value="'+k+'"'+(k===sel?" selected":"")+'>'+esc(roles[k]||"Admin")+'</option>'}).join("")};
   $("#rqList").innerHTML=pend.map(function(r){if(!RQSEL[r.email])RQSEL[r.email]=r.entries&&r.entries.length?[]:rqSuggest(r);var sel=RQSEL[r.email];
     return '<div class="card" style="box-shadow:none;margin:10px 0 0" data-rq="'+esc(r.email)+'"><div class="row" style="justify-content:space-between"><div><b>'+esc(r.name)+'</b> · '+esc(r.email)+(r.mobile?' · '+esc(r.mobile):"")+'<div class="sub" style="margin:2px 0 0">Asked for <b>'+esc(roles[r.role]||r.role)+'</b> · '+esc(fmtDay((r.requestedOn||"").slice(0,10)))+(r.note?' · “'+esc(r.note)+'”':"")+'</div></div>'+
-      '<label class="f" style="margin:0">Grant role<select class="inp" data-f="role">'+opt(r.role)+'</select></label></div>'+
+      '<div class="row" style="gap:8px"><label class="f" style="margin:0">Group<select class="inp" data-f="group">'+grpOpts(r.group||"")+'</select></label><label class="f" style="margin:0">Grant role<select class="inp" data-f="role">'+opt(r.role)+'</select></label></div></div>'+
       (r.entries&&r.entries.length?'<table class="tbl dense" style="margin:10px 0"><thead><tr><th>Partner (as typed)</th><th>Accounts they manage</th><th>Dealer page</th></tr></thead><tbody>'+r.entries.map(function(en,k){var m=rqMatch(en.partner);
         return '<tr data-en="'+k+'"><td>'+esc(en.partner)+'</td><td><textarea class="inp" data-f="acc" rows="2" style="width:100%;min-width:200px">'+esc(en.accounts||"")+'</textarea></td><td><select class="inp" data-f="dl" style="max-width:240px"><option value="">— not linked —</option>'+dealerOpts(m)+'</select></td></tr>'}).join("")+'</tbody></table>'
         :'<p class="sub" style="white-space:pre-line;margin:10px 0 6px"><b>Partners they handle:</b> '+esc(r.partners||"—")+'</p>')+
@@ -338,24 +340,28 @@ $("#rqList").addEventListener("change",function(e){var id=e.target.dataset.d;if(
   if(e.target.checked&&i<0)sel.push(id);if(!e.target.checked&&i>=0)sel.splice(i,1);c.querySelector("[data-n]").textContent=sel.length});
 $("#rqList").addEventListener("click",function(e){var b=e.target.closest("button[data-act]");if(!b)return;var c=b.closest("[data-rq]"),em=c.dataset.rq,dec=b.dataset.act,role=c.querySelector('[data-f="role"]').value;
   if(dec==="reject"&&!confirm("Reject "+em+"?"))return;if(dec==="approve"&&role==="admin"&&!confirm("Give "+em+" full ADMIN access (costs, margins, all settings)?"))return;
-  b.disabled=true;call("decideRegistration",{email:em,decision:dec,role:role,dealerIds:RQSEL[em]||[],note:c.querySelector('[data-f="note"]').value,
+  b.disabled=true;call("decideRegistration",{email:em,decision:dec,role:role,group:c.querySelector('[data-f="group"]').value,dealerIds:RQSEL[em]||[],note:c.querySelector('[data-f="note"]').value,
     assign:[].map.call(c.querySelectorAll("tr[data-en]"),function(tr){var r=(A.registrations||[]).filter(function(x){return x.email===em})[0],en=(r&&r.entries||[])[+tr.dataset.en]||{};return {dealerId:tr.querySelector('[data-f="dl"]').value,accounts:tr.querySelector('[data-f="acc"]').value,partner:en.partner}}).filter(function(a){return a.dealerId})}).then(function(){delete RQSEL[em];toast(dec==="approve"?"Approved "+em+" — they can sign in now":"Rejected "+em)},function(){b.disabled=false})});
 
+var GROUPS=["GMA 1","GMA 2","Prov 1","Prov 2","Prov 3","Corp"],GROUPN={"GMA 1":"GMA 1 · Manila","GMA 2":"GMA 2 · Manila","Prov 1":"Prov 1 · Luzon","Prov 2":"Prov 2 · Visayas","Prov 3":"Prov 3 · Mindanao","Corp":"Corp · Corporate"};
+function grpOpts(sel,blank){return '<option value="">'+(blank||"— no group —")+'</option>'+GROUPS.map(function(g){return '<option value="'+g+'"'+(g===sel?" selected":"")+'>'+GROUPN[g]+'</option>'}).join("")}
 function renderUsers(){
   var f=($("#uFilter").value||"").toLowerCase(),owner=(A.settings.OWNER_EMAIL||"").toLowerCase();$("#ownerEmail").textContent=owner||"not set";
-  var rows=USERS.map(function(u,i){return {u:u,i:i}}).filter(function(x){return !f||(x.u.email+" "+x.u.name+" "+x.u.role).toLowerCase().indexOf(f)>=0});
-  rows.sort(function(a,b){var r={admin:0,csomgr:1,sales:2,csa:3,cso:4,hplead:5,dealer:6};return (r[a.u.role]-r[b.u.role])||a.u.email.localeCompare(b.u.email)});
+  var gf=$("#uGF").value;if(!$("#uGroup").options.length){$("#uGroup").innerHTML=grpOpts("","Group…");$("#uGF").innerHTML=grpOpts(gf,"All groups")}
+  var rows=USERS.map(function(u,i){return {u:u,i:i}}).filter(function(x){return (!f||(x.u.email+" "+x.u.name+" "+x.u.role+" "+(x.u.group||"")).toLowerCase().indexOf(f)>=0)&&(!gf||x.u.group===gf)});
+  rows.sort(function(a,b){var r={admin:0,csomgr:1,sm:2,sales:3,cso:4,csa:5,hplead:6,dealer:7},g=function(u){var k=GROUPS.indexOf(u.group||"");return k<0?9:k};return (g(a.u)-g(b.u))||(r[a.u.role]-r[b.u.role])||a.u.email.localeCompare(b.u.email)});
   $("#uBody").innerHTML=rows.map(function(x){var u=x.u,locked=u.email===owner,dl=dealerCount(u.email);
     return '<tr data-i="'+x.i+'"><td class="sku">'+esc(u.email)+(locked?' <span class="lock">owner</span>':"")+(u.email===ME.email?' <span class="lock">you</span>':"")+'</td>'+
       '<td><input class="inp" data-f="name" value="'+esc(u.name)+'" style="width:180px"></td>'+
-      '<td><select class="role" data-f="role"'+(locked?" disabled":"")+'>'+[["admin","Admin"],["csomgr","CSO manager"],["sales","Sales"],["csa","Sales assistant (CSA)"],["cso","Channel sales (CSO)"],["hplead","HP lead"],["dealer","Dealer account"]].map(function(r){return '<option value="'+r[0]+'"'+(u.role===r[0]?" selected":"")+'>'+r[1]+'</option>'}).join("")+'</select></td>'+
+      '<td><select class="role" data-f="role"'+(locked?" disabled":"")+'>'+[["admin","Admin"],["csomgr","CSO manager"],["sm","Sales manager (SM)"],["sales","Sales"],["csa","Sales assistant (CSA)"],["cso","Channel sales (CSO)"],["hplead","HP lead"],["dealer","Dealer account"]].map(function(r){return '<option value="'+r[0]+'"'+(u.role===r[0]?" selected":"")+'>'+r[1]+'</option>'}).join("")+'</select></td>'+
+      '<td><select class="role" data-f="group">'+grpOpts(u.group||"")+'</select></td>'+
       '<td class="c"><input type="checkbox" data-f="active"'+(u.active?" checked":"")+(locked?" disabled":"")+'></td>'+
-      '<td style="font-size:12px;color:var(--muted)">'+(/^(admin|csomgr|sales|csa)$/.test(u.role)?"All":esc(dl.join(", ")||"—"))+'</td>'+
+      '<td style="font-size:12px;color:var(--muted)">'+(/^(admin|csomgr|sales)$/.test(u.role)?"All":u.role==="sm"?("All "+esc(u.group||"(set a group)")+" dealers"+(dl.length?" + "+esc(dl.join(", ")):"")):esc(dl.join(", ")||"—"))+'</td>'+
       '<td style="font-size:12px;color:var(--faint)">'+esc(when(u.updatedOn))+(u.updatedBy&&u.updatedBy!=="setup"?" · "+esc(u.updatedBy):"")+'</td>'+
-      '<td>'+(locked?"":'<button class="x" data-del title="Remove from list" type="button">×</button>')+'</td></tr>'}).join("")||'<tr class="empty-row"><td colspan="7">No users match.</td></tr>';
+      '<td>'+(locked?"":'<button class="x" data-del title="Remove from list" type="button">×</button>')+'</td></tr>'}).join("")||'<tr class="empty-row"><td colspan="8">No users match.</td></tr>';
   $("#uSave").disabled=JSON.stringify(USERS)===USERS0;
 }
-$("#uFilter").addEventListener("input",renderUsers);
+$("#uFilter").addEventListener("input",renderUsers);$("#uGF").addEventListener("change",renderUsers);
 $("#uBody").addEventListener("change",function(e){var tr=e.target.closest("tr");if(!tr)return;var u=USERS[+tr.dataset.i],f=e.target.dataset.f;if(!f)return;u[f]=f==="active"?e.target.checked:e.target.value;renderUsers()});
 $("#uBody").addEventListener("click",function(e){if(!e.target.hasAttribute("data-del"))return;var tr=e.target.closest("tr"),u=USERS[+tr.dataset.i];
   var dl=dealerCount(u.email);if(dl.length&&!confirm(u.email+" is assigned to "+dl.join(", ")+". Remove anyway? (They will lose access.)"))return;
@@ -363,7 +369,7 @@ $("#uBody").addEventListener("click",function(e){if(!e.target.hasAttribute("data
 $("#uAdd").addEventListener("click",function(){var e=$("#uEmail").value.trim().toLowerCase();
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){msg("#uMsg","Enter a full email address.");return}
   if(USERS.some(function(u){return u.email===e})){msg("#uMsg",e+" is already on the list.");return}
-  USERS.push({email:e,name:$("#uName").value.trim(),role:$("#uRole").value,active:true});$("#uEmail").value="";$("#uName").value="";msg("#uMsg","Added "+e+" — press Save users to apply.",true);renderUsers()});
+  USERS.push({email:e,name:$("#uName").value.trim(),role:$("#uRole").value,group:$("#uGroup").value,active:true});$("#uEmail").value="";$("#uName").value="";msg("#uMsg","Added "+e+" — press Save users to apply.",true);renderUsers()});
 $("#uSave").addEventListener("click",function(){var b=$("#uSave");b.disabled=true;b.textContent="Saving…";
   call("saveUsers",{users:USERS},"Users saved").then(function(){msg("#uMsg","Saved.",true)},function(){}).then(function(){b.textContent="Save users";renderUsers()})});
 
@@ -372,15 +378,15 @@ var DSEG="fav",BULK={base:"thr",pct:"",round:"0"};
 function renderDealerList(){
   var f=($("#dSearch").value||"").toLowerCase(),lead=$("#dLead").value;
   var leads={};A.dealers.forEach(function(d){if(d.hpLead)leads[d.hpLead]=1});
-  $("#dLead").innerHTML='<option value="">Any HP lead</option>'+Object.keys(leads).sort().map(function(l){return '<option'+(l===lead?" selected":"")+'>'+esc(l)+'</option>'}).join("");
+  $("#dLead").innerHTML='<option value="">Any HP lead / group</option><optgroup label="Sales group">'+GROUPS.map(function(g){return '<option value="g:'+g+'"'+("g:"+g===lead?" selected":"")+'>'+GROUPN[g]+'</option>'}).join("")+'<option value="g:"'+(lead==="g:"?" selected":"")+'>No group yet</option></optgroup><optgroup label="HP lead">'+Object.keys(leads).sort().map(function(l){return '<option'+(l===lead?" selected":"")+'>'+esc(l)+'</option>'}).join("")+'</optgroup>';
   var list=A.dealers.filter(function(d){
     if(f&&(d.name+" "+d.code+" "+d.partnerId+" "+d.hpLead+" "+d.csoManager+" "+d.emails.join(" ")).toLowerCase().indexOf(f)<0)return false;
-    if(lead&&d.hpLead!==lead)return false;
+    if(lead&&d.hpLead!==lead&&!(lead.indexOf("g:")===0&&(d.group||"")===lead.slice(2)))return false;
     if(!f&&!lead&&DSEG==="fav"&&!d.favorite)return false;
     if(DSEG==="priced"&&!d.prices.length)return false;
     return true}).sort(function(a,b){return (b.favorite-a.favorite)||a.name.localeCompare(b.name)});
   $("#dList").innerHTML=list.map(function(d){
-    return '<div class="ditem'+(d.active?"":" off")+'" data-id="'+esc(d.id)+'" role="button" tabindex="0"'+(CUR&&CUR.id===d.id?' aria-current="true"':"")+'><b><button type="button" class="star'+(d.favorite?" on":"")+'" data-star="'+esc(d.id)+'" title="'+(d.favorite?"Remove from favorites":"Add to favorites")+'" aria-label="Favorite">'+(d.favorite?"★":"☆")+'</button> '+esc(d.name)+'</b><span>'+esc(d.code||d.id)+(d.hpLead?" · HP "+esc(d.hpLead):"")+' · '+d.prices.length+' SKUs · '+(d.emails.length||"no")+' viewer'+(d.emails.length===1?"":"s")+(d.validUntil?" · to "+esc(fmtDay(d.validUntil)):"")+(d.active?"":" · inactive")+'</span></div>'}).join("")||'<p class="sub" style="padding:10px">'+(DSEG==="fav"&&!f&&!lead?"No favorites yet — tap ☆ on a dealer to pin it here.":"No dealers match.")+'</p>';
+    return '<div class="ditem'+(d.active?"":" off")+'" data-id="'+esc(d.id)+'" role="button" tabindex="0"'+(CUR&&CUR.id===d.id?' aria-current="true"':"")+'><b><button type="button" class="star'+(d.favorite?" on":"")+'" data-star="'+esc(d.id)+'" title="'+(d.favorite?"Remove from favorites":"Add to favorites")+'" aria-label="Favorite">'+(d.favorite?"★":"☆")+'</button> '+esc(d.name)+'</b><span>'+esc(d.code||d.id)+(d.group?" · "+esc(d.group):"")+(d.hpLead?" · HP "+esc(d.hpLead):"")+' · '+d.prices.length+' SKUs · '+(d.emails.length||"no")+' viewer'+(d.emails.length===1?"":"s")+(d.validUntil?" · to "+esc(fmtDay(d.validUntil)):"")+(d.active?"":" · inactive")+'</span></div>'}).join("")||'<p class="sub" style="padding:10px">'+(DSEG==="fav"&&!f&&!lead?"No favorites yet — tap ☆ on a dealer to pin it here.":"No dealers match.")+'</p>';
 }
 $("#dSearch").addEventListener("input",renderDealerList);
 $("#dLead").addEventListener("change",renderDealerList);
@@ -389,7 +395,7 @@ $("#dList").addEventListener("click",function(e){var st=e.target.closest("[data-
   if(st){e.stopPropagation();var d=A.dealers.filter(function(x){return x.id===st.dataset.star})[0];if(!d)return;var to=!d.favorite;st.disabled=true;
     call("setFavorite",{dealerId:d.id,favorite:to},to?"★ "+d.name+" added to favorites":d.name+" removed from favorites").catch(function(){});return}
   var b=e.target.closest(".ditem");if(b){if(dirtyDealer()&&!confirm("Discard unsaved changes to "+CUR.name+"?"))return;editDealer(b.dataset.id)}});
-$("#dNew").addEventListener("click",function(){if(dirtyDealer()&&!confirm("Discard unsaved changes?"))return;CUR={id:"",name:"",code:"",partnerId:"",hpLead:"",csoManager:"",favorite:false,emails:[],validUntil:"",note:"",active:true,prices:[]};CUR0=JSON.stringify(CUR);history.replaceState(null,"","#dealers");renderDealerList();renderDealer();$("#fName").focus()});
+$("#dNew").addEventListener("click",function(){if(dirtyDealer()&&!confirm("Discard unsaved changes?"))return;CUR={id:"",name:"",code:"",partnerId:"",hpLead:"",csoManager:"",group:"",favorite:false,emails:[],validUntil:"",note:"",active:true,prices:[]};CUR0=JSON.stringify(CUR);history.replaceState(null,"","#dealers");renderDealerList();renderDealer();$("#fName").focus()});
 function editDealer(id,keepEdits){var d=A.dealers.filter(function(x){return x.id===id})[0];if(!d)return;
   if(!(keepEdits&&CUR&&CUR.id===id&&dirtyDealer())){CUR=clone(d);CUR0=JSON.stringify(CUR)}
   history.replaceState(null,"","#dealers/"+encodeURIComponent(id));showTab("dealers");renderDealerList();renderDealer()}
@@ -418,6 +424,7 @@ function renderDealer(){
        '<label class="f">Valid until<input class="inp" id="fValid" type="date" value="'+esc(CUR.validUntil)+'"></label>'+
        '<label class="f">HP partner ID<input class="inp" id="fPid" value="'+esc(CUR.partnerId)+'" placeholder="e.g. 2-SISC-23901"></label>'+
        '<label class="f">HP lead (RAM)<input class="inp" id="fLead" value="'+esc(CUR.hpLead)+'" list="leadList" placeholder="e.g. Yvette Dela Paz"></label>'+
+       '<label class="f">Sales group<select class="inp" id="fGroup">'+grpOpts(CUR.group||"")+'</select></label>'+
        '<label class="f">CSO manager<input class="inp" id="fMgr" value="'+esc(CUR.csoManager)+'" placeholder="Name or email (to be added)"></label>'+
        '<label class="f">Favorite<select class="inp" id="fFav"><option value="1"'+(CUR.favorite?" selected":"")+'>★ Yes — pin to the top</option><option value="0"'+(CUR.favorite?"":" selected")+'>No</option></select></label>'+
        '<label class="f">Status<select class="inp" id="fActive"><option value="1"'+(CUR.active?" selected":"")+'>Active — viewers can open it</option><option value="0"'+(CUR.active?"":" selected")+'>Inactive — hidden from viewers</option></select></label></div>'+
@@ -437,7 +444,7 @@ function renderDealer(){
 }
 function wireDealer(){
   var bind=function(id,key,fn){$(id).addEventListener("input",function(e){CUR[key]=fn?fn(e.target.value):e.target.value;refreshSave()})};
-  bind("#fName","name");bind("#fCode","code");bind("#fPid","partnerId");bind("#fLead","hpLead");bind("#fMgr","csoManager");
+  bind("#fName","name");bind("#fCode","code");bind("#fPid","partnerId");bind("#fLead","hpLead");bind("#fMgr","csoManager");$("#fGroup").addEventListener("change",function(){CUR.group=this.value;refreshSave()});
   $("#fFav").addEventListener("change",function(e){CUR.favorite=e.target.value==="1";refreshSave()});bind("#fValid","validUntil");bind("#fNote","note");
   bind("#fEmails","emails",function(v){return v.split(/[\s,;]+/).map(function(x){return x.trim().toLowerCase()}).filter(Boolean)});
   $("#fActive").addEventListener("change",function(e){CUR.active=e.target.value==="1";refreshSave()});
@@ -472,7 +479,7 @@ function saveDealer(){
   var bad=CUR.emails.filter(function(e){return !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)});if(bad.length){msg("#dMsg","Check these emails: "+bad.join(", "));return}
   var missing=CUR.prices.filter(function(p){return p.price==null||p.price<=0});if(missing.length){msg("#dMsg","Set a price for "+missing.map(function(p){return p.sku}).join(", ")+" or remove it.");return}
   var b=$("#dSave");b.disabled=true;b.textContent="Saving…";
-  call("saveDealer",{dealer:{id:CUR.id,name:CUR.name,code:CUR.code,partnerId:CUR.partnerId,hpLead:CUR.hpLead,csoManager:CUR.csoManager,favorite:CUR.favorite,emails:CUR.emails,validUntil:CUR.validUntil,note:CUR.note,active:CUR.active},prices:CUR.prices}).then(function(d){
+  call("saveDealer",{dealer:{id:CUR.id,name:CUR.name,code:CUR.code,partnerId:CUR.partnerId,hpLead:CUR.hpLead,csoManager:CUR.csoManager,group:CUR.group||"",favorite:CUR.favorite,emails:CUR.emails,validUntil:CUR.validUntil,note:CUR.note,active:CUR.active},prices:CUR.prices}).then(function(d){
     CUR=null;editDealer(d.savedDealer);toast("Saved "+d.savedDealer+(d.addedUsers&&d.addedUsers.length?" · added "+d.addedUsers.join(", ")+" as CSO":""));
   },function(){b.disabled=false;b.textContent="Save dealer page"});
 }
