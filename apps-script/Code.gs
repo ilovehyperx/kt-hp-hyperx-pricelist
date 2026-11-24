@@ -1,149 +1,3 @@
-/* HyperX pricing engine · Iontech
- * One copy of the price math, used by:
- *   - editor.html (live preview in the browser)
- *   - the Apps Script backend (paste this file as Engine.gs)
- * so the editor, the sales page and the Sheet always agree.
- *
- * Price rules (from the KT-HP Threshold Costing sheet):
- *   invoice cost = NDP x VAT (1.12)
- *   Base DP      = ROUND(invoice cost / (1 - DP margin), DP rounding)   <- nearest, default whole peso
- *   Threshold    = ROUNDUP(invoice cost / (1 - threshold margin), threshold rounding)
- *   Rebate price = ROUNDUP((NDP - rebate) x VAT / (1 - threshold margin), threshold rounding)
- *                  used only while rebate units are left, and only if lower than Threshold
- *   Special price (what sales sees) = rebate price if it applies, else Threshold
- *   Margin w/o rebate = 1 - invoice cost / special price
- *   Limited Qty Price  = margin w/o rebate < the category's "Limited below" (default MIN_MARGIN 5%; Monitors 0%)
- *     units left = MIN(rebate units left, on hand) when rebate-backed, else on hand
- * Rounding digits work like Excel ROUNDUP: 2 = centavo, 1 = 10 centavos, 0 = peso, -1 = tens.
- */
-var HXPricing = (function () {
-  function roundUp(x, digits) {
-    if (x == null || isNaN(x)) return null;
-    var d = Number(digits); if (isNaN(d)) d = 0;
-    var f = Math.pow(10, d);
-    // tiny epsilon so 909.1800000001 does not jump a step because of float noise
-    return Math.ceil(x * f - 1e-9) / f;
-  }
-  function roundNear(x, digits) {
-    if (x == null || isNaN(x)) return null;
-    var d = Number(digits); if (isNaN(d)) d = 0;
-    var f = Math.pow(10, d);
-    return Math.round(x * f + 1e-9) / f;
-  }
-  /** New = explicit Y/N in the New column, else Auto: release date or OPG-added date within `days` of today. */
-  function resolveNew(flag, release, opgAdded, today, days) {
-    var f = String(flag == null ? '' : flag).trim();
-    if (/^(y|yes|true|1|new)$/i.test(f)) return true;
-    if (/^(n|no|false|0|existing)$/i.test(f)) return false;
-    var t = toDate(today) || new Date(), win = Number(days) || 90, newest = null;
-    [release, opgAdded].forEach(function (x) { var d = toDate(x); if (d && (!newest || d > newest)) newest = d; });
-    return !!newest && (t - newest) / 864e5 <= win && newest <= t;
-  }
-  function pct(x) { var n = Number(x); if (isNaN(n)) return null; return n > 1 ? n / 100 : n; }
-  function num(x) { if (x === '' || x == null) return null; var n = typeof x === 'number' ? x : Number(String(x).replace(/[₱,\s]/g, '')); return isNaN(n) ? null : n; }
-  function isNew(v) { return /^(y|yes|true|1|new)$/i.test(String(v == null ? '' : v).trim()); }
-  function seg(v) { return isNew(v) ? 'New' : 'Existing'; }
-
-  /** rules: [{cat, seg:'New'|'Existing', dpMargin, dpDigits, thrMargin, thrDigits}] ; '*' cat = fallback */
-  function findRule(rules, cat, segment) {
-    var hit = null, star = null;
-    for (var i = 0; i < rules.length; i++) {
-      var r = rules[i];
-      if (r.seg !== segment) continue;
-      if (r.cat === cat) { hit = r; break; }
-      if (r.cat === '*') star = r;
-    }
-    return hit || star || { cat: '*', seg: segment, dpMargin: 0.15, dpDigits: 0, thrMargin: 0.06, thrDigits: 0, limitBelow: null };
-  }
-
-  /**
-   * item:  {sku, desc, cat, isNew, ndp, srp, dpOverride, thrOverride, onHand, active}
-   * rebate (optional): {rebate, max, sold, left}
-   * opts: {vat, minMargin}
-   */
-  function priceItem(item, rules, rebate, opts) {
-    var vat = num(opts && opts.vat) || 1.12;
-    var minMargin = pct(opts && opts.minMargin); if (minMargin == null) minMargin = 0.05;
-    var segment = seg(item.isNew);
-    var rule = findRule(rules, item.cat, segment);
-    var lim = rule.limitBelow === '' || rule.limitBelow == null ? null : pct(rule.limitBelow);
-    if (lim != null) minMargin = lim;
-    var ndp = num(item.ndp);
-    var cost = ndp == null ? null : ndp * vat;
-    var dpM = pct(rule.dpMargin), thM = pct(rule.thrMargin);
-
-    var dpCalc = cost == null ? null : roundNear(cost / (1 - dpM), rule.dpDigits);
-    var thrCalc = cost == null ? null : roundUp(cost / (1 - thM), rule.thrDigits);
-    var dp = num(item.dpOverride) != null ? num(item.dpOverride) : dpCalc;
-    var thr = num(item.thrOverride) != null ? num(item.thrOverride) : thrCalc;
-
-    var reb = rebate && num(rebate.rebate) ? rebate : null;
-    var rebatePrice = null, rebateBacked = false;
-    if (reb && ndp != null && (reb.left || 0) > 0) {
-      rebatePrice = roundUp((ndp - num(reb.rebate)) * vat / (1 - thM), rule.thrDigits);
-      if (thr != null && rebatePrice < thr) rebateBacked = true; else rebatePrice = null;
-    }
-    var sp = rebateBacked ? rebatePrice : thr;
-
-    var mNo = (cost == null || !sp) ? null : 1 - cost / sp;
-    var mWith = (cost == null || !sp) ? null : 1 - (reb ? (ndp - num(reb.rebate)) * vat : cost) / sp;
-    var onHand = num(item.onHand);
-    var limited = mNo != null && mNo < minMargin;
-    var unitsLeft = null;
-    if (limited) {
-      if (rebateBacked) unitsLeft = onHand == null ? reb.left : Math.min(reb.left, Math.max(0, onHand));
-      else unitsLeft = onHand == null ? null : Math.max(0, onHand);
-    }
-    return {
-      sku: item.sku, desc: item.desc, cat: item.cat, segment: segment, isNew: segment === 'New',
-      ndp: ndp, cost: cost, srp: num(item.srp),
-      dp: dp, dpCalc: dpCalc, dpOverridden: num(item.dpOverride) != null,
-      thr: thr, thrCalc: thrCalc, thrOverridden: num(item.thrOverride) != null,
-      rule: rule,
-      rebate: reb ? num(reb.rebate) : 0, rebateMax: reb ? reb.max : null, rebateSold: reb ? reb.sold : null, rebateLeft: reb ? reb.left : null,
-      rebatePrice: rebatePrice, rebateBacked: rebateBacked,
-      sp: sp, marginNoRebate: mNo, marginWithRebate: mWith,
-      dpMarginActual: (cost == null || !dp) ? null : 1 - cost / dp,
-      limited: limited, limitBelow: minMargin, unitsLeft: unitsLeft, onHand: onHand,
-      noRebateCover: limited && !rebateBacked
-    };
-  }
-
-  /** HP sell-out rows -> sold per SKU inside each program window. Returns net off; floor 0. */
-  function rebateStatus(programRows, selloutRows) {
-    var by = {};
-    programRows.forEach(function (r) {
-      var s = baseSku(r.sku); if (!s) return;
-      by[s] = { sku: s, rebate: num(r.rebate) || 0, max: num(r.max) || 0, start: toDate(r.start), end: toDate(r.end), sold: 0, left: 0 };
-    });
-    var raw = {}, latest = null;
-    (selloutRows || []).forEach(function (r) {
-      var s = baseSku(r.sku), b = by[s]; if (!b) return;
-      var d = toDate(r.date);
-      if (d && b.start && d < b.start) return;
-      if (d && b.end && d > b.end) return;
-      if (d && (!latest || d > latest)) latest = d;
-      raw[s] = (raw[s] || 0) + sapQty(r.qty);
-    });
-    Object.keys(by).forEach(function (s) { var b = by[s]; b.sold = Math.max(0, raw[s] || 0); b.left = Math.max(0, b.max - b.sold); });
-    return { bySku: by, latest: latest };
-  }
-
-  function baseSku(s) { return String(s || '').split('#')[0].trim().toUpperCase(); }
-  function sapQty(x) { if (typeof x === 'number') return x; var s = String(x || '').trim(), neg = /-$/.test(s); var n = Number(s.replace(/-$/, '').replace(/,/g, '')) || 0; return neg ? -n : n; }
-  function toDate(x) {
-    if (!x) return null;
-    if (Object.prototype.toString.call(x) === '[object Date]') return x;
-    var s = String(x).trim();
-    // dates are compared as local calendar days, so "20261113" and "2026-11-13" mean the same day
-    if (/^\d{8}$/.test(s)) return new Date(+s.slice(0, 4), +s.slice(4, 6) - 1, +s.slice(6, 8));
-    var m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
-    var d = new Date(s); return isNaN(d) ? null : new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  }
-
-  return { roundUp: roundUp, roundNear: roundNear, resolveNew: resolveNew, priceItem: priceItem, findRule: findRule, rebateStatus: rebateStatus, baseSku: baseSku, sapQty: sapQty, num: num, pct: pct, isNew: isNew };
-})();
 /**
  * HyperX Sales Pricing API · Iontech
  * Apps Script web app bound to the private "HyperX Sales Pricing" Google Sheet.
@@ -193,8 +47,10 @@ var CAN_QUOTE = { admin: 1, csomgr: 1, sales: 1, csa: 1, cso: 1 };
 var SEES_SALES = { admin: 1, csomgr: 1, sales: 1, csa: 1 };
 H.quotes = ['Quote ID', 'Created', 'Email', 'Name', 'Role', 'Dealer ID', 'Dealer name', 'Source', 'Status', 'Lines', 'Total', 'Note', 'Idempotency key', 'Meta'];
 H.qlines = ['Quote ID', 'Line', 'SKU', 'Description', 'Qty', 'SRP', 'Regular DP', 'SP', 'Line total', 'Price source'];
-TAB.quotes = 'Quotes'; TAB.qlines = 'QuoteLines';
-var EDITABLE_SETTINGS = ['MIN_MARGIN', 'NEW_DAYS', 'SALES_NOTE', 'DEALER_NOTE', 'PRICES_AS_OF'];
+TAB.quotes = 'Quotes'; TAB.qlines = 'QuoteLines'; TAB.commit = 'Commitments';
+H.commit = ['ID', 'Batch', 'Type', 'Status', 'Created', 'Email', 'Name', 'Dealer ID', 'Dealer name', 'SKU', 'Description', 'Qty', 'Until', 'Remarks', 'Decided by', 'Decided at', 'Decision note', 'Idempotency key'];
+var COMMIT_TYPES = { reservation: 1, hold: 1, allocation: 1 };
+var EDITABLE_SETTINGS = ['RES_WAREHOUSE', 'MIN_MARGIN', 'NEW_DAYS', 'SALES_NOTE', 'DEALER_NOTE', 'PRICES_AS_OF'];
 
 /* ================================================================== entry points */
 
@@ -222,7 +78,8 @@ function publicData_() {
   all.order.forEach(function (s) {
     var p = all.priced[s]; if (!p.active) return;
     prices[s] = { srp: p.srp, dp: p.dp };
-    if (p.onHand != null) levels[s] = p.onHand <= 0 ? 'out' : p.onHand <= very ? 'very' : p.onHand < lim ? 'limited' : 'ok';
+    var q = p.atp != null ? p.atp : p.onHand;
+    if (q != null) levels[s] = q <= 0 ? 'out' : q <= very ? 'very' : q < lim ? 'limited' : 'ok';
   });
   var out = { ok: true, updated: new Date().toISOString(), pricesAsOf: settings.PRICES_AS_OF || '', source: 'HyperX Sales Pricing sheet', prices: prices, levels: levels };
   try { cache.put('public_v1', JSON.stringify(out), 300); } catch (err) {}
@@ -240,7 +97,7 @@ function route_(body) {
   var user = { email: who.email, name: m.name || who.name, role: m.role, picture: who.picture || '' };
   var isAdmin = m.role === 'admin';
   var ctx = { settings: settings, user: user, isAdmin: isAdmin, body: body };
-  var adminOnly = { editor: 1, save: 1, admin: 1, saveUsers: 1, saveDealer: 1, setFavorite: 1, uploadSellout: 1, uploadStock: 1, uploadRebate: 1, saveSettings: 1 };
+  var adminOnly = { decideCommitment: 1, editor: 1, save: 1, admin: 1, saveUsers: 1, saveDealer: 1, saveDealerPrices: 1, setFavorite: 1, uploadSellout: 1, uploadStock: 1, uploadRebate: 1, saveSettings: 1 };
   if (adminOnly[action] && !isAdmin) { log_(who.email, user.name, m.role, action + ' denied (not admin)', body.page); return { ok: false, error: 'admin_only', user: user }; }
 
   var out;
@@ -255,6 +112,7 @@ function route_(body) {
     case 'admin': out = adminData_(ctx); break;
     case 'saveUsers': out = saveUsers_(ctx); break;
     case 'saveDealer': out = saveDealer_(ctx); break;
+    case 'saveDealerPrices': out = saveDealerPrices_(ctx); break;
     case 'setFavorite': out = setFavorite_(ctx); break;
     case 'uploadSellout': out = uploadSellout_(ctx); break;
     case 'uploadStock': out = uploadStock_(ctx); break;
@@ -262,6 +120,10 @@ function route_(body) {
     case 'saveSettings': out = saveSettings_(ctx); break;
     case 'createQuote': out = createQuote_(ctx); break;
     case 'quotes': out = listQuotes_(ctx); break;
+    case 'commitments': out = listCommitments_(ctx); break;
+    case 'requestCommitment': out = requestCommitment_(ctx); break;
+    case 'decideCommitment': out = decideCommitment_(ctx); break;
+    case 'releaseCommitment': out = releaseCommitment_(ctx); break;
     default: out = { ok: false, error: 'unknown_action' };
   }
   log_(who.email, user.name, m.role, action + (out && out.ok === false ? ' · ' + out.error : '') + (body.dealerId ? ' ' + body.dealerId : ''), body.page);
@@ -339,6 +201,8 @@ function loadAll_(settings) {
     p.active = it.active; p.moq = HXPricing.num(it.moq); p.material = it.material;
     priced[it.sku] = p; order.push(it.sku);
   });
+  var committed = committedBySku_();
+  Object.keys(priced).forEach(function (s) { var p = priced[s]; p.committed = committed[s] || 0; p.atp = p.onHand == null ? null : Math.max(0, p.onHand - p.committed); });
   opts.newDays = newDays; opts.today = iso_(today);
   return { rules: rules, items: items, priced: priced, order: order, rebateBySku: st.bySku, deal: deal, selloutAsOf: iso_(st.latest), opts: opts };
 }
@@ -417,7 +281,7 @@ function dealerData_(ctx, id) {
     } else if (cap != null) units = cap;
     var o = { sku: sku, desc: p.desc, cat: p.cat, isNew: p.isNew, srp: p.srp, dp: p.dp, price: price, qtyCap: cap, note: String(r['Note'] || ''),
       override: over != null, tier: over == null ? 'base' : (limited ? 'limited' : 'special'), unitsLeft: units,
-      level: p.onHand == null ? 'unknown' : p.onHand <= 0 ? 'out' : p.onHand <= very ? 'very' : p.onHand < lim ? 'limited' : 'ok' };
+      level: p.atp == null ? 'unknown' : p.atp <= 0 ? 'out' : p.atp <= very ? 'very' : p.atp < lim ? 'limited' : 'ok' };
     if (isDealer) { o.unitsLeft = null; o.qtyCap = null; }
     if (admin) { o.cost = p.cost; o.thr = p.thr; o.sp = p.sp; o.rebate = rebateUsable ? reb.rebate : 0; o.rebateLeft = reb ? reb.left : null; o.marginNoRebate = mNo; o.marginWithRebate = mWith; o.limitBelow = limBelow; o.belowWithRebate = mWith != null && mWith < limBelow; }
     return o;
@@ -510,6 +374,129 @@ function listQuotes_(ctx) {
   var list = quoteRows_().filter(function (q) { return canSeeQuote_(ctx.user, q); });
   if (ctx.body.dealerId) list = list.filter(function (q) { return q.dealerId === String(ctx.body.dealerId); });
   return { quotes: list.reverse().slice(0, 100) };
+}
+
+/* ================================================================== stock commitments
+ * One row per SKU line. Every type starts Pending and only Approved rows reduce available-to-promise (ATP):
+ *   ATP = SAP on hand - SUM(qty of Approved rows that have not expired or been released).
+ * Approval re-checks ATP under a script lock, so two requests can never both claim the same units.
+ * Expiry: reservation = end of its Manila business day; hold = end of its hold-until date; allocation = no expiry (release it).
+ */
+function commitRows_() {
+  var sh = ss_().getSheetByName(TAB.commit);
+  if (!sh || sh.getLastRow() < 2) return [];
+  var now = new Date();
+  return sh.getDataRange().getValues().slice(1).map(function (r, i) {
+    var o = {}; H.commit.forEach(function (k, j) { o[k] = r[j]; });
+    var until = o['Until'] instanceof Date ? o['Until'] : toDate_(o['Until']);
+    var st = String(o['Status'] || 'pending').toLowerCase();
+    if ((st === 'pending' || st === 'approved') && until && endOfDay_(until) < now) st = 'expired';
+    return { row: i + 2, id: String(o['ID']), batch: String(o['Batch']), type: String(o['Type']), status: st,
+      created: o['Created'] instanceof Date ? o['Created'].toISOString() : String(o['Created']), email: String(o['Email']), name: String(o['Name'] || ''),
+      dealerId: String(o['Dealer ID']), dealer: String(o['Dealer name']), sku: HXPricing.baseSku(o['SKU']), desc: String(o['Description'] || ''), qty: Number(o['Qty']) || 0,
+      until: until ? iso_(until) : '', remarks: String(o['Remarks'] || ''), decidedBy: String(o['Decided by'] || ''),
+      decidedAt: o['Decided at'] instanceof Date ? o['Decided at'].toISOString() : String(o['Decided at'] || ''), decisionNote: String(o['Decision note'] || ''), idem: String(o['Idempotency key'] || '') };
+  });
+}
+function endOfDay_(d) { var x = new Date(d.getTime()); x.setHours(23, 59, 59, 999); return x; }
+function committedBySku_() {
+  var m = {};
+  commitRows_().forEach(function (c) { if (c.status === 'approved') m[c.sku] = (m[c.sku] || 0) + c.qty; });
+  return m;
+}
+var INTERNAL = { admin: 1, csomgr: 1, sales: 1, csa: 1, cso: 1 };
+
+function listCommitments_(ctx) {
+  if (!INTERNAL[ctx.user.role]) return { ok: false, error: 'not_allowed_here' };
+  var rows = commitRows_(), all = loadAll_(ctx.settings), skus = {};
+  var cutoff = Date.now() - 30 * 864e5;
+  var list = rows.filter(function (c) { return c.status === 'pending' || c.status === 'approved' || Date.parse(c.created) > cutoff; }).reverse().slice(0, 500);
+  list.forEach(function (c) { skus[c.sku] = 1; });
+  (ctx.body.skus || []).forEach(function (s) { skus[HXPricing.baseSku(s)] = 1; });
+  var stock = {};
+  Object.keys(skus).forEach(function (s) { var p = all.priced[s]; if (!p) return;
+    var pend = rows.filter(function (c) { return c.sku === s && c.status === 'pending'; }).reduce(function (a, c) { return a + c.qty; }, 0);
+    stock[s] = { onHand: p.onHand, committed: p.committed, atp: p.atp, pending: pend, desc: p.desc }; });
+  list.forEach(function (c) { c.mine = c.email === ctx.user.email; delete c.row; delete c.idem; });
+  return { commitments: list, stock: stock, stockAsOf: ctx.settings.STOCK_AS_OF || '', warehouse: ctx.settings.RES_WAREHOUSE || 'BS3', dealers: dealersFor_(ctx.user, false) };
+}
+
+function requestCommitment_(ctx) {
+  var u = ctx.user, b = ctx.body, type = String(b.type || '');
+  if (!INTERNAL[u.role] || u.role === 'hplead') return { ok: false, error: 'not_allowed_here' };
+  if (!COMMIT_TYPES[type]) return { ok: false, error: 'bad_request', detail: 'Unknown request type' };
+  var key = String(b.idem || '');
+  if (!/^[\w-]{8,64}$/.test(key)) return { ok: false, error: 'bad_request', detail: 'Missing idempotency key' };
+  var d = dealerRows_().filter(function (x) { return x.id === String(b.dealerId || ''); })[0];
+  if (!d || !canSeeDealer_(u, d)) return { ok: false, error: 'dealer_not_allowed' };
+  var lines = (Array.isArray(b.lines) ? b.lines : []).slice(0, 100);
+  if (!lines.length) return { ok: false, error: 'bad_request', detail: 'Add at least one item.' };
+  var today = new Date(), until = null;
+  if (type === 'reservation') until = today;
+  else if (type === 'hold') { until = toDate_(b.until); if (!until || endOfDay_(until) < today) return { ok: false, error: 'bad_request', detail: 'Pick a hold-until date from today onward.' }; }
+  else if (b.until) until = toDate_(b.until);
+  var all = loadAll_(ctx.settings);
+  var lock = LockService.getScriptLock(); if (!lock.tryLock(20000)) return { ok: false, error: 'busy' };
+  try {
+    var sh = sheet_(TAB.commit); if (sh.getLastRow() === 0) sh.appendRow(H.commit);
+    var existing = commitRows_().filter(function (c) { return c.idem === key; });
+    if (existing.length) return merge_(listCommitments_(ctx), { duplicate: true, batch: existing[0].batch });
+    var props = PropertiesService.getScriptProperties(), day = Utilities.formatDate(today, 'Asia/Manila', 'yyMMdd');
+    var seq = Number(props.getProperty('CSEQ_' + day) || 0) + 1; props.setProperty('CSEQ_' + day, String(seq));
+    var batch = { reservation: 'R', hold: 'H', allocation: 'A' }[type] + day + '-' + ('000' + seq).slice(-3);
+    var rows = [], n = 0;
+    for (var i = 0; i < lines.length; i++) {
+      var sku = HXPricing.baseSku(lines[i].sku), p = all.priced[sku], qty = Math.round(Number(lines[i].qty));
+      if (!p || !p.active) return { ok: false, error: 'bad_request', detail: 'Unknown SKU ' + sku };
+      if (!(qty > 0)) return { ok: false, error: 'bad_request', detail: 'Check the quantity for ' + sku };
+      n++;
+      rows.push([batch + '/' + n, batch, type, 'pending', today, u.email, u.name, d.id, d.name, sku, p.desc, qty, until ? iso_(until) : '', String(lines[i].remarks || b.remarks || '').slice(0, 200), '', '', '', n === 1 ? key : key + '#' + n]);
+    }
+    sh.getRange(sh.getLastRow() + 1, 1, rows.length, H.commit.length).setValues(rows);
+    sh.getRange(2, 13, sh.getLastRow() - 1, 1).setNumberFormat('@');
+    editLog_(u.email, type + ' request ' + batch + ' for ' + d.name + ': ' + rows.length + ' SKUs', null);
+  } finally { lock.releaseLock(); }
+  return merge_(listCommitments_(ctx), { batch: batch });
+}
+
+/** Admin approve / reject. Approve re-checks ATP per SKU inside the lock; lines that would oversubscribe stay pending and are reported. */
+function decideCommitment_(ctx) {
+  var b = ctx.body, ids = (b.ids || []).map(String), decision = b.decision === 'approve' ? 'approved' : b.decision === 'reject' ? 'rejected' : '';
+  if (!ids.length || !decision) return { ok: false, error: 'bad_request' };
+  var lock = LockService.getScriptLock(); if (!lock.tryLock(20000)) return { ok: false, error: 'busy' };
+  var done = [], conflicts = [], skipped = [];
+  try {
+    var rows = commitRows_(), all = loadAll_(ctx.settings), sh = sheet_(TAB.commit), now = new Date();
+    var atp = {}; Object.keys(all.priced).forEach(function (s) { atp[s] = all.priced[s].atp; });
+    rows.filter(function (c) { return ids.indexOf(c.id) >= 0; }).sort(function (a, b) { return a.row - b.row; }).forEach(function (c) {
+      if (c.status !== 'pending') { skipped.push(c.id + ' (' + c.status + ')'); return; }
+      if (decision === 'approved' && atp[c.sku] != null && c.qty > atp[c.sku]) { conflicts.push(c.id + ': ' + c.sku + ' needs ' + c.qty + ', only ' + atp[c.sku] + ' available'); return; }
+      if (decision === 'approved' && atp[c.sku] != null) atp[c.sku] -= c.qty;
+      sh.getRange(c.row, 4).setValue(decision);
+      sh.getRange(c.row, 15, 1, 3).setValues([[ctx.user.email, now, String(b.note || '').slice(0, 200)]]);
+      done.push(c.id);
+    });
+    if (done.length) editLog_(ctx.user.email, decision + ' ' + done.join(', '), { conflicts: conflicts });
+  } finally { lock.releaseLock(); }
+  return merge_(listCommitments_(ctx), { decided: done, conflicts: conflicts, skipped: skipped });
+}
+
+/** Release an approved commitment (admin or requester) or cancel your own pending request. */
+function releaseCommitment_(ctx) {
+  var ids = (ctx.body.ids || []).map(String), u = ctx.user, out = [];
+  var lock = LockService.getScriptLock(); if (!lock.tryLock(20000)) return { ok: false, error: 'busy' };
+  try {
+    var sh = sheet_(TAB.commit), now = new Date();
+    commitRows_().filter(function (c) { return ids.indexOf(c.id) >= 0; }).forEach(function (c) {
+      var mine = c.email === u.email, admin = u.role === 'admin';
+      if (c.status === 'approved' && (admin || mine)) { sh.getRange(c.row, 4).setValue('released'); }
+      else if (c.status === 'pending' && (admin || mine)) { sh.getRange(c.row, 4).setValue('cancelled'); }
+      else return;
+      sh.getRange(c.row, 15, 1, 2).setValues([[u.email, now]]); out.push(c.id);
+    });
+    if (out.length) editLog_(u.email, 'released/cancelled ' + out.join(', '), null);
+  } finally { lock.releaseLock(); }
+  return merge_(listCommitments_(ctx), { released: out });
 }
 
 /* ================================================================== admin: console data */
@@ -621,6 +608,46 @@ function saveDealer_(ctx) {
   } finally { lock.releaseLock(); }
 }
 
+/** Inline edits from the dealer page (admin): upsert special prices per SKU.
+ *  changes: [{sku, price (null/'' = back to Base DP), qtyCap, note}]. A row equal to Base DP with no cap/note is removed
+ *  so DealerPrices keeps exceptions only. */
+function saveDealerPrices_(ctx) {
+  var id = String(ctx.body.dealerId || '').trim(), changes = Array.isArray(ctx.body.changes) ? ctx.body.changes.slice(0, 500) : [];
+  var d = dealerRows_().filter(function (x) { return x.id === id; })[0];
+  if (!d) return { ok: false, error: 'bad_request', detail: 'Unknown dealer.' };
+  if (!changes.length) return { ok: false, error: 'bad_request', detail: 'Nothing to save.' };
+  var all = loadAll_(ctx.settings), bad = [];
+  var lock = LockService.getScriptLock(); if (!lock.tryLock(15000)) return { ok: false, error: 'busy' };
+  try {
+    var v = sheet_(TAB.dprices).getDataRange().getValues(), mine = {}, order = [], keep = [];
+    v.slice(1).forEach(function (r) {
+      if (r[0] === '' && r[1] === '') return;
+      if (String(r[0]).trim() === id && r[1]) { var k = HXPricing.baseSku(r[1]); if (!mine[k]) order.push(k); mine[k] = r.slice(0, 5); }
+      else keep.push(r.slice(0, 5));
+    });
+    var before = {}, n = 0;
+    changes.forEach(function (c) {
+      var sku = HXPricing.baseSku(c.sku || ''), p = all.priced[sku];
+      if (!sku || !p) { bad.push(String(c.sku || '?')); return; }
+      var price = c.price === '' || c.price == null ? null : HXPricing.num(c.price);
+      if (price != null && !(price > 0)) { bad.push(sku); return; }
+      var cap = HXPricing.num(c.qtyCap); cap = cap == null ? '' : Math.max(0, Math.round(cap));
+      var note = String(c.note || '').slice(0, 200).trim();
+      before[sku] = mine[sku] ? { price: mine[sku][2], cap: mine[sku][3], note: mine[sku][4] } : null;
+      if (price != null) price = Math.round(price * 100) / 100;
+      var same = price == null || (p.dp != null && price === p.dp);
+      if (same && cap === '' && !note) { delete mine[sku]; n++; return; }
+      if (!mine[sku]) order.push(sku);
+      mine[sku] = [id, sku, price == null ? (p.dp == null ? '' : p.dp) : price, cap, note]; n++;
+    });
+    if (bad.length) return { ok: false, error: 'bad_request', detail: 'Check these SKUs: ' + bad.slice(0, 10).join(', ') };
+    var rows = keep.concat(order.filter(function (k, i) { return mine[k] && order.indexOf(k) === i; }).map(function (k) { return mine[k]; }));
+    writeRows_(TAB.dprices, H.dprices, rows);
+    editLog_(ctx.user.email, 'dealer prices ' + id + ' ' + d.name + ': ' + n + ' change' + (n === 1 ? '' : 's'), { dealer: id, changes: changes, before: before });
+  } finally { lock.releaseLock(); }
+  var out = dealerData_(ctx, id); out.saved = n; return out;
+}
+
 /** Star / unstar a dealer page (favorites sort first everywhere). */
 function setFavorite_(ctx) {
   var id = String(ctx.body.dealerId || '').trim(), fav = !!ctx.body.favorite;
@@ -678,6 +705,7 @@ function uploadStock_(ctx) {
     pv[k][co] = nv;
   }
   psh.getRange(1, 1, pv.length, ph.length).setValues(pv);
+  setSetting_('STOCK_AS_OF', Utilities.formatDate(new Date(), 'Asia/Manila', 'yyyy-MM-dd HH:mm'));
   editLog_(ctx.user.email, 'stock: ' + matched + ' SAP lines matched, ' + changed + ' SKUs changed' + (unknown.length ? ', ' + unknown.length + ' unknown materials' : ''), { unknown: unknown.slice(0, 50) });
   var out = adminData_(ctx); out.uploaded = { matched: matched, changed: changed, unknown: unknown.slice(0, 30) };
   return out;

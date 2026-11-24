@@ -29,6 +29,14 @@ document.documentElement.setAttribute("data-theme",t)})();
 .pill{font-size:12px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 10px;color:var(--muted)}
 .pill b{color:var(--ink)}
 .pill.bad{border-color:var(--out);color:var(--out);background:var(--out-bg)}
+/* inline price editing */
+.editbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;border:1px solid var(--red-2);border-radius:var(--r);background:var(--surface);padding:10px 14px;margin-bottom:12px}
+.editbar .inp,.ed{height:32px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);padding:0 8px;font-size:13px;color:var(--ink)}
+.ed.num{width:104px;text-align:right;font-weight:700}.ed.cap{width:70px;text-align:right}.ed.note{width:150px}
+tr.dirty td{background:color-mix(in srgb,var(--lim-bg) 70%,transparent)}
+.ed.bad{border-color:var(--out);color:var(--out)}
+.rv{border:0;background:none;color:var(--faint);cursor:pointer;font-size:15px;padding:0 4px}.rv:hover{color:var(--red-2)}
+.editbar .grow{flex:1}.editbar b.n{color:var(--red-2)}
 </style>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
@@ -89,6 +97,8 @@ document.documentElement.setAttribute("data-theme",t)})();
     <a class="btn" href="dealer.html" id="allDealersBtn">All dealers</a>
     <select class="sel" id="dealerSwitch" aria-label="Switch dealer" hidden></select>
     <a class="btn btn-primary" id="quoteBtn" href="quote.html" hidden>New quotation</a>
+    <button class="btn" type="button" id="editBtn" hidden><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>Edit prices</button>
+    <button class="btn" type="button" id="xlsxBtn"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Excel price list</button>
     <button class="btn" type="button" id="copyBtn"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/></svg>Copy as table</button>
     <button class="btn" type="button" id="csvBtn"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>CSV</button>
   </div>
@@ -110,25 +120,42 @@ document.documentElement.setAttribute("data-theme",t)})();
       <p class="result-count" id="count"></p>
     </div>
   </div>
+  <div class="editbar" id="editBar" hidden>
+    <b>Editing prices</b>
+    <span class="muted" style="font-size:12.5px">Set</span>
+    <select class="inp" id="bkScope"><option value="shown">SKUs shown</option><option value="all">all SKUs</option></select>
+    <span class="muted" style="font-size:12.5px">to</span>
+    <select class="inp" id="bkBase"><option value="dp">Base DP</option><option value="srp">SRP</option><option value="cur">current price</option></select>
+    <span class="muted" style="font-size:12.5px">minus</span>
+    <input class="inp" id="bkPct" type="number" step="0.5" value="0" style="width:70px;text-align:right"><span class="muted">%</span>
+    <select class="inp" id="bkRound"><option value="1">round to ₱1</option><option value="10">round to ₱10</option><option value="50">round to ₱50</option><option value="0">no rounding</option></select>
+    <button class="btn btn-sm" id="bkApply" type="button">Apply</button>
+    <button class="btn btn-sm" id="bkRevert" type="button" title="Clear special prices so these SKUs follow Base DP again">Back to Base DP</button>
+    <span class="grow"></span>
+    <span id="edCount" style="font-size:13px"></span>
+    <button class="btn btn-sm" id="edDiscard" type="button">Discard</button>
+    <button class="btn btn-primary btn-sm" id="edSave" type="button" disabled>Save changes</button>
+  </div>
   <div class="tbl-wrap"><table class="tbl"><thead><tr id="thead"></tr></thead><tbody id="tbody"></tbody></table></div>
   <p class="foot-note">Prices in Philippine Peso (₱), VAT-inclusive. <b>Limited Qty Price</b> holds only for the units shown or while stocks last. Confidential to this dealer: do not share with other dealers.</p>
 </main>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="assets/hx-auth.js"></script>
+<script src="assets/hx-xlsx.js"></script>
 <script>
 (function(){
 "use strict";
 var $=function(s){return document.querySelector(s)}, $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
 var CAT_ORDER=["PC Headset","Console","Mobile Audio","Microphone","Mouse","Keyboard","Accessory","Monitor"];
-var D=null, ME=null, CAN={}, LIST=[], CATALOG={}, st={tier:"all",cat:"",q:"",margins:false};
+var D=null, ME=null, CAN={}, LIST=[], CATALOG={}, st={tier:"all",cat:"",q:"",margins:false}, EDIT=false, ED={};
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function peso(n,dec){if(n==null||n===""||isNaN(n))return "—";var d=dec!=null?dec:(Math.round(n)!==n?2:0);return "₱"+Number(n).toLocaleString("en-PH",{minimumFractionDigits:d,maximumFractionDigits:d})}
 function pct(x){return x==null||isNaN(x)?"—":(x*100).toFixed(1)+"%"}
 function fmtDay(s){if(!s)return "";var d=new Date(s+"T00:00:00+08:00");return isNaN(d)?s:d.toLocaleDateString("en-PH",{month:"short",day:"numeric",year:"numeric"})}
 function toast(t){var el=$("#toast");el.textContent=t;el.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(function(){el.classList.remove("show")},2200)}
 $("#themeToggle").addEventListener("click",function(){var t=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("hxpl-theme",t)}catch(e){}});
-fetch("data/products.json",{cache:"no-store"}).then(function(r){return r.json()}).then(function(d){(d.products||[]).forEach(function(p){(p.variants||[]).forEach(function(v){if(!v.sku)return;CATALOG[String(v.sku).split("#")[0].trim().toUpperCase()]={name:p.name,label:v.label}})});if(D)render()}).catch(function(){});
+fetch("data/products.json",{cache:"no-store"}).then(function(r){return r.json()}).then(function(d){(d.products||[]).forEach(function(p){(p.variants||[]).forEach(function(v){if(!v.sku)return;CATALOG[String(v.sku).split("#")[0].trim().toUpperCase()]={name:p.name,label:v.label,img:(v.gallery||[])[0]||p.image||""}})});if(D)render()}).catch(function(){});
 function title(i){var c=CATALOG[i.sku];return c?c.name+(c.label?" · "+c.label:""):i.desc}
 
 function gateMsg(t,ok){var m=$("#gateMsg");m.textContent=t||"";m.classList.toggle("ok",!!ok)}
@@ -176,7 +203,7 @@ function head(){
   $("#expired").hidden=!x.expired;$("#noteText").textContent=D.note||"Confidential dealer pricing.";
   $("#allDealersBtn").hidden=LIST.length<2;$("#dealerSwitch").hidden=LIST.length<2;$("#dealerSwitch").innerHTML=LIST.map(function(d){return '<option value="'+esc(d.id)+'"'+(d.id===x.id?" selected":"")+'>'+(d.favorite?"★ ":"")+esc(d.name)+'</option>'}).join("");
   $("#quoteBtn").hidden=!x.canQuote;$("#quoteBtn").href="quote.html?d="+encodeURIComponent(x.id);
-  $("#editDealer").hidden=!CAN.admin;$("#editDealer").href="admin.html#dealers/"+encodeURIComponent(x.id);
+  $("#editDealer").hidden=!CAN.admin;$("#editBtn").hidden=!CAN.admin;$("#editDealer").href="admin.html#dealers/"+encodeURIComponent(x.id);
   var cats={};D.items.forEach(function(i){cats[i.cat]=1});$("#cat").innerHTML='<option value="">All categories</option>'+sortCats(Object.keys(cats)).map(function(c){return "<option>"+esc(c)+"</option>"}).join("");
 }
 $("#dealerSwitch").addEventListener("change",function(e){openDealer(e.target.value)});
@@ -199,18 +226,69 @@ function tierCell(i){
 function render(){
   if(!D)return;var adm=CAN.admin&&st.margins;
   var cols=['<th>Product</th>','<th>SKU</th>','<th class="c">Type</th>','<th class="r">SRP</th>','<th class="r">Base DP</th>','<th class="r">Dealer price</th>','<th>Price type</th>','<th>Note</th>'];
-  if(adm)cols.push('<th class="r">Invoice cost</th>','<th class="r">Margin w/o rebate</th>','<th class="r">Margin w/ rebate</th>');
+  if(EDIT){adm=false;cols=['<th>Product</th>','<th>SKU</th>','<th class="r">SRP</th>','<th class="r">Base DP</th>','<th class="r">Dealer price</th>','<th class="r">Qty cap</th>','<th>Note</th>','<th class="r">Cost</th>','<th class="r">Margin</th>','<th>Result</th>']}
+  else if(adm)cols.push('<th class="r">Invoice cost</th>','<th class="r">Margin w/o rebate</th>','<th class="r">Margin w/ rebate</th>');
   $("#thead").innerHTML=cols.join("");
   var list=rows();$("#nAll").textContent=D.items.length;$("#nLim").textContent=D.items.filter(function(i){return i.tier==="limited"}).length;$("#nSp").textContent=D.items.filter(function(i){return i.tier==="special"}).length;$("#nBase").textContent=D.items.filter(function(i){return i.tier==="base"}).length;
   $("#count").innerHTML="<strong>"+list.length+"</strong> SKU"+(list.length===1?"":"s");
   var by={};list.forEach(function(i){(by[i.cat]=by[i.cat]||[]).push(i)});var html="";
   sortCats(Object.keys(by)).forEach(function(c){var g=by[c];html+='<tr class="grp"><td colspan="'+cols.length+'">'+esc(c)+'<span class="n">'+g.length+'</span></td></tr>';
     g.sort(function(a,b){return title(a).localeCompare(title(b))}).forEach(function(i){
+      if(EDIT){html+=edRow(i);return}
       html+='<tr><td class="desc">'+esc(title(i))+(CATALOG[i.sku]?'<small>'+esc(i.desc)+'</small>':"")+'</td><td class="sku">'+esc(i.sku)+'</td><td class="c">'+(i.isNew?'<span class="tag tag-new">New</span>':'<span class="tag tag-muted">Existing</span>')+'</td>'+
         '<td class="r">'+peso(i.srp)+'</td><td class="r">'+peso(i.dp)+'</td><td class="r sp-val">'+peso(i.price)+'</td><td>'+tierCell(i)+'</td><td>'+esc(i.note||"")+'</td>'+
         (adm?'<td class="r">'+peso(i.cost,2)+'</td><td class="r '+(i.marginNoRebate<0?"neg":i.marginNoRebate<(i.limitBelow!=null?i.limitBelow:D.minMargin)?"warn":"okc")+'">'+pct(i.marginNoRebate)+'</td><td class="r '+(i.belowWithRebate?"neg":"")+'">'+pct(i.marginWithRebate)+'</td>':"")+'</tr>'})});
   $("#tbody").innerHTML=html||'<tr class="empty-row"><td colspan="'+cols.length+'">'+(D.items.length?"No SKUs match these filters.":"No special prices have been set for this dealer yet.")+'</td></tr>';
 }
+/* ---------- inline editing (admin) ---------- */
+function val(i){var e=ED[i.sku];return {price:e&&"price" in e?e.price:(i.override?i.price:""),cap:e&&"cap" in e?e.cap:(i.qtyCap==null?"":i.qtyCap),note:e&&"note" in e?e.note:(i.note||"")}}
+function eff(i){var v=val(i),p=v.price===""?i.dp:+v.price;return p}
+function edRow(i){var v=val(i),p=eff(i),m=i.cost&&p?1-i.cost/p:null,lim=i.limitBelow!=null?i.limitBelow:D.minMargin,dirty=!!ED[i.sku];
+  var res=v.price===""?'<span class="tag tag-muted">Base DP</span>':(m!=null&&m<lim?'<span class="tag tag-lim">Limited Qty</span>':'<span class="tag tag-sp">Special</span>');
+  return '<tr data-sku="'+esc(i.sku)+'"'+(dirty?' class="dirty"':'')+'><td class="desc">'+esc(title(i))+(i.isNew?' <span class="tag tag-new">New</span>':'')+'<small>'+esc(i.desc)+'</small></td><td class="sku">'+esc(i.sku)+'</td><td class="r">'+peso(i.srp)+'</td><td class="r">'+peso(i.dp)+'</td>'+
+    '<td class="r"><input class="ed num'+(v.price!==""&&!(+v.price>0)?' bad':'')+'" data-f="price" inputmode="decimal" placeholder="'+(i.dp!=null?Math.round(i.dp):"")+'" value="'+esc(v.price)+'">'+(v.price!==""?'<button class="rv" data-rv title="Back to Base DP">↺</button>':'')+'</td>'+
+    '<td class="r"><input class="ed cap" data-f="cap" inputmode="numeric" value="'+esc(v.cap)+'"></td><td><input class="ed note" data-f="note" maxlength="200" value="'+esc(v.note)+'"></td>'+
+    '<td class="r">'+peso(i.cost,2)+'</td><td class="r '+(m==null?"":m<0?"neg":m<lim?"warn":"okc")+'">'+pct(m)+'</td><td>'+res+'</td></tr>'}
+function dirtyN(){return Object.keys(ED).length}
+function edUI(){var n=dirtyN();$("#edCount").innerHTML=n?'<b class="n">'+n+'</b> unsaved change'+(n===1?"":"s"):"No changes yet";$("#edSave").disabled=!n}
+function setEd(sku,f,v){var i=D.items.filter(function(x){return x.sku===sku})[0];if(!i)return;var e=ED[sku]||{};e[f]=v;ED[sku]=e;
+  var cur={price:i.override?String(i.price):"",cap:i.qtyCap==null?"":String(i.qtyCap),note:i.note||""},nv=val(i);
+  if(String(nv.price)===cur.price&&String(nv.cap)===cur.cap&&nv.note===cur.note)delete ED[sku]}
+function setEdit(on){if(!on&&dirtyN()&&!confirm("Discard "+dirtyN()+" unsaved price change(s)?"))return;EDIT=on;if(!on)ED={};$("#editBar").hidden=!on;$("#editBtn").innerHTML=on?"Done editing":'<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>Edit prices';$("#marginWrap").hidden=on||!CAN.admin;edUI();render()}
+$("#editBtn").addEventListener("click",function(){setEdit(!EDIT)});
+$("#tbody").addEventListener("change",function(e){var t=e.target;if(!t.dataset.f)return;var sku=t.closest("tr").dataset.sku,v=t.value.trim().replace(/[₱,\s]/g,"");
+  if(t.dataset.f==="note")v=t.value.trim();setEd(sku,t.dataset.f,v);edUI();setTimeout(function(){updRow(sku)},0)});
+function updRow(sku){var tr=document.querySelector('tr[data-sku="'+sku+'"]'),i=D.items.filter(function(x){return x.sku===sku})[0];if(!tr||!i)return;
+  var ae=document.activeElement,f=ae&&tr.contains(ae)?ae.dataset.f:null;var tmp=document.createElement("tbody");tmp.innerHTML=edRow(i);tr.replaceWith(tmp.firstChild);
+  if(f){var el=document.querySelector('tr[data-sku="'+sku+'"] input[data-f="'+f+'"]');if(el)el.focus()}}
+$("#tbody").addEventListener("keydown",function(e){if(e.key!=="Enter"||!e.target.dataset.f)return;e.preventDefault();var f=e.target.dataset.f,tr=e.target.closest("tr"),nx=tr.nextElementSibling;
+  while(nx&&!nx.dataset.sku)nx=nx.nextElementSibling;e.target.blur();var sku=nx&&nx.dataset.sku;setTimeout(function(){if(sku){var el=document.querySelector('tr[data-sku="'+sku+'"] input[data-f="'+f+'"]');if(el){el.focus();el.select()}}},0)});
+$("#tbody").addEventListener("click",function(e){if(!e.target.hasAttribute("data-rv"))return;var k=e.target.closest("tr").dataset.sku;setEd(k,"price","");edUI();updRow(k)});
+function scope(){return $("#bkScope").value==="all"?D.items:rows()}
+$("#bkApply").addEventListener("click",function(){var pc=+$("#bkPct").value||0,rd=+$("#bkRound").value,base=$("#bkBase").value,n=0;
+  scope().forEach(function(i){var b=base==="srp"?i.srp:base==="cur"?eff(i):i.dp;if(!(b>0))return;var p=b*(1-pc/100);p=rd?Math.round(p/rd)*rd:Math.round(p*100)/100;setEd(i.sku,"price",String(p));n++});
+  edUI();render();toast("Set "+n+" price"+(n===1?"":"s")+". Review, then Save changes.")});
+$("#bkRevert").addEventListener("click",function(){var l=scope().filter(function(i){return val(i).price!==""});if(!l.length){toast("Nothing to revert");return}
+  if(!confirm("Clear special prices on "+l.length+" SKU(s) so they follow Base DP?"))return;l.forEach(function(i){setEd(i.sku,"price","")});edUI();render()});
+$("#edDiscard").addEventListener("click",function(){if(dirtyN()&&!confirm("Discard all unsaved changes?"))return;ED={};edUI();render()});
+$("#edSave").addEventListener("click",function(){var bad=Object.keys(ED).filter(function(k){var p=ED[k].price;return p!=null&&p!==""&&!(+p>0)});if(bad.length){toast("Fix the price for "+bad.join(", "));return}
+  var ch=Object.keys(ED).map(function(k){var i=D.items.filter(function(x){return x.sku===k})[0],v=val(i);return {sku:k,price:v.price===""?null:+v.price,qtyCap:v.cap===""?null:+v.cap,note:v.note}});
+  var b=$("#edSave");b.disabled=true;b.textContent="Saving…";
+  HXAuth.api("saveDealerPrices",{dealerId:D.dealer.id,changes:ch}).then(function(d){b.textContent="Save changes";if(!d.ok){toast(HXAuth.message(d.error)+(d.detail?" — "+d.detail:""));edUI();return}
+    D.items=d.items;D.dealer=d.dealer||D.dealer;ED={};edUI();render();toast("Saved "+d.saved+" change"+(d.saved===1?"":"s")+" for "+D.dealer.name)}).catch(function(e){b.textContent="Save changes";edUI();toast("Not saved: "+e.message+". Your edits are still here — try again.")})});
+window.addEventListener("beforeunload",function(e){if(EDIT&&dirtyN()){e.preventDefault();e.returnValue=""}});
+
+/* ---------- styled Excel price list ---------- */
+$("#xlsxBtn").addEventListener("click",function(){if(!D)return;var b=$("#xlsxBtn"),lbl=b.innerHTML;b.disabled=true;b.textContent="Building…";
+  var list=rows(),x=D.dealer,fl=[st.tier!=="all"?{limited:"Limited Qty",special:"Special",base:"Base DP"}[st.tier]+" only":"",st.cat,st.q?"\u201c"+st.q+"\u201d":""].filter(Boolean).join(" · ");
+  var asOf=new Date().toLocaleDateString("en-PH",{month:"long",day:"numeric",year:"numeric"});
+  HXXlsx.pricelist({title:"HyperX Special Price List — "+x.name,dealer:x.name,asOf:asOf,
+    subtitle:"As of "+asOf+(x.validUntil?" · valid until "+fmtDay(x.validUntil):"")+" · PHP, VAT-inclusive"+(fl?" · "+fl:""),catOrder:CAT_ORDER,
+    items:list.map(function(i){var c=CATALOG[i.sku]||{};return {sku:i.sku,cat:i.cat,series:c.name||"",desc:c.name?title(i):i.desc,srp:i.srp,price:i.price,tier:i.tier,isNew:i.isNew,unitsLeft:i.unitsLeft,note:i.note,img:c.img||""}}),
+    notes:["Prices in Philippine Peso, VAT-inclusive. Dealer Price applies to "+x.name+" only — confidential, do not share with other dealers.","LIMITED QTY PRICE holds only for the units shown or while stocks last. Stock and prices are subject to change without prior notice; confirm availability before ordering."]
+  }).then(function(blob){var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=(x.name||"dealer").replace(/[^\w]+/g,"-")+"-HyperX-Price-List.xlsx";a.click();toast("Excel price list downloaded")})
+  .catch(function(e){toast("Excel export failed: "+e.message)}).then(function(){b.disabled=false;b.innerHTML=lbl})});
+
 var HDR=["SKU","SKU Desc","SRP","Regular DP","SP","Price type","Qty"];
 function exportRows(){return rows().map(function(i){return [i.sku,title(i),i.srp,i.dp,i.price,i.tier==="limited"?"Limited Qty":"Special",i.unitsLeft==null?"":i.unitsLeft]})}
 $("#copyBtn").addEventListener("click",function(){var t=[HDR].concat(exportRows()).map(function(r){return r.join("\t")}).join("\n");
