@@ -156,12 +156,19 @@ label.f .inp,label.f .txt{font-weight:500;color:var(--ink)}
     <div class="card">
       <h2>SAP stock (on hand)</h2>
       <p class="sub">Used for "units left" on Limited Qty prices. Copy the whole list from SAP (MB52 or similar: Material and Unrestricted columns), paste here. Quantities are summed per SKU across storage locations.</p>
+      <div class="row" style="margin-bottom:8px"><label class="btn btn-sm" style="cursor:pointer">Choose SAP inventory file (.xlsx / .csv)<input type="file" id="stFile" accept=".xlsx,.csv,.txt" hidden></label><span class="muted" style="font-size:12.5px">or paste below</span></div>
       <textarea class="txt" id="stText" rows="5" placeholder="Paste the SAP list, header row included…"></textarea>
       <div class="row" style="margin-top:8px">
         <label class="check"><input type="checkbox" id="stZero" checked><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span><span class="label">SKUs missing from the paste have 0 on hand</span></label>
         <span style="flex:1"></span><button class="btn btn-primary btn-sm" id="stGo" type="button">Upload stock</button>
       </div>
       <p class="msg" id="stMsg"></p>
+    </div>
+    <div class="card">
+      <h2>HP incoming (OSS report)</h2>
+      <p class="sub">Choose the OSS open-order CSV from HP (osreport_OSSPPS_…csv). HyperX lines for SKUs on the pricelist that are not yet delivered become "Incoming" with HP's scheduled delivery date as ETA. Each upload replaces the previous one. Last upload: <b id="incNow">—</b>.</p>
+      <div class="row"><label class="btn btn-primary btn-sm" style="cursor:pointer" id="incLbl">Choose OSS file (.csv)<input type="file" id="incFile" accept=".csv,.txt" hidden></label></div>
+      <p class="msg" id="incMsg"></p>
     </div>
     <div class="card">
       <h2>New HP rebate program</h2>
@@ -211,6 +218,7 @@ label.f .inp,label.f .txt{font-weight:500;color:var(--ink)}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="assets/pricing-engine.js"></script>
 <script src="assets/hx-auth.js"></script>
+<script src="assets/hx-xlsx.js"></script>
 <script>
 (function(){
 "use strict";
@@ -394,6 +402,7 @@ function saveDealer(){
 function renderData(){
   $("#soStat").innerHTML="<dt>Rows on file</dt><dd>"+A.sellout.rows+"</dd><dt>Latest sell-out date counted</dt><dd>"+esc(fmtDay(A.selloutAsOf)||"—")+"</dd>";
   $("#rbNow").textContent=A.deal?A.deal.id+" · "+A.rebate+" SKUs · "+fmtDay(A.deal.start)+" – "+fmtDay(A.deal.end):"none";
+  $("#incNow").textContent=(A.settings&&A.settings.INCOMING_AS_OF)||"not uploaded yet";
 }
 function upload(btn,action,payload,msgId,done){var b=$(btn);b.disabled=true;var t=b.textContent;b.textContent="Uploading…";
   call(action,payload).then(function(d){msg(msgId,done(d.uploaded||{}),true)},function(){msg(msgId,"Upload failed — see the message above.")}).then(function(){b.disabled=false;b.textContent=t})}
@@ -401,6 +410,19 @@ $("#soGo").addEventListener("click",function(){var t=$("#soText").value;if(!t.tr
   upload("#soGo","uploadSellout",{text:t,mode:$("input[name=soMode]:checked").value},"#soMsg",function(u){$("#soText").value="";return "Saved "+u.rows+" rows"+(u.skipped?" ("+u.skipped+" duplicates skipped)":"")+". Rebate units left are updated."})});
 $("#stGo").addEventListener("click",function(){var t=$("#stText").value;if(!t.trim()){msg("#stMsg","Paste the SAP list first.");return}
   upload("#stGo","uploadStock",{text:t,zeroMissing:$("#stZero").checked},"#stMsg",function(u){$("#stText").value="";return u.matched+" SAP lines matched, "+u.changed+" SKUs changed."+(u.unknown&&u.unknown.length?" Not in the pricelist: "+u.unknown.slice(0,8).join(", ")+(u.unknown.length>8?"…":""):"")})});
+$("#incFile").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;var rd=new FileReader();
+  rd.onload=function(){msg("#incMsg","Uploading "+f.name+"…",true);call("uploadIncoming",{text:rd.result}).then(function(d){var u=d.uploaded||{};$("#incNow").textContent=(d.settings&&d.settings.INCOMING_AS_OF)||"just now";
+    msg("#incMsg","Saved "+u.lines+" open HyperX lines · "+u.skus+" SKUs · "+(u.units||0).toLocaleString()+" units incoming."+(u.delivered?" "+u.delivered+" delivered lines skipped.":""),true)},function(){msg("#incMsg","Upload failed — see the message above.")});e.target.value=""};rd.readAsText(f)});
+/* SAP inventory file → same paste format the stock upload reads (Material / Material Description / Unrestricted) */
+$("#stFile").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;e.target.value="";
+  var toTsv=function(rows){var h=(rows[0]||[]).map(function(x){return String(x==null?"":x)});
+    if(h.some(function(x){return /unrestr/i.test(x)}))return rows.map(function(r){return r.join("\t")}).join("\n");
+    /* header-less SAP layout: B = material, C = description, I = unrestricted */
+    return "Material\tMaterial Description\tUnrestricted\n"+rows.filter(function(r){return r[1]}).map(function(r){return [r[1],r[2]||"",r[8]||0].join("\t")}).join("\n")};
+  var go=function(t){$("#stText").value=t;msg("#stMsg","Loaded "+f.name+" — check the box below, then Upload stock.",true)};
+  if(/\.xlsx$/i.test(f.name)){HXXlsx.load().then(function(){return f.arrayBuffer()}).then(function(buf){var wb=new ExcelJS.Workbook();return wb.xlsx.load(buf).then(function(){var ws=wb.worksheets[0],rows=[];
+    ws.eachRow({includeEmpty:false},function(r){var v=[];for(var k=1;k<=Math.max(ws.columnCount,9);k++){var c=r.getCell(k).value;if(c&&typeof c==="object")c=c.result!=null?c.result:c.text!=null?c.text:"";v.push(c==null?"":c)}rows.push(v)});go(toTsv(rows))})}).catch(function(err){msg("#stMsg","Could not read the file: "+err.message)})}
+  else{var rd=new FileReader();rd.onload=function(){go(toTsv(String(rd.result).split(/\r?\n/).filter(Boolean).map(function(l){return l.split(l.indexOf("\t")>=0?"\t":",")})))};rd.readAsText(f)}});
 $("#rbGo").addEventListener("click",function(){var p={deal:$("#rbDeal").value.trim(),program:$("#rbName").value.trim(),start:$("#rbStart").value,end:$("#rbEnd").value,text:$("#rbText").value};
   if(!p.deal||!p.start||!p.end||!p.text.trim()){msg("#rbMsg","Fill in the deal number, dates and SKU lines.");return}
   if(!confirm("Replace rebate program "+(A.deal?A.deal.id:"")+" with "+p.deal+"? Limited Qty prices will be recalculated."))return;

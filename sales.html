@@ -67,6 +67,7 @@ document.documentElement.setAttribute("data-theme",t)})();
     </div>
     <span class="spacer"></span>
     <button class="btn" type="button" id="copyBtn" title="Copy SKU, SKU Desc, SRP, Regular DP, SP for Viber, email or Excel"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/></svg>Copy as table</button>
+    <button class="btn" type="button" id="xlsxBtn"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Excel (prices + stock)</button>
     <button class="btn" type="button" id="csvBtn"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>CSV</button>
   </div>
 
@@ -104,6 +105,7 @@ document.documentElement.setAttribute("data-theme",t)})();
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="assets/hx-auth.js"></script>
+<script src="assets/hx-xlsx.js"></script>
 <script>
 (function(){
 "use strict";
@@ -151,7 +153,7 @@ function showApp(){
   var admin=ME.role==="admin",can=DATA.can||{};$("#editorLink").hidden=!admin;$("#adminLink").hidden=!admin;$("#dealerLink").hidden=!can.dealers;$("#marginToggleWrap").hidden=!admin;
   var cats=uniqCats();$("#cat").innerHTML='<option value="">All categories</option>'+cats.map(function(c){return '<option>'+esc(c)+'</option>'}).join("");
   var dl=DATA.deal;
-  $("#meta").innerHTML="Prices as of <b>"+esc(fmtDay(DATA.asOf)||"—")+"</b>"+(dl?" · HP rebate deal "+esc(dl.id)+" runs to "+esc(fmtDay(dl.end)):"")+(DATA.selloutAsOf?" · rebate units counted from HP sell-out up to "+esc(fmtDay(DATA.selloutAsOf)):"");
+  $("#meta").innerHTML="Prices as of <b>"+esc(fmtDay(DATA.asOf)||"—")+"</b>"+(dl?" · HP rebate deal "+esc(dl.id)+" runs to "+esc(fmtDay(dl.end)):"")+(DATA.selloutAsOf?" · rebate units counted from HP sell-out up to "+esc(fmtDay(DATA.selloutAsOf)):"")+"<br>SAP stock as of <b>"+esc(DATA.stockAsOf||"—")+"</b> · HP incoming (OSS) as of <b>"+esc(DATA.incomingAsOf||"not uploaded yet")+"</b>";
   $("#noteText").textContent=DATA.note||"Limited Qty prices are backed by the HP rebate and last only for the units shown.";
 }
 $("#signOut").addEventListener("click",function(){HXAuth.signOut();DATA=null;gateMsg("Signed out.",true);showGate()});
@@ -183,10 +185,16 @@ function tierCell(i){
   if(u===0)return '<span class="tag tag-out">Limited Qty · none left</span><span class="units">Confirm with PM before quoting</span>';
   return '<span class="tag tag-lim">Limited Qty Price</span><span class="units">'+(u!=null?"<b>"+u+"</b> unit"+(u===1?"":"s")+" left · ":"")+'while stocks last</span>';
 }
+function num(v){return v==null?"—":Number(v).toLocaleString("en-PH")}
+function sday(s){if(!s)return "TBA";var d=new Date(s+"T00:00:00+08:00");return isNaN(d)?s:d.toLocaleDateString("en-PH",{month:"short",day:"numeric"})}
+function incDetail(i){return (i.incomingLines||[]).map(function(l){return l.qty+" "+(l.status==="Shipped"?"shipped":l.status.toLowerCase())+", ETA "+sday(l.eta)+(l.mode?" ("+l.mode+")":"")+" · PO "+l.po}).join("; ")}
+function stockCells(i){var a=i.atp,oh=i.onHand,c=i.committed||0;
+  return '<td class="r"><b>'+num(oh)+'</b></td><td class="r'+(a===0?' neg':'')+'">'+num(a)+(c?'<span class="units">'+c+' committed</span>':'')+'</td>'+
+    '<td>'+(i.incoming?'<b>'+num(i.incoming)+'</b>'+(i.incomingLines||[]).map(function(l){return '<span class="units">'+l.qty+' · ETA '+esc(sday(l.eta))+(l.status&&l.status!=="Shipped"?' · '+esc(l.status.toLowerCase()):'')+(l.mode?' · '+esc(l.mode):'')+'</span>'}).join(""):'<span class="units">—</span>')+'</td>'}
 function render(){
   if(!DATA)return;
   var admin=ME&&ME.role==="admin"&&st.margins;
-  var cols=['<th>Product</th>','<th>SKU</th>','<th class="c">Type</th>','<th class="r">SRP</th>','<th class="r">Base DP</th>','<th class="r">Special price</th>','<th>Price type</th>'];
+  var cols=['<th>Product</th>','<th>SKU</th>','<th class="c">Type</th>','<th class="r">SRP</th>','<th class="r">Base DP</th>','<th class="r">Special price</th>','<th>Price type</th>','<th class="r" title="SAP unrestricted stock">On hand</th>','<th class="r" title="On hand minus approved reservations, holds and allocations">Available</th>','<th title="Open HP orders from the OSS report">Incoming</th>'];
   if(admin)cols.push('<th class="r">Invoice cost</th>','<th class="r">Rebate/unit</th>','<th class="r">Margin w/o rebate</th>','<th class="r">Margin w/ rebate</th>');
   $("#thead").innerHTML=cols.join("");
   var all=DATA.items, list=rows();
@@ -202,7 +210,7 @@ function render(){
         '<td class="sku">'+esc(i.sku)+'</td>'+
         '<td class="c">'+(i.isNew?'<span class="tag tag-new">New</span>':'<span class="tag tag-muted">Existing</span>')+'</td>'+
         '<td class="r">'+peso(i.srp)+'</td><td class="r">'+pesoAuto(i.dp)+'</td>'+
-        '<td class="r sp-val">'+peso(i.sp)+'</td><td>'+tierCell(i)+'</td>'+
+        '<td class="r sp-val">'+peso(i.sp)+'</td><td>'+tierCell(i)+'</td>'+stockCells(i)+
         (admin?'<td class="r">'+peso(i.cost,true)+'</td><td class="r">'+(i.rebate?peso(i.rebate)+(i.rebateLeft!=null?' <span class="units">'+i.rebateLeft+' claimable</span>':""):"—")+'</td>'+
           '<td class="r '+(i.marginNoRebate<0?"neg":i.marginNoRebate<DATA.minMargin?"warn":"okc")+'">'+pct(i.marginNoRebate)+'</td><td class="r">'+pct(i.marginWithRebate)+'</td>':"")+
         '</tr>'})});
@@ -215,8 +223,17 @@ function wireImgs(){$$("#tbody img[data-alt]").forEach(function(im){if(im.datase
   im.addEventListener("error",function next(){var a=(im.dataset.alt||"").split("|").filter(Boolean);if(a.length){im.dataset.alt=a.slice(1).join("|");im.src=a[0]}else{im.removeEventListener("error",next);im.remove()}})})}
 
 /* export: same columns as the quote format (SKU, SKU Desc, SRP, Regular DP, SP) */
-function exportRows(){return rows().map(function(i){return [i.sku,title(i),i.srp,i.dp,i.sp,i.tier==="limited"?"Limited Qty"+(i.unitsLeft!=null?" ("+i.unitsLeft+" left)":""):"Special"]})}
-var HDR=["SKU","SKU Desc","SRP","Regular DP","SP","Price type"];
+function exportRows(){return rows().map(function(i){return [i.sku,title(i),i.srp,i.dp,i.sp,i.tier==="limited"?"Limited Qty"+(i.unitsLeft!=null?" ("+i.unitsLeft+" left)":""):"Special",num(i.onHand),i.committed||0,num(i.atp),i.incoming||0,i.incoming?sday(i.nextEta):"",incDetail(i)]})}
+var HDR=["SKU","SKU Desc","SRP","Regular DP","SP","Price type","On hand","Committed","Available","Incoming","Next ETA","Incoming detail"];
+$("#xlsxBtn").addEventListener("click",function(){if(!DATA)return;var b=$("#xlsxBtn"),lbl=b.innerHTML;b.disabled=true;b.textContent="Building…";
+  var list=rows(),asOf=new Date().toLocaleDateString("en-PH",{month:"long",day:"numeric",year:"numeric"});
+  HXXlsx.pricelist({stock:true,showcase:false,title:"HyperX Special DP + Inventory · Internal",dealer:"Iontech internal",asOf:asOf,catOrder:CAT_ORDER,
+    subtitle:"Prices as of "+fmtDay(DATA.asOf)+" · SAP stock "+(DATA.stockAsOf||"—")+" · HP incoming (OSS) "+(DATA.incomingAsOf||"—")+" · PHP, VAT-inclusive",
+    items:list.map(function(i){var c=CATALOG[i.sku]||{};return {sku:i.sku,cat:i.cat,series:c.name||"",desc:c.name?title(i):i.desc,srp:i.srp,dp:i.dp,price:i.sp,tier:i.tier==="limited"?"limited":"special",isNew:i.isNew,unitsLeft:i.tier==="limited"?i.unitsLeft:null,
+      onHand:i.onHand,committed:i.committed||0,atp:i.atp,incoming:i.incoming||0,nextEta:i.incoming?sday(i.nextEta):"",incDetail:incDetail(i)}}),
+    notes:["INTERNAL — Special DP is the Iontech sales price, not a dealer price list. Do not forward to dealers as-is.","Available = SAP on hand minus approved reservations, holds and allocations. Incoming = open HP orders from the OSS report (shipped or in production, not yet delivered); ETA is HP's scheduled delivery date.","LIMITED QTY PRICE is backed by the HP rebate and holds only for the units shown."]
+  }).then(function(blob){var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="HyperX-Special-DP-Inventory-"+new Date().toISOString().slice(0,10)+".xlsx";a.click();toast("Excel downloaded")})
+  .catch(function(e){toast("Excel export failed: "+e.message)}).then(function(){b.disabled=false;b.innerHTML=lbl})});
 $("#copyBtn").addEventListener("click",function(){
   var t=[HDR].concat(exportRows()).map(function(r){return r.join("\t")}).join("\n");
   (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){toast("Copied "+(exportRows().length)+" rows")},function(){toast("Copy failed — select the table instead")});

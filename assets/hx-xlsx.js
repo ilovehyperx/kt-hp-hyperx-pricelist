@@ -63,7 +63,8 @@
   }
 
   function listSheet(wb, o, img, cats) {
-    var cols = [22, 26, 15, 44, 15, 17, 20, 34], last = cols.length;
+    var ST = !!o.stock;
+    var cols = ST ? [18, 24, 13, 40, 13, 13, 14, 19, 11, 11, 11, 11, 44] : [22, 26, 15, 44, 15, 17, 20, 34], last = cols.length;
     var ws = wb.addWorksheet("Orderable Price List", {
       views: [{ state: "frozen", xSplit: 4, ySplit: 3, showGridLines: false }],
       pageSetup: { paperSize: 9, orientation: "landscape", fitToPage: true, fitToWidth: 1, fitToHeight: 0, printTitlesRow: "3:3", margins: { left: .3, right: .3, top: .4, bottom: .4, header: .2, footer: .2 } },
@@ -72,7 +73,9 @@
     cols.forEach(function (w, i) { ws.getColumn(i + 1).width = w; });
     banner(wb, ws, img, cols, last);
     infoBar(ws, 2, last, (o.title || "HYPERX PRICE LIST").toUpperCase(), o.subtitle);
-    var H = ["Product Category", "Sub-Categories/Series", "SKU Number", "SKU Description", "SRP", "Dealer Price", "Price Type", "Remarks"];
+    var H = ST ? ["Product Category", "Sub-Categories/Series", "SKU Number", "SKU Description", "SRP", "Base DP", "Special DP", "Price Type", "On Hand", "Available", "Incoming", "Next ETA", "Incoming detail / Remarks"]
+               : ["Product Category", "Sub-Categories/Series", "SKU Number", "SKU Description", "SRP", "Dealer Price", "Price Type", "Remarks"];
+    var cP = ST ? 7 : 6, cT = ST ? 8 : 7, cR = last;
     var hr = ws.getRow(3); hr.values = H; hr.height = 30;
     hr.eachCell(function (c) { c.font = { name: HFONT, size: 12, bold: true, color: { argb: WHITE } }; c.fill = { type: "pattern", pattern: "solid", fgColor: { argb: RED } }; c.alignment = { horizontal: "center", vertical: "middle", wrapText: true }; c.border = BOX; });
     var r = 4, band = false;
@@ -80,16 +83,27 @@
       band = !band;
       o.byCat[cat].forEach(function (i) {
         var row = ws.getRow(r++);
-        row.values = [cat, i.series || "", i.sku, i.desc, i.srp == null ? null : i.srp, i.price, tierLabel(i), remarks(i)];
+        row.values = ST ? [cat, i.series || "", i.sku, i.desc, i.srp == null ? null : i.srp, i.dp, i.price, tierLabel(i), i.onHand, i.atp, i.incoming || 0, i.nextEta || "", [i.incDetail, remarks(i)].filter(Boolean).join(" · ")]
+                        : [cat, i.series || "", i.sku, i.desc, i.srp == null ? null : i.srp, i.price, tierLabel(i), remarks(i)];
         row.height = 20;
         row.eachCell({ includeEmpty: true }, function (c, n) {
-          c.font = { name: BFONT, size: 12 }; c.border = BOX; c.alignment = { vertical: "middle", wrapText: n === 8 };
+          c.font = { name: BFONT, size: 12 }; c.border = BOX; c.alignment = { vertical: "middle", wrapText: n === cR };
           if (band) c.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFF7F7F7" } };
         });
         row.getCell(3).font = { name: BFONT, size: 12, bold: true };
-        row.getCell(5).numFmt = PHP; row.getCell(6).numFmt = PHP;
-        row.getCell(6).font = { name: BFONT, size: 13, bold: true, color: { argb: i.tier === "limited" ? RED : INK } };
-        var t = row.getCell(7); t.alignment = { horizontal: "center", vertical: "middle" };
+        row.getCell(5).numFmt = PHP; row.getCell(6).numFmt = PHP; row.getCell(cP).numFmt = PHP;
+        if (ST) {
+          [9, 10, 11].forEach(function (k) { var c = row.getCell(k); c.numFmt = "#,##0"; c.alignment = { horizontal: "center", vertical: "middle" }; });
+          row.getCell(9).font = { name: BFONT, size: 12, bold: true };
+          var av = row.getCell(10), q = i.atp || 0;
+          av.font = { name: BFONT, size: 11, bold: true, color: { argb: q > 5 && q <= 20 ? INK : WHITE } };
+          av.fill = { type: "pattern", pattern: "solid", fgColor: { argb: q <= 0 ? "FF808080" : q <= 5 ? RED : q <= 20 ? "FFFFC000" : "FF548235" } };
+          if (i.incoming) row.getCell(11).font = { name: BFONT, size: 12, bold: true, color: { argb: "FF1F4E79" } };
+          row.getCell(12).alignment = { horizontal: "center", vertical: "middle" };
+          row.getCell(13).font = { name: BFONT, size: 10, color: { argb: "FF404040" } };
+        }
+        row.getCell(cP).font = { name: BFONT, size: 13, bold: true, color: { argb: i.tier === "limited" ? RED : INK } };
+        var t = row.getCell(cT); t.alignment = { horizontal: "center", vertical: "middle" };
         if (i.tier === "limited") { t.font = { name: BFONT, size: 11, bold: true, color: { argb: WHITE } }; t.fill = { type: "pattern", pattern: "solid", fgColor: { argb: RED } }; }
         else if (i.tier === "special") t.font = { name: BFONT, size: 11, bold: true, color: { argb: RED } };
         else t.font = { name: BFONT, size: 11, color: { argb: "FF595959" } };
