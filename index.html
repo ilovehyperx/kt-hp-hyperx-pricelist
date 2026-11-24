@@ -191,7 +191,11 @@ img{max-width:100%;display:block}
 .chip svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.4}
 
 .products.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;min-width:0;transition:border-color .15s,transform .15s}
+.padd{position:absolute;top:10px;right:10px;z-index:3;width:36px;height:36px;border-radius:50%;border:0;background:#e3192b;color:#fff;font:700 22px/1 Inter,system-ui,sans-serif;display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35);transition:transform .12s}
+.padd:hover{transform:scale(1.08)}.padd.in{background:#fff;color:#e3192b}
+.vpop{position:absolute;top:52px;right:10px;z-index:4;min-width:230px;max-width:290px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 34px rgba(0,0,0,.35);padding:8px}
+.vpop b{display:block;font-size:12px;margin:2px 4px 6px;color:var(--muted)}.vpop .vr{display:flex;align-items:center;gap:8px;padding:4px;font-size:12.5px}.vpop .vr span{flex:1}
+.card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;min-width:0;transition:border-color .15s,transform .15s}
 .card:hover{border-color:color-mix(in srgb,var(--red-2) 45%,var(--line))}
 .card-media{position:relative;border:0;padding:0;background:var(--plate);aspect-ratio:4/3;cursor:pointer;display:grid;place-items:center;overflow:hidden;width:100%}
 .card-media img{position:absolute;inset:0;box-sizing:border-box;width:100%;height:100%;object-fit:contain;padding:9%;mix-blend-mode:multiply;transition:transform .25s}
@@ -719,7 +723,8 @@ function card(p){
   var skus=p.variants.map(function(v){return v.sku?base(v.sku):null}).filter(Boolean);
   var skuTxt=skus.length?(skus.length>2?skus.slice(0,2).join(" · ")+" +"+(skus.length-2):skus.join(" · ")):"SKU to confirm";
   var sw=p.variants.length>1?'<div class="swatches">'+p.variants.slice(0,6).map(function(v){return '<span class="sw">'+esc(v.label.split(" · ")[0])+'</span>'}).join("")+(p.variants.length>6?'<span class="sw">+'+(p.variants.length-6)+'</span>':"")+'</div>':"";
-  return '<article class="card" data-id="'+p.id+'">'+
+  var addable=p.variants.some(function(v){return v.sku});
+  return '<article class="card" data-id="'+p.id+'">'+(addable?'<button type="button" class="padd" data-padd="'+p.id+'" title="Add to quote table" aria-label="Add '+esc(p.name)+' to quote table">+</button>':"")+
    '<button type="button" class="card-media" data-open="'+p.id+'" aria-label="View details for '+esc(p.name)+'">'+media(p)+
      '<span class="media-badges">'+(sp?'<span class="mbadge sp">Special price</span>':"")+(p.ltb?'<span class="mbadge ltb">Last-time-buy</span>':"")+(p.badge?'<span class="mbadge">'+esc(p.badge)+'</span>':"")+'</span>'+
      (p.variants.length>1?'<span class="vcount">'+p.variants.length+' variants</span>':"")+'</button>'+
@@ -837,12 +842,12 @@ function openDetail(id,push){
   var p=DATA.products.filter(function(x){return x.id===id})[0];if(!p)return;DETAIL_ID=id;
   var srp=pRange(p,"srp"),dp=pRange(p,"dp"),psp=pSP(p),kd=kitOf(p);
   var rows=p.variants.map(function(v,vi){var pr=vPrice(p,v),l=vLevel(p,v),sp=vSP(p,v);
-    return '<tr'+(vGal(v)?' class="has-ph" data-vi="'+vi+'" title="Show photos of this variant"':'')+'><td>'+esc(v.label)+'</td><td>'+(v.sku?'<span class="sku">'+esc(v.sku)+'</span>':'<span class="sku na">to confirm</span>')+(v.sku&&(PRICES[base(v.sku)]||{}).exclusive?'<span class="xs" style="color:#e3192b">Dealer exclusive · ask your AM</span>':"")+'</td><td class="r">'+(peso(pr.srp)||"—")+'</td><td class="r">'+(psp&&sp!=null?'<span class="was">'+(peso(pr.dp)||"—")+'</span>':(peso(pr.dp)||"—"))+'</td>'+(psp?'<td class="r sp-cell">'+(sp!=null?peso(sp):"—")+'</td>':"")+'<td>'+stockPill(l)+'</td>'+xCells(p,v)+'</tr>'}).join("");
+    return '<tr'+(vGal(v)?' class="has-ph" data-vi="'+vi+'" title="Show photos of this variant"':'')+'><td>'+esc(v.label)+'</td><td>'+(v.sku?'<span class="sku">'+esc(v.sku)+'</span>':'<span class="sku na">to confirm</span>')+(v.sku&&(PRICES[base(v.sku)]||{}).exclusive?'<span class="xs" style="color:#e3192b">Dealer exclusive · ask your AM</span>':"")+'</td><td class="r">'+(peso(pr.srp)||"—")+'</td><td class="r">'+(psp&&sp!=null?'<span class="was">'+(peso(pr.dp)||"—")+'</span>':(peso(pr.dp)||"—"))+'</td>'+(psp?'<td class="r sp-cell">'+(sp!=null?peso(sp):"—")+'</td>':"")+'<td>'+stockPill(l)+'</td>'+xCells(p,v)+'<td>'+vAdd(p,v)+'</td></tr>'}).join("");
   $("#detailBody").innerHTML='<div class="dm"><div class="dm-media"><div class="dm-main" id="dmMain">'+media(p,"big")+'</div><div class="dm-cap" id="dmCap"></div><div class="dm-thumbs" id="dmThumbs"></div></div><div class="dm-info">'+
     '<span class="type-tag">'+esc(catName(p.cat))+' · '+esc(p.tier||"")+(p.ltb?' · Last-time-buy':"")+(p.badge?' · '+esc(p.badge):"")+'</span><h2 id="dmTitle">'+esc(p.name)+'</h2>'+(kd&&kd.tagline?'<p class="dm-lead">'+esc(kd.tagline)+'</p>':"")+
     '<div class="dm-prices"><div class="price srp"><span class="lbl">SRP</span><span class="val">'+(srp?rangeText(srp):(p.priceNote||"Ask your AM"))+'</span></div><div class="price dp"><span class="lbl">DP</span><span class="val'+(dp?"":" na")+'">'+(dp?rangeText(dp):"Ask your AM")+'</span></div>'+(psp?'<div class="price sp"><span class="lbl">SPECIAL PRICE</span><span class="val">'+rangeText(psp)+'</span><span class="sub">Until '+esc(promoEnd())+'</span></div>':"")+'</div>'+
     '<ul class="spec-list">'+p.specs.map(function(s){return "<li><span>"+esc(s)+"</span></li>"}).join("")+(p.cat==="laptops"?"":'<li><span>Works with: '+esc(p.platforms.join(", "))+' · '+esc(p.conn)+'</span></li><li><span>'+(kd&&kd.warranty?'Warranty: '+esc(kd.warranty):'2-year limited warranty')+'</span></li>')+'</ul>'+(p.cat==="laptops"&&DATA.laptopSource?'<p class="dm-note">From the <a href="'+esc(DATA.laptopSource.url)+'" target="_blank" rel="noopener">'+esc(DATA.laptopSource.name)+'</a>, as of '+esc(fmtDate(DATA.laptopSource.asOf))+'. Check the latest there before quoting.</p>':"")+
-    '<table class="vtable"><thead><tr><th>Variant</th><th>SKU</th><th class="r">SRP</th><th class="r">DP</th>'+(psp?'<th class="r">Special</th>':"")+'<th>Availability</th>'+(XS?'<th class="r">On hand</th><th class="r">Available</th><th>Incoming</th><th></th>':"")+'</tr></thead><tbody>'+rows+'</tbody></table>'+
+    '<table class="vtable"><thead><tr><th>Variant</th><th>SKU</th><th class="r">SRP</th><th class="r">DP</th>'+(psp?'<th class="r">Special</th>':"")+'<th>Availability</th>'+(XS?'<th class="r">On hand</th><th class="r">Available</th><th>Incoming</th>':"")+'<th></th>'+'</tr></thead><tbody>'+rows+'</tbody></table>'+
     (psp?'<p class="dm-note"><b>Special price until '+esc(promoEnd())+'.</b> '+esc(PROMO.terms||"")+'</p>':"")+(p.note?'<p class="dm-note">'+esc(p.note)+'</p>':"")+
     '<div class="dm-actions"><button type="button" class="btn btn-primary" data-copy="'+p.id+'">Copy details</button><button type="button" class="btn" data-copy="'+p.id+'" data-copy-mode="customer">Copy for customer (SRP only)</button></div>'+
     '</div></div><div class="dd" id="dmDeep" hidden></div>';
@@ -974,14 +979,27 @@ function xday(s){if(!s)return "TBA";var d=new Date(s+"T00:00:00+08:00");return i
 function xRow(p,v){return XS&&v.sku?XS[base(v.sku)]:null}
 function xCard(p){if(!XS)return "";var oh=0,av=0,inc=0,eta="",any=false;p.variants.forEach(function(v){var x=xRow(p,v);if(!x)return;any=true;oh+=x.onHand||0;av+=x.atp||0;inc+=x.incoming||0;if(x.nextEta&&(!eta||x.nextEta<eta))eta=x.nextEta});
   if(!any)return "";return '<div class="xstk" title="Exact SAP stock (Iontech sales only)"><span class="'+(oh?"":"zero")+'">On hand <b>'+xn(oh)+'</b></span><span>Avail <b>'+xn(av)+'</b></span>'+(inc?'<span class="inc">Incoming <b>'+xn(inc)+'</b> · '+esc(xday(eta))+'</span>':"")+'</div>'}
+function vAdd(p,v){if(!v.sku||typeof HXCart==="undefined")return "";var pr=vPrice(p,v),sp=vSP(p,v);return HXCart.btn({sku:base(v.sku),desc:p.name+(v.label&&p.variants.length>1?" · "+v.label:""),price:sp!=null?sp:pr.dp,srp:pr.srp})}
 function xAdd(p,v){if(!XS||!v.sku||typeof HXCart==="undefined")return "";var pr=vPrice(p,v),sp=vSP(p,v);return HXCart.btn({sku:base(v.sku),desc:p.name+(v.label&&p.variants.length>1?" · "+v.label:""),price:sp!=null?sp:pr.dp,srp:pr.srp})}
-function xCells(p,v){if(!XS)return "";var x=xRow(p,v),add='<td>'+xAdd(p,v)+'</td>';if(!x)return '<td class="r">—</td><td class="r">—</td><td>—</td>'+add;
+function xCells(p,v){if(!XS)return "";var x=xRow(p,v),add="";if(!x)return '<td class="r">—</td><td class="r">—</td><td>—</td>';
   return '<td class="r"><b>'+xn(x.onHand)+'</b></td><td class="r">'+xn(x.atp)+(x.committed?'<span class="xs">'+x.committed+' committed</span>':"")+'</td><td>'+(x.incoming?'<b>'+xn(x.incoming)+'</b>'+(x.lines||[]).map(function(l){return '<span class="xs">'+l.qty+' · ETA '+esc(xday(l.eta))+(l.status&&l.status!=="Shipped"?" · "+esc(l.status.toLowerCase()):"")+(l.mode?" · "+esc(l.mode):"")+'</span>'}).join(""):"—")+'</td>'+add}
+/* ---------- quote table (+) for everyone; logged to Pipes only for signed-in Iontech sales ---------- */
+if(typeof HXCart!=="undefined")HXCart.init({context:"pricelist",basis:"DP / special price",canLog:function(){return !!XS},page:"pricelist"});
+function cartItem(p,v){var pr=vPrice(p,v),sp=vSP(p,v);return {sku:base(v.sku),desc:p.name+(v.label&&p.variants.length>1?" · "+v.label:""),price:sp!=null?sp:pr.dp,srp:pr.srp}}
+function closeVpop(){var o=document.querySelector(".vpop");if(o)o.remove()}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-padd]");
+  if(!b){if(!e.target.closest(".vpop"))closeVpop();return}
+  e.preventDefault();e.stopPropagation();var p=DATA.products.filter(function(x){return x.id===b.dataset.padd})[0];if(!p||typeof HXCart==="undefined")return;
+  var vs=p.variants.filter(function(v){return v.sku});
+  if(vs.length===1){HXCart.add(cartItem(p,vs[0]));b.classList.add("in");b.textContent="✓";return}
+  var open=document.querySelector(".vpop");closeVpop();if(open&&open.parentNode===null&&open.dataset.p===p.id)return;
+  var d=document.createElement("div");d.className="vpop";d.dataset.p=p.id;d.innerHTML='<b>Add which variant?</b>'+vs.map(function(v){var it=cartItem(p,v);return '<div class="vr"><span>'+esc(v.label||it.sku)+'<br><small class="sku">'+esc(it.sku)+' · '+(it.price!=null?peso(it.price):"—")+'</small></span>'+HXCart.btn(it)+'</div>'}).join("");
+  b.closest(".card").appendChild(d);HXCart.mark()},true);
 function xMark(){if(typeof HXCart!=="undefined"&&XS)setTimeout(HXCart.mark,0)}
 function xRefresh(){xMark();var keep=!$("#detailModal").hidden&&/^#p-/.test(location.hash);renderNav();renderWelcome();setView(state.view);if(keep)openDetail(location.hash.slice(3),false)}
 function xLoad(){return HXAuth.api("stock",{}).then(function(d){
   if(!d.ok){if(d.error==="not_allowed_here"||d.error==="not_allowed"){$("#xErr").textContent=d.error==="not_allowed"?HXAuth.message("not_allowed"):"Exact stock is for Iontech sales accounts only.";$("#xErr").hidden=false;$("#xPop").hidden=false}return}
-  XS=d.stock;XS_META=d;if(typeof HXCart!=="undefined")HXCart.init({context:"pricelist",basis:"DP / special price",canLog:function(){return !!XS},page:"pricelist"});var a=$("#hdrSalesLink");a.innerHTML="Exact stock on · "+esc((d.user&&(d.user.name||d.user.email)||"").split(" ")[0]);a.title="Exact stock from SAP "+(d.stockAsOf||"")+", HP incoming "+(d.incomingAsOf||"")+". Click for sign-out.";$("#xPop").hidden=true;xRefresh()}).catch(function(){})}
+  XS=d.stock;XS_META=d;var a=$("#hdrSalesLink");a.innerHTML="Exact stock on · "+esc((d.user&&(d.user.name||d.user.email)||"").split(" ")[0]);a.title="Exact stock from SAP "+(d.stockAsOf||"")+", HP incoming "+(d.incomingAsOf||"")+". Click for sign-out.";$("#xPop").hidden=true;xRefresh()}).catch(function(){})}
 var xInit=false;
 function xStart(show){if(typeof HXAuth==="undefined")return;
   if(!xInit){xInit=true;if(!document.querySelector('script[src*="gsi/client"]')){var g=document.createElement("script");g.src="https://accounts.google.com/gsi/client";g.async=true;document.head.appendChild(g)}
