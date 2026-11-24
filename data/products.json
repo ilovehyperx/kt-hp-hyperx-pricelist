@@ -1403,7 +1403,8 @@
      "gallery": [
       "assets/products/audio-mixer/k-black-1.webp",
       "assets/products/audio-mixer/k-black-2.webp",
-      "assets/products/audio-mixer/k-black-3.webp"
+      "assets/products/audio-mixer/k-black-3.webp",
+      "assets/products/audio-mixer/k-black-4.webp"
      ],
      "kit": "audio-mixer"
     }
@@ -1955,12 +1956,12 @@
      "srp": 2590,
      "dp": 1942.21,
      "gallery": [
-      "assets/products/alloy-core-rgb/k-black-us-1.webp"
+      "assets/products/alloy-core-rgb/k-black-1.webp"
      ],
      "kit": "alloy-core-rgb-gaming-keyboard"
     }
    ],
-   "img": "assets/products/alloy-core-rgb/k-black-us-1.webp",
+   "img": "assets/products/alloy-core-rgb/k-black-1.webp",
    "tier": "Premium Essentials",
    "platforms": [
     "PC"
@@ -2135,7 +2136,8 @@
      "gallery": [
       "assets/products/alloy-rise-75/k-black-red-linear-1.webp",
       "assets/products/alloy-rise-75/k-black-red-linear-2.webp",
-      "assets/products/alloy-rise-75/k-black-red-linear-3.webp"
+      "assets/products/alloy-rise-75/k-black-red-linear-3.webp",
+      "assets/products/alloy-rise-75/k-black-red-linear-4.webp"
      ],
      "kit": "alloy-rise-75-gaming-keyboard"
     }
@@ -2171,7 +2173,8 @@
      "gallery": [
       "assets/products/alloy-rise/k-black-red-linear-1.webp",
       "assets/products/alloy-rise/k-black-red-linear-2.webp",
-      "assets/products/alloy-rise/k-black-red-linear-3.webp"
+      "assets/products/alloy-rise/k-black-red-linear-3.webp",
+      "assets/products/alloy-rise/k-black-red-linear-4.webp"
      ],
      "kit": "alloy-rise-gaming-keyboard"
     }
@@ -2207,7 +2210,8 @@
      "gallery": [
       "assets/products/alloy-origins/k-red-linear-1.webp",
       "assets/products/alloy-origins/k-red-linear-2.webp",
-      "assets/products/alloy-origins/k-red-linear-3.webp"
+      "assets/products/alloy-origins/k-red-linear-3.webp",
+      "assets/products/alloy-origins/k-red-linear-4.webp"
      ],
      "kit": "alloy-origins-mechanical-gaming-keyboard"
     },
@@ -2219,7 +2223,8 @@
      "gallery": [
       "assets/products/alloy-origins/k-red-linear-1.webp",
       "assets/products/alloy-origins/k-red-linear-2.webp",
-      "assets/products/alloy-origins/k-red-linear-3.webp"
+      "assets/products/alloy-origins/k-red-linear-3.webp",
+      "assets/products/alloy-origins/k-red-linear-4.webp"
      ],
      "kit": "alloy-origins-mechanical-gaming-keyboard"
     }
@@ -2255,7 +2260,8 @@
      "gallery": [
       "assets/products/alloy-origins-60/k-red-linear-1.webp",
       "assets/products/alloy-origins-60/k-red-linear-2.webp",
-      "assets/products/alloy-origins-60/k-red-linear-3.webp"
+      "assets/products/alloy-origins-60/k-red-linear-3.webp",
+      "assets/products/alloy-origins-60/k-red-linear-4.webp"
      ],
      "kit": "alloy-origins-60-mechanical-gaming-keyboard"
     }
@@ -2291,7 +2297,8 @@
      "gallery": [
       "assets/products/alloy-origins-65/k-red-linear-1.webp",
       "assets/products/alloy-origins-65/k-red-linear-2.webp",
-      "assets/products/alloy-origins-65/k-red-linear-3.webp"
+      "assets/products/alloy-origins-65/k-red-linear-3.webp",
+      "assets/products/alloy-origins-65/k-red-linear-4.webp"
      ],
      "kit": "alloy-origins-65-mechanical-gaming-keyboard"
     },
@@ -2301,9 +2308,10 @@
      "srp": 5999,
      "dp": 4499.76,
      "gallery": [
-      "assets/products/alloy-origins-65/k-red-linear-1.webp",
-      "assets/products/alloy-origins-65/k-red-linear-2.webp",
-      "assets/products/alloy-origins-65/k-red-linear-3.webp"
+      "assets/products/alloy-origins-65/k-aqua-tactile-1.webp",
+      "assets/products/alloy-origins-65/k-aqua-tactile-2.webp",
+      "assets/products/alloy-origins-65/k-aqua-tactile-3.webp",
+      "assets/products/alloy-origins-65/k-red-linear-1.webp"
      ],
      "kit": "alloy-origins-65-mechanical-gaming-keyboard"
     }
@@ -2339,7 +2347,8 @@
      "gallery": [
       "assets/products/alloy-origins-pbt/k-red-linear-1.webp",
       "assets/products/alloy-origins-pbt/k-red-linear-2.webp",
-      "assets/products/alloy-origins-pbt/k-red-linear-3.webp"
+      "assets/products/alloy-origins-pbt/k-red-linear-3.webp",
+      "assets/products/alloy-origins-pbt/k-red-linear-4.webp"
      ],
      "kit": "alloy-origins-pbt-mechanical-gaming-keyboard"
     },
@@ -2351,7 +2360,8 @@
      "gallery": [
       "assets/products/alloy-origins-pbt/k-red-linear-1.webp",
       "assets/products/alloy-origins-pbt/k-red-linear-2.webp",
-      "assets/products/alloy-origins-pbt/k-red-linear-3.webp"
+      "assets/products/alloy-origins-pbt/k-red-linear-3.webp",
+      "assets/products/alloy-origins-pbt/k-red-linear-4.webp"
      ],
      "kit": "alloy-origins-pbt-mechanical-gaming-keyboard"
     },
@@ -2361,9 +2371,9 @@
      "srp": 6499,
      "dp": 4873.98,
      "gallery": [
-      "assets/products/alloy-origins-pbt/k-red-linear-1.webp",
-      "assets/products/alloy-origins-pbt/k-red-linear-2.webp",
-      "assets/products/alloy-origins-pbt/k-red-linear-3.webp"
+      "assets/products/alloy-origins-pbt/k-aqua-tactile-1.webp",
+      "assets/products/alloy-origins-pbt/k-aqua-tactile-2.webp",
+      "assets/products/alloy-origins-pbt/k-red-linear-1.webp"
      ],
      "kit": "alloy-origins-pbt-mechanical-gaming-keyboard"
     }
@@ -2399,7 +2409,8 @@
      "gallery": [
       "assets/products/alloy-origins-core-pbt/k-blue-clicky-1.webp",
       "assets/products/alloy-origins-core-pbt/k-blue-clicky-2.webp",
-      "assets/products/alloy-origins-core-pbt/k-blue-clicky-3.webp"
+      "assets/products/alloy-origins-core-pbt/k-blue-clicky-3.webp",
+      "assets/products/alloy-origins-core-pbt/k-blue-clicky-4.webp"
      ],
      "kit": "alloy-origins-core-pbt-hx-red-gaming-keyboard"
     },
@@ -2409,9 +2420,10 @@
      "srp": 5999,
      "dp": 4499.76,
      "gallery": [
-      "assets/products/alloy-origins-core-pbt/k-blue-clicky-1.webp",
-      "assets/products/alloy-origins-core-pbt/k-blue-clicky-2.webp",
-      "assets/products/alloy-origins-core-pbt/k-blue-clicky-3.webp"
+      "assets/products/alloy-origins-core-pbt/k-aqua-tactile-1.webp",
+      "assets/products/alloy-origins-core-pbt/k-aqua-tactile-2.webp",
+      "assets/products/alloy-origins-core-pbt/k-aqua-tactile-3.webp",
+      "assets/products/alloy-origins-core-pbt/k-aqua-tactile-4.webp"
      ],
      "kit": "alloy-origins-core-pbt-hx-red-gaming-keyboard"
     }
@@ -2944,15 +2956,15 @@
      "srp": 1490,
      "dp": 1043.58,
      "gallery": [
-      "assets/products/chargeplay-quad-2/k-black-1.webp",
-      "assets/products/chargeplay-quad-2/k-black-2.webp",
-      "assets/products/chargeplay-quad-2/k-black-3.webp",
-      "assets/products/chargeplay-quad-2/k-black-4.webp"
+      "assets/products/chargeplay-quad-2/k-white-red-1.webp",
+      "assets/products/chargeplay-quad-2/k-white-red-2.webp",
+      "assets/products/chargeplay-quad-2/k-white-red-3.webp",
+      "assets/products/chargeplay-quad-2/k-white-red-4.webp"
      ],
      "kit": "chargeplay-quad-2"
     }
    ],
-   "img": "assets/products/chargeplay-quad-2/k-black-1.webp",
+   "img": "assets/products/chargeplay-quad-2/k-white-red-1.webp",
    "tier": "Premium Essentials",
    "platforms": [
     "Switch"
