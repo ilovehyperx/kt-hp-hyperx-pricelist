@@ -190,7 +190,9 @@ tr.inactive td{opacity:.45}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="assets/pricing-engine.js"></script>
-<script src="assets/hx-auth.js"></script>
+<script src="assets/hx-auth.js?v=20261125"></script>
+<script src="assets/hx-shell.js?v=20261125"></script>
+<script>HXShell.attach({title:"Price list editor"})</script>
 <script>
 (function(){
 "use strict";
@@ -218,7 +220,7 @@ function gateMsg(t,ok){var m=$("#gateMsg");m.textContent=t||"";m.classList.toggl
 function load(){
   gateMsg("Checking your access…",true);
   HXAuth.api("editor").then(function(d){
-    if(!d.ok){gateMsg(HXAuth.message(d.error)+(d.email?" ("+d.email+")":""));if(d.error==="not_allowed"||d.error==="admin_only")HXAuth.signOut();showGate();return}
+    if(!d.ok){gateMsg(HXAuth.message(d.error)+(d.email?" ("+d.email+")":""));if(d.error==="not_allowed")HXAuth.signOut();showGate();return}
     ME=d.user;accept(d);showApp();
   }).catch(function(e){gateMsg("Could not reach the pricing server. "+e.message);showGate()});
 }

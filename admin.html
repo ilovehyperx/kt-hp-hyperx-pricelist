@@ -60,6 +60,30 @@ label.f .inp,label.f .txt{font-weight:500;color:var(--ink)}
 .sugg .s{font-weight:700;width:76px;flex:none}
 .sugg .m{color:var(--faint);margin-left:auto;white-space:nowrap}
 @media (max-width:1000px){.split{grid-template-columns:1fr}.dlist{max-height:none}}
+/* assignment / team dialogs */
+dialog.hxd{border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);padding:0;width:min(760px,94vw);max-height:88vh;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+dialog.hxd::backdrop{background:rgba(8,9,12,.55)}
+.hxd-h{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.hxd-h h3{margin:0;font-size:16px;flex:1}
+.hxd-b{padding:14px 18px;overflow:auto;max-height:calc(88vh - 140px)}
+.hxd-f{display:flex;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--line)}
+.pick{border:1px solid var(--line);border-radius:12px;max-height:340px;overflow:auto}
+.pick label{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line-2);cursor:pointer;font-size:13px}
+.pick label:last-child{border-bottom:0}
+.pick label:hover{background:var(--surface-2)}
+.pick label.inh{cursor:default;opacity:.75}
+.pick .m{margin-left:auto;font-size:11.5px;color:var(--muted);white-space:nowrap}
+.pick input{width:16px;height:16px;accent-color:var(--red)}
+.chipset{display:flex;gap:6px;flex-wrap:wrap}
+.chipset button{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:5px 11px;font-size:12px;cursor:pointer}
+.chipset button[aria-pressed=true]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.pend{font-size:12.5px;color:var(--muted)}
+.pend b.add{color:var(--ok)} .pend b.rem{color:var(--out)}
+.ucnt{font-size:12px;color:var(--muted);white-space:nowrap}
+.ubtns{display:flex;gap:6px;margin-top:4px}
+.ubtns button{font-size:11.5px;padding:3px 9px}
+.teamcard{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px}
+.teamcard .t{font-weight:700}.teamcard .s{font-size:12px;color:var(--muted)}
 </style>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
@@ -95,7 +119,7 @@ label.f .inp,label.f .txt{font-weight:500;color:var(--ink)}
     <button role="tab" data-tab="dealers" aria-selected="true">Dealer pages<span class="n" id="tnD"></span></button>
     <button role="tab" data-tab="requests" aria-selected="false">Access requests<span class="n" id="tnR"></span></button>
     <button role="tab" data-tab="users" aria-selected="false">Users &amp; admins<span class="n" id="tnU"></span></button>
-    <button role="tab" data-tab="pipes" aria-selected="false">Pipes</button>
+    <a role="tab" href="pipeline.html" class="tablink" style="display:inline-flex;align-items:center;padding:0 14px;color:inherit;text-decoration:none;font-weight:600">Quotation pipeline ↗</a>
     <button role="tab" data-tab="data" aria-selected="false">Data uploads</button>
     <button role="tab" data-tab="settings" aria-selected="false">Settings</button>
     <button role="tab" data-tab="activity" aria-selected="false">Activity</button>
@@ -162,7 +186,26 @@ label.f .inp,label.f .txt{font-weight:500;color:var(--ink)}
         <span>The owner account (<b id="ownerEmail"></b>) always stays an active admin, and you can't remove your own admin access from here.</span>
       </div>
     </div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:8px"><div><h2>Sales teams</h2><p class="sub" style="margin:0">Link CSOs, CSAs and SMs into teams (one person can be in several teams). Everyone in a team can open the team's dealer pages, on top of their own direct assignments. Removing a direct assignment never removes access someone still has through a team.</p></div>
+        <button class="btn btn-sm" id="tNew" type="button">+ New team</button></div>
+      <div id="tList"></div>
+    </div>
   </section>
+  <dialog class="hxd" id="dlgAsg" aria-labelledby="dlgAsgT"><div class="hxd-h"><h3 id="dlgAsgT">Manage assigned dealers</h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+    <div class="hxd-b"><div class="row" style="gap:8px;margin-bottom:10px"><input class="inp" id="asgQ" placeholder="Search dealer, code, HP partner ID…" style="flex:1;min-width:200px" autocomplete="off"><select class="inp" id="asgGrp" style="width:auto"></select></div>
+      <div class="row" style="gap:8px;margin-bottom:10px"><div class="chipset" id="asgSeg"><button type="button" data-v="all" aria-pressed="true">All</button><button type="button" data-v="on" aria-pressed="false">Assigned</button><button type="button" data-v="off" aria-pressed="false">Unassigned</button></div><span style="flex:1"></span>
+        <button class="btn btn-sm" id="asgAll" type="button">Select all shown</button><button class="btn btn-sm" id="asgNone" type="button">Clear shown</button></div>
+      <div class="pick" id="asgList"></div><p class="sub" style="font-size:12px;margin:8px 0 0">Dealers shown as <i>via team</i> come from a team and are changed under Sales teams.</p></div>
+    <div class="hxd-f"><span class="pend" id="asgPend">No changes</span><span style="flex:1"></span><button class="btn btn-sm" type="button" data-close>Cancel</button><button class="btn btn-primary btn-sm" id="asgSave" type="button" disabled>Save assignments</button></div></dialog>
+  <dialog class="hxd" id="dlgTeam" aria-labelledby="dlgTeamT"><div class="hxd-h"><h3 id="dlgTeamT">Sales team</h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+    <div class="hxd-b">
+      <div class="grid2" style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;margin-bottom:12px"><label class="f">Team name<input class="inp" id="tmName" placeholder="e.g. GMA 1 · Heidi + Aleli"></label><label class="f">Team lead<select class="inp" id="tmLead"></select></label><label class="f">Status<select class="inp" id="tmActive"><option value="1">Active</option><option value="0">Inactive</option></select></label></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div><div class="row" style="gap:6px;margin-bottom:6px"><b style="font-size:13px">People</b><span class="pend" id="tmPc"></span><span style="flex:1"></span><input class="inp sm" id="tmPQ" placeholder="Search…" style="width:130px"></div><div class="pick" id="tmPeople" style="max-height:300px"></div></div>
+        <div><div class="row" style="gap:6px;margin-bottom:6px"><b style="font-size:13px">Dealer pages</b><span class="pend" id="tmDc"></span><span style="flex:1"></span><input class="inp sm" id="tmDQ" placeholder="Search…" style="width:130px"></div><div class="pick" id="tmDealers" style="max-height:300px"></div></div>
+      </div></div>
+    <div class="hxd-f"><button class="btn btn-sm" id="tmDel" type="button" style="color:var(--out)">Delete team</button><span style="flex:1"></span><button class="btn btn-sm" type="button" data-close>Cancel</button><button class="btn btn-primary btn-sm" id="tmSave" type="button">Save team</button></div></dialog>
 
   <!-- ===== Data ===== -->
   <section data-panel="data" hidden>
@@ -248,8 +291,10 @@ label.f .inp,label.f .txt{font-weight:500;color:var(--ink)}
 <datalist id="leadList"></datalist>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="assets/pricing-engine.js"></script>
-<script src="assets/hx-auth.js"></script>
-<script src="assets/hx-xlsx.js"></script>
+<script src="assets/hx-auth.js?v=20261125"></script>
+<script src="assets/hx-shell.js?v=20261125"></script>
+<script>HXShell.attach({title:"Admin"})</script>
+<script src="assets/hx-xlsx.js?v=20261125"></script>
 <script>
 (function(){
 "use strict";
@@ -269,7 +314,7 @@ $("#themeToggle").addEventListener("click",function(){var t=document.documentEle
 /* ---------- sign-in ---------- */
 function gateMsg(t,ok){var m=$("#gateMsg");m.textContent=t||"";m.classList.toggle("ok",!!ok)}
 function load(){gateMsg("Checking your access…",true);
-  HXAuth.api("admin").then(function(d){if(!d.ok){gateMsg(HXAuth.message(d.error)+(d.email?" ("+d.email+")":""));if(d.error==="not_allowed"||d.error==="admin_only")HXAuth.signOut();return}
+  HXAuth.api("admin").then(function(d){if(!d.ok){gateMsg(HXAuth.message(d.error)+(d.email?" ("+d.email+")":""));if(d.error==="not_allowed")HXAuth.signOut();return}
     ME=d.user;accept(d);$("#gate").hidden=true;$("#app").hidden=false;$("#userChip").hidden=false;$("#userName").textContent=ME.name||ME.email;if(ME.picture)$("#userPic").src=ME.picture;else $("#userPic").hidden=true;route();
   }).catch(function(e){gateMsg("Could not reach the pricing server. "+e.message)})}
 HXAuth.init($("#gsiButton"),load).catch(function(e){gateMsg(HXAuth.message(e.message==="not_configured"?"not_configured":e.message))});
@@ -278,7 +323,7 @@ function call(action,payload,okText){return HXAuth.api(action,payload).then(func
 
 function accept(d){
   A=d;CAT={};d.catalog.forEach(function(c){CAT[c.sku]=c});
-  USERS=clone(d.users);USERS0=JSON.stringify(USERS);
+  USERS=clone(d.users);USERS0=JSON.stringify(USERS);A.teams=d.teams||[];setTimeout(renderTeams,0);
   $("#meta").innerHTML=d.catalog.length+" SKUs · "+d.users.length+" users · "+d.dealers.length+" dealer pages"+(d.deal?" · rebate deal "+esc(d.deal.id)+" to "+esc(fmtDay(d.deal.end)):"")+(d.selloutAsOf?" · sell-out to "+esc(fmtDay(d.selloutAsOf)):"");
   $("#tnD").textContent=d.dealers.length;$("#tnU").textContent=d.users.length;
   var lds={};d.dealers.forEach(function(x){if(x.hpLead)lds[x.hpLead]=1});$("#leadList").innerHTML=Object.keys(lds).sort().map(function(l){return '<option value="'+esc(l)+'">'}).join("");
@@ -299,12 +344,76 @@ function renderPipes(){if(!PIPES)return;var q=$("#pQ").value.toLowerCase(),w=$("
   var by={};L.forEach(function(p){p.lines.forEach(function(l){var o=by[l.sku]=by[l.sku]||{sku:l.sku,desc:l.desc,t:0,u:0,v:0,who:{}};o.t++;o.u+=l.qty;o.v+=(l.price||0)*l.qty;o.who[p.name||p.email]=1})});
   $("#pSku").innerHTML=Object.keys(by).map(function(k){return by[k]}).sort(function(a,b){return b.u-a.u}).slice(0,50).map(function(o){return '<tr><td class="sku">'+esc(o.sku)+'</td><td>'+esc(o.desc)+'</td><td class="r">'+o.t+'</td><td class="r"><b>'+o.u+'</b></td><td class="r">₱'+Math.round(o.v).toLocaleString()+'</td><td>'+esc(Object.keys(o.who).join(", "))+'</td></tr>'}).join("")||'<tr class="empty-row"><td colspan="6">—</td></tr>'}
 ["#pQ"].forEach(function(i){$(i).addEventListener("input",renderPipes)});["#pWho","#pDays"].forEach(function(i){$(i).addEventListener("change",renderPipes)});$("#pRefresh").addEventListener("click",loadPipes);
-function showTab(t){if(t==="pipes"&&!PIPES)setTimeout(loadPipes,0);$$(".tabs button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.tab===t)});$$("[data-panel]").forEach(function(p){p.hidden=p.dataset.panel!==t})}
+function showTab(t){if(t==="pipes"){location.href="pipeline.html";return}$$(".tabs button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.tab===t)});$$("[data-panel]").forEach(function(p){p.hidden=p.dataset.panel!==t})}
 $$(".tabs button").forEach(function(b){b.addEventListener("click",function(){history.replaceState(null,"","#"+b.dataset.tab);showTab(b.dataset.tab)})});
-function route(){var h=location.hash.replace(/^#/,"").split("/");showTab(["dealers","users","data","settings","activity"].indexOf(h[0])>=0?h[0]:"dealers");if(h[0]==="dealers"&&h[1])editDealer(decodeURIComponent(h[1]))}
+function route(){var h=location.hash.replace(/^#/,"").split("/");showTab(["dealers","users","data","settings","activity","requests"].indexOf(h[0])>=0?h[0]:"dealers");if(h[0]==="dealers"&&h[1])editDealer(decodeURIComponent(h[1]))}
 
 /* ================= USERS ================= */
 function dealerCount(email){return A.dealers.filter(function(d){return d.emails.indexOf(email)>=0}).map(function(d){return d.name})}
+/* ---------- dealer access: direct + teams ---------- */
+function teamsOf(email){return (A.teams||[]).filter(function(t){return t.active&&(t.members.indexOf(email)>=0||t.lead===email)})}
+function effective(email){var m={};A.dealers.forEach(function(d){if(d.emails.indexOf(email)>=0)m[d.id]="direct"});teamsOf(email).forEach(function(t){t.dealers.forEach(function(id){if(!m[id])m[id]="team:"+t.name})});return m}
+function accessCell(u){
+  if(/^(admin|csomgr|sales)$/.test(u.role))return '<span class="ucnt">All dealer pages</span>';
+  var eff=effective(u.email),dir=0,inh=0;for(var k in eff)eff[k]==="direct"?dir++:inh++;var tm=teamsOf(u.email);
+  var smTxt=u.role==="sm"?(u.group?'All '+esc(u.group)+' dealers + ':'<span style="color:var(--lim)">set a group</span> + '):"";
+  var saved=!USERS0||JSON.parse(USERS0).some(function(x){return x.email===u.email});
+  return '<span class="ucnt">'+smTxt+'<b>'+dir+'</b> direct'+(inh?' · <b>'+inh+'</b> via team':"")+(tm.length?' · '+tm.length+' team'+(tm.length>1?"s":""):"")+'</span>'+
+    '<div class="ubtns"><button class="btn btn-sm" type="button" data-asg'+(saved?"":' disabled title="Save users first"')+'>Manage assigned dealers</button><button class="btn btn-sm" type="button" data-team'+(saved?"":' disabled title="Save users first"')+'>Sales team</button></div>'}
+var ASG={email:"",orig:{},sel:{},seg:"all"};
+function dlg(id){var d=$(id);if(!d.showModal){d.setAttribute("open","");return d}if(!d.open)d.showModal();return d}
+$$("dialog.hxd").forEach(function(d){d.addEventListener("click",function(e){if(e.target.hasAttribute("data-close")||e.target===d)d.close()})});
+function openAsg(email){ASG={email:email,orig:{},sel:{},seg:"all"};A.dealers.forEach(function(d){if(d.emails.indexOf(email)>=0){ASG.orig[d.id]=1;ASG.sel[d.id]=1}});
+  var u=USERS.filter(function(x){return x.email===email})[0]||{};$("#dlgAsgT").textContent="Manage assigned dealers · "+(u.name||email);
+  $("#asgQ").value="";$("#asgGrp").innerHTML=grpOpts("","All groups");$$("#asgSeg button").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.v==="all")});renderAsg();dlg("#dlgAsg");setTimeout(function(){$("#asgQ").focus()},50)}
+function asgShown(){var q=$("#asgQ").value.trim().toLowerCase(),g=$("#asgGrp").value,eff=effective(ASG.email);
+  return A.dealers.filter(function(d){var on=!!ASG.sel[d.id]||(eff[d.id]&&eff[d.id]!=="direct");
+    if(ASG.seg==="on"&&!on)return false;if(ASG.seg==="off"&&on)return false;if(g&&d.group!==g)return false;
+    return !q||(d.name+" "+d.code+" "+d.partnerId+" "+d.id+" "+d.hpLead).toLowerCase().indexOf(q)>=0}).sort(function(a,b){return (!!ASG.sel[b.id]-!!ASG.sel[a.id])||a.name.localeCompare(b.name)})}
+function renderAsg(){var eff=effective(ASG.email),list=asgShown();
+  $("#asgList").innerHTML=list.map(function(d){var via=eff[d.id]&&eff[d.id]!=="direct"?eff[d.id].slice(5):"";
+    return '<label'+(via&&!ASG.sel[d.id]?' class="inh"':"")+'><input type="checkbox" data-id="'+esc(d.id)+'"'+(ASG.sel[d.id]?" checked":"")+'><span><b>'+esc(d.name)+'</b><br><span class="sub" style="font-size:11.5px">'+esc(d.code||d.id)+(d.group?" · "+esc(d.group):"")+(d.active?"":" · inactive")+'</span></span><span class="m">'+(via?'via team '+esc(via):"")+'</span></label>'}).join("")||'<p class="sub" style="padding:14px">No dealers match.</p>';
+  var add=0,rem=0;for(var k in ASG.sel)if(!ASG.orig[k])add++;for(var j in ASG.orig)if(!ASG.sel[j])rem++;
+  $("#asgPend").innerHTML=add||rem?'Pending: <b class="add">+'+add+'</b> added · <b class="rem">−'+rem+'</b> removed · '+Object.keys(ASG.sel).length+' direct after saving':Object.keys(ASG.sel).length+' assigned directly · no changes';
+  $("#asgSave").disabled=!(add||rem)}
+$("#asgQ").addEventListener("input",renderAsg);$("#asgGrp").addEventListener("change",renderAsg);
+$("#asgSeg").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;ASG.seg=b.dataset.v;$$("#asgSeg button").forEach(function(x){x.setAttribute("aria-pressed",x===b)});renderAsg()});
+$("#asgList").addEventListener("change",function(e){var id=e.target.dataset.id;if(!id)return;if(e.target.checked)ASG.sel[id]=1;else delete ASG.sel[id];renderAsg()});
+$("#asgAll").addEventListener("click",function(){asgShown().forEach(function(d){ASG.sel[d.id]=1});renderAsg()});
+$("#asgNone").addEventListener("click",function(){asgShown().forEach(function(d){delete ASG.sel[d.id]});renderAsg()});
+$("#asgSave").addEventListener("click",function(){var add=[],rem=[];for(var k in ASG.sel)if(!ASG.orig[k])add.push(k);for(var j in ASG.orig)if(!ASG.sel[j])rem.push(j);
+  var b=this;b.disabled=true;b.textContent="Saving…";
+  HXAuth.api("assignDealers",{email:ASG.email,add:add,remove:rem}).then(function(d){if(!d.ok)throw new Error(HXAuth.message(d.error));
+    A.dealers.forEach(function(x){if(add.indexOf(x.id)>=0&&x.emails.indexOf(ASG.email)<0)x.emails.push(ASG.email);if(rem.indexOf(x.id)>=0)x.emails=x.emails.filter(function(e){return e!==ASG.email})});
+    toast("Saved: +"+add.length+" / −"+rem.length+" dealer pages");$("#dlgAsg").close();renderUsers();if(typeof renderDealerList==="function")renderDealerList()})
+  .catch(function(e){toast(e.message||"Save failed — nothing was changed")}).then(function(){b.textContent="Save assignments";b.disabled=false})});
+/* ---------- sales teams ---------- */
+var TM=null;
+function roleName(r){return {admin:"Admin",csomgr:"CSO mgr",sm:"SM",sales:"Sales",csa:"CSA",cso:"CSO",hplead:"HP lead",dealer:"Dealer"}[r]||r}
+function renderTeams(){var T=A.teams||[],nameOf={};USERS.forEach(function(u){nameOf[u.email]=u.name||u.email});var dn={};A.dealers.forEach(function(d){dn[d.id]=d.name});
+  $("#tList").innerHTML=T.map(function(t){return '<div class="teamcard"><div><span class="t">'+esc(t.name)+'</span>'+(t.active?"":' <span class="lock">inactive</span>')+'<div class="s">'+(t.lead?"Lead: "+esc(nameOf[t.lead]||t.lead)+" · ":"")+t.members.length+' people: '+esc(t.members.map(function(e){return nameOf[e]||e}).join(", ")||"—")+'</div><div class="s">'+t.dealers.length+' dealer pages: '+esc(t.dealers.map(function(i){return dn[i]||i}).slice(0,6).join(", ")+(t.dealers.length>6?"…":""))+'</div></div><div><button class="btn btn-sm" type="button" data-tedit="'+esc(t.id)+'">Edit</button></div></div>'}).join("")||'<p class="sub">No teams yet. Create one to link CSOs, CSAs and SMs who share dealers.</p>'}
+function openTeam(t,withEmail){TM=t?JSON.parse(JSON.stringify(t)):{id:"",name:"",lead:withEmail||"",members:withEmail?[withEmail]:[],dealers:[],active:true};
+  $("#dlgTeamT").textContent=t?"Edit sales team":"New sales team";$("#tmName").value=TM.name;$("#tmActive").value=TM.active?"1":"0";$("#tmDel").hidden=!t;$("#tmPQ").value="";$("#tmDQ").value="";renderTeamPick();dlg("#dlgTeam");setTimeout(function(){$("#tmName").focus()},50)}
+function renderTeamPick(){var saved=JSON.parse(USERS0||"[]").filter(function(u){return u.active&&!/^(admin|dealer)$/.test(u.role)});
+  var pq=$("#tmPQ").value.trim().toLowerCase(),dq=$("#tmDQ").value.trim().toLowerCase();
+  $("#tmLead").innerHTML='<option value="">— no lead —</option>'+saved.filter(function(u){return TM.members.indexOf(u.email)>=0}).map(function(u){return '<option value="'+esc(u.email)+'"'+(u.email===TM.lead?" selected":"")+'>'+esc(u.name||u.email)+' ('+roleName(u.role)+')</option>'}).join("");
+  $("#tmPeople").innerHTML=saved.filter(function(u){return !pq||(u.email+" "+u.name+" "+u.role+" "+(u.group||"")).toLowerCase().indexOf(pq)>=0}).sort(function(a,b){return (TM.members.indexOf(b.email)>=0)-(TM.members.indexOf(a.email)>=0)||(a.name||a.email).localeCompare(b.name||b.email)}).map(function(u){
+    return '<label><input type="checkbox" data-pe="'+esc(u.email)+'"'+(TM.members.indexOf(u.email)>=0?" checked":"")+'><span>'+esc(u.name||u.email)+'<br><span class="sub" style="font-size:11px">'+esc(u.email)+'</span></span><span class="m">'+roleName(u.role)+(u.group?" · "+esc(u.group):"")+'</span></label>'}).join("")||'<p class="sub" style="padding:12px">No match (save new users first).</p>';
+  $("#tmDealers").innerHTML=A.dealers.filter(function(d){return !dq||(d.name+" "+d.code+" "+d.id).toLowerCase().indexOf(dq)>=0}).sort(function(a,b){return (TM.dealers.indexOf(b.id)>=0)-(TM.dealers.indexOf(a.id)>=0)||a.name.localeCompare(b.name)}).map(function(d){
+    return '<label><input type="checkbox" data-de="'+esc(d.id)+'"'+(TM.dealers.indexOf(d.id)>=0?" checked":"")+'><span>'+esc(d.name)+'</span><span class="m">'+esc(d.group||"")+'</span></label>'}).join("");
+  $("#tmPc").textContent=TM.members.length+" selected";$("#tmDc").textContent=TM.dealers.length+" selected"}
+$("#tmPeople").addEventListener("change",function(e){var em=e.target.dataset.pe;if(!em)return;if(e.target.checked){if(TM.members.indexOf(em)<0)TM.members.push(em)}else{TM.members=TM.members.filter(function(x){return x!==em});if(TM.lead===em)TM.lead=""}renderTeamPick()});
+$("#tmDealers").addEventListener("change",function(e){var id=e.target.dataset.de;if(!id)return;if(e.target.checked){if(TM.dealers.indexOf(id)<0)TM.dealers.push(id)}else TM.dealers=TM.dealers.filter(function(x){return x!==id});renderTeamPick()});
+$("#tmPQ").addEventListener("input",renderTeamPick);$("#tmDQ").addEventListener("input",renderTeamPick);$("#tmLead").addEventListener("change",function(){TM.lead=this.value});
+$("#tNew").addEventListener("click",function(){openTeam(null)});
+$("#tList").addEventListener("click",function(e){var b=e.target.closest("[data-tedit]");if(b)openTeam((A.teams||[]).filter(function(t){return t.id===b.dataset.tedit})[0])});
+function teamSaved(d,okText){if(!d.ok)throw new Error(HXAuth.message(d.error)+(d.detail?" — "+d.detail:""));A.teams=d.teams;toast(okText);$("#dlgTeam").close();renderTeams();renderUsers()}
+$("#tmSave").addEventListener("click",function(){TM.name=$("#tmName").value.trim();TM.active=$("#tmActive").value==="1";if(!TM.name){toast("Give the team a name");return}
+  var b=this;b.disabled=true;b.textContent="Saving…";HXAuth.api("saveTeam",{team:TM}).then(function(d){teamSaved(d,"Team saved")}).catch(function(e){toast(e.message)}).then(function(){b.disabled=false;b.textContent="Save team"})});
+$("#tmDel").addEventListener("click",function(){if(!TM.id||!confirm("Delete team "+TM.name+"? Members keep their direct dealer assignments."))return;HXAuth.api("deleteTeam",{id:TM.id}).then(function(d){teamSaved(d,"Team deleted")}).catch(function(e){toast(e.message)})});
+$("#uBody").addEventListener("click",function(e){var tr=e.target.closest("tr");if(!tr)return;var u=USERS[+tr.dataset.i];
+  if(e.target.closest("[data-asg]"))openAsg(u.email);
+  else if(e.target.closest("[data-team]")){var tm=teamsOf(u.email);if(tm.length===1)openTeam(tm[0]);else if(!tm.length)openTeam(null,u.email);else{var pick=prompt(u.email+" is in: "+tm.map(function(t,i){return (i+1)+". "+t.name}).join("  ")+"\nType a number to edit, or N for a new team:");if(!pick)return;if(/^n/i.test(pick))openTeam(null,u.email);else if(tm[+pick-1])openTeam(tm[+pick-1])}}});
 /* ---------- access requests ---------- */
 var RQSEL={};
 function rqSuggest(r){var lines=String(r.partners||"").toLowerCase().split(/\n|,|;/).map(function(x){return x.replace(/\(.*?\)/g," ").trim()}).filter(function(x){return x.length>2});
@@ -356,7 +465,7 @@ function renderUsers(){
       '<td><select class="role" data-f="role"'+(locked?" disabled":"")+'>'+[["admin","Admin"],["csomgr","CSO manager"],["sm","Sales manager (SM)"],["sales","Sales"],["csa","Sales assistant (CSA)"],["cso","Channel sales (CSO)"],["hplead","HP lead"],["dealer","Dealer account"]].map(function(r){return '<option value="'+r[0]+'"'+(u.role===r[0]?" selected":"")+'>'+r[1]+'</option>'}).join("")+'</select></td>'+
       '<td><select class="role" data-f="group">'+grpOpts(u.group||"")+'</select></td>'+
       '<td class="c"><input type="checkbox" data-f="active"'+(u.active?" checked":"")+(locked?" disabled":"")+'></td>'+
-      '<td style="font-size:12px;color:var(--muted)">'+(/^(admin|csomgr|sales)$/.test(u.role)?"All":u.role==="sm"?("All "+esc(u.group||"(set a group)")+" dealers"+(dl.length?" + "+esc(dl.join(", ")):"")):esc(dl.join(", ")||"—"))+'</td>'+
+      '<td>'+accessCell(u)+'</td>'+
       '<td style="font-size:12px;color:var(--faint)">'+esc(when(u.updatedOn))+(u.updatedBy&&u.updatedBy!=="setup"?" · "+esc(u.updatedBy):"")+'</td>'+
       '<td>'+(locked?"":'<button class="x" data-del title="Remove from list" type="button">×</button>')+'</td></tr>'}).join("")||'<tr class="empty-row"><td colspan="8">No users match.</td></tr>';
   $("#uSave").disabled=JSON.stringify(USERS)===USERS0;

@@ -141,9 +141,11 @@ tr.dirty td{background:color-mix(in srgb,var(--lim-bg) 70%,transparent)}
 </main>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="assets/hx-auth.js"></script>
-<script src="assets/hx-xlsx.js"></script>
-<script src="assets/hx-cart.js"></script>
+<script src="assets/hx-auth.js?v=20261125"></script>
+<script src="assets/hx-shell.js?v=20261125"></script>
+<script>HXShell.attach({title:"Dealer pages"})</script>
+<script src="assets/hx-xlsx.js?v=20261125"></script>
+<script src="assets/hx-cart.js?v=20261125"></script>
 <script>
 (function(){
 "use strict";
@@ -240,10 +242,10 @@ function render(){
     g.sort(function(a,b){return title(a).localeCompare(title(b))}).forEach(function(i){
       if(EDIT){html+=edRow(i);return}
       html+='<tr><td class="desc">'+esc(title(i))+(CATALOG[i.sku]?'<small>'+esc(i.desc)+'</small>':"")+'</td><td class="sku">'+esc(i.sku)+'</td><td class="c">'+(i.isNew?'<span class="tag tag-new">New</span>':'<span class="tag tag-muted">Existing</span>')+'</td>'+
-        '<td class="r">'+peso(i.srp)+'</td><td class="r">'+peso(i.dp)+'</td><td class="r sp-val">'+peso(i.price)+'</td><td>'+tierCell(i)+(i.eol?'<span class="tag tag-out">EOL</span>':"")+(i.exclusive?'<span class="units">Exclusive to this dealer</span>':"")+'</td><td>'+esc(i.note||"")+'</td>'+(CQ?'<td>'+HXCart.btn({sku:i.sku,desc:title(i),price:i.price,srp:i.srp})+'</td>':"")+
+        '<td class="r">'+peso(i.srp)+'</td><td class="r">'+peso(i.dp)+'</td><td class="r sp-val">'+peso(i.price)+'</td><td>'+tierCell(i)+(i.eol?'<span class="tag tag-out">EOL</span>':"")+(i.exclusive?'<span class="units">Exclusive to this dealer</span>':"")+'</td><td>'+esc(i.note||"")+'</td>'+(CQ?'<td>'+HXCart.btn({sku:i.sku,desc:title(i),price:i.price,srp:i.srp,reg:i.dp,cat:i.cat})+'</td>':"")+
         (adm?'<td class="r">'+peso(i.cost,2)+'</td><td class="r '+(i.marginNoRebate<0?"neg":i.marginNoRebate<(i.limitBelow!=null?i.limitBelow:D.minMargin)?"warn":"okc")+'">'+pct(i.marginNoRebate)+'</td><td class="r '+(i.belowWithRebate?"neg":"")+'">'+pct(i.marginWithRebate)+'</td>':"")+'</tr>'})});
   $("#tbody").innerHTML=html||'<tr class="empty-row"><td colspan="'+cols.length+'">'+(D.items.length?"No SKUs match these filters.":"No special prices have been set for this dealer yet.")+'</td></tr>';
-  if(CQ){var ctx="dealer:"+D.dealer.id;if(render.ctx!==ctx){if(!render.ctx)HXCart.init({context:ctx,basis:"Dealer price",dealer:function(){return D&&D.dealer?{id:D.dealer.id,name:D.dealer.name}:null},canLog:function(){return true},page:"dealer"});else HXCart.setContext(ctx);render.ctx=ctx}HXCart.mark()}
+  if(CQ){var ctx="dealer:"+D.dealer.id;if(render.ctx!==ctx){if(!render.ctx)HXCart.init({context:ctx,basis:"Dealer price",dealer:function(){return D&&D.dealer?{id:D.dealer.id,name:D.dealer.name}:null},canLog:function(){return true},page:"dealer",user:function(){return ME||null}});else HXCart.setContext(ctx);render.ctx=ctx}HXCart.mark()}
 }
 /* ---------- inline editing (admin) ---------- */
 function val(i){var e=ED[i.sku];return {price:e&&"price" in e?e.price:(i.override?i.price:""),cap:e&&"cap" in e?e.cap:(i.qtyCap==null?"":i.qtyCap),note:e&&"note" in e?e.note:(i.note||"")}}

@@ -104,9 +104,11 @@ document.documentElement.setAttribute("data-theme",t)})();
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="assets/hx-auth.js"></script>
-<script src="assets/hx-xlsx.js"></script>
-<script src="assets/hx-cart.js"></script>
+<script src="assets/hx-auth.js?v=20261125"></script>
+<script src="assets/hx-shell.js?v=20261125"></script>
+<script>HXShell.attach({title:"Special pricing"})</script>
+<script src="assets/hx-xlsx.js?v=20261125"></script>
+<script src="assets/hx-cart.js?v=20261125"></script>
 <script>
 (function(){
 "use strict";
@@ -194,6 +196,9 @@ function incDetail(i){return (i.incomingLines||[]).map(function(l){return l.qty+
 function stockCells(i){var a=i.atp,oh=i.onHand,c=i.committed||0;
   return '<td class="r"><b>'+num(oh)+'</b></td><td class="r'+(a===0?' neg':'')+'">'+num(a)+(c?'<span class="units">'+c+' committed</span>':'')+'</td>'+
     '<td>'+(i.incoming?'<b>'+num(i.incoming)+'</b>'+(i.incomingLines||[]).map(function(l){return '<span class="units">'+l.qty+' · ETA '+esc(sday(l.eta))+(l.status&&l.status!=="Shipped"?' · '+esc(l.status.toLowerCase()):'')+(l.mode?' · '+esc(l.mode):'')+'</span>'}).join(""):'<span class="units">—</span>')+'</td>'}
+/* Prices for the quote cart when the user switches dealer: '' = sales special prices; otherwise that dealer's authorized prices. */
+function salesReprice(id){if(!id){var m={};(DATA.items||[]).forEach(function(i){m[i.sku]={price:i.sp,reg:i.dp}});return Promise.resolve(m)}
+  return HXAuth.api("dealer",{dealerId:id}).then(function(d){if(!d.ok)throw new Error(HXAuth.message(d.error));var m={};(d.items||[]).forEach(function(i){m[i.sku]={price:i.price,reg:i.dp}});return m})}
 function render(){
   if(!DATA)return;
   var admin=ME&&ME.role==="admin"&&st.margins;
@@ -213,13 +218,13 @@ function render(){
         '<td class="sku">'+esc(i.sku)+'</td>'+
         '<td class="c">'+(i.isNew?'<span class="tag tag-new">New</span>':'<span class="tag tag-muted">Existing</span>')+'</td>'+
         '<td class="r">'+peso(i.srp)+'</td><td class="r">'+pesoAuto(i.dp)+'</td>'+
-        '<td class="r sp-val">'+peso(i.sp)+'</td><td>'+tierCell(i)+'</td>'+stockCells(i)+'<td>'+HXCart.btn({sku:i.sku,desc:title(i),price:i.sp,srp:i.srp})+'</td>'+
+        '<td class="r sp-val">'+peso(i.sp)+'</td><td>'+tierCell(i)+'</td>'+stockCells(i)+'<td>'+HXCart.btn({sku:i.sku,desc:title(i),price:i.sp,srp:i.srp,reg:i.dp,cat:i.cat})+'</td>'+
         (admin?'<td class="r">'+peso(i.cost,true)+'</td><td class="r">'+(i.rebate?peso(i.rebate)+(i.rebateLeft!=null?' <span class="units">'+i.rebateLeft+' claimable</span>':""):"—")+'</td>'+
           '<td class="r '+(i.marginNoRebate<0?"neg":i.marginNoRebate<DATA.minMargin?"warn":"okc")+'">'+pct(i.marginNoRebate)+'</td><td class="r">'+pct(i.marginWithRebate)+'</td>':"")+
         '</tr>'})});
   setTimeout(wireImgs,0);
   $("#tbody").innerHTML=html||'<tr class="empty-row"><td colspan="'+cols.length+'">No SKUs match. Clear a filter or try another search.</td></tr>';
-  if(window.HXCart){if(!render.cart){render.cart=1;HXCart.init({context:"sales",basis:"Special price",canLog:function(){return true},page:"sales"})}HXCart.mark()}
+  if(window.HXCart){if(!render.cart){render.cart=1;HXCart.init({context:"sales",basis:"Special price",canLog:function(){return true},page:"sales",user:function(){return ME},dealers:function(){return DATA&&DATA.myDealers||[]},reprice:salesReprice})}HXCart.mark()}
 }
 
 /* photos: fall back through the other gallery images, then hide */

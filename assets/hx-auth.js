@@ -1,10 +1,11 @@
 /* Google sign-in + API calls for the Iontech HyperX sales pages.
  * Config lives in data/sales-config.json: { "clientId": "...apps.googleusercontent.com", "apiUrl": "https://script.google.com/macros/s/.../exec" }
- * The ID token is kept in sessionStorage for this tab only (it expires after ~1 hour) and is sent in a POST body,
- * never in a URL. The Apps Script backend checks the token and the allowlist on every request.
+ * Sign in once with Google; the server then issues a signed 12-hour session (localStorage) so every page and tab
+ * works without signing in again. Tokens travel in a POST body, never in a URL. The backend still checks the
+ * session signature and re-reads the allowlist (role, group, dealer access) on every request.
  */
 var HXAuth = (function () {
-  var CFG = null, TOKEN = null, onToken = null, KEY = 'hx-idtoken';
+  var CFG = null, TOKEN = null, onToken = null, KEY = 'hx-idtoken', SKEY = 'hx-session', SESSION = null, inflight = {};
 
   function loadConfig() {
     if (CFG) return Promise.resolve(CFG);
@@ -21,6 +22,19 @@ var HXAuth = (function () {
   }
   function save(t) { TOKEN = t; try { sessionStorage.setItem(KEY, t); } catch (e) {} }
   function clear() { TOKEN = null; try { sessionStorage.removeItem(KEY); } catch (e) {} }
+  function savedSession() {
+    if (SESSION && SESSION.exp - Date.now() > 120000) return SESSION;
+    try { var o = JSON.parse(localStorage.getItem(SKEY) || 'null'); if (o && o.token && o.exp - Date.now() > 120000) return (SESSION = o); } catch (e) {}
+    return null;
+  }
+  function saveSession(o) { if (!o || !o.token) return; SESSION = o; try { localStorage.setItem(SKEY, JSON.stringify(o)); } catch (e) {} }
+  function clearSession() { SESSION = null; try { localStorage.removeItem(SKEY); } catch (e) {} }
+  /** Email of the signed-in account (for per-account drafts/preferences), or "" */
+  function email() {
+    var s = savedSession(); if (s) return s.email || '';
+    var t = TOKEN || saved(); if (!t) return '';
+    try { return JSON.parse(atob(t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).email || ''; } catch (e) { return ''; }
+  }
 
   function waitForGsi() {
     return new Promise(function (res, rej) {
@@ -38,8 +52,9 @@ var HXAuth = (function () {
     onToken = cb; opts = opts || {};
     return loadConfig().then(function () {
       if (!configured()) throw new Error('not_configured');
-      var t = saved();
-      if (t) { TOKEN = t; cb(t); }
+      var t = saved(), ss = savedSession();
+      if (t) TOKEN = t;
+      if (t || ss) cb(t || ss.token);
       return waitForGsi().then(function () {
         google.accounts.id.initialize({
           client_id: CFG.clientId,
@@ -50,27 +65,44 @@ var HXAuth = (function () {
           ux_mode: 'popup'
         });
         if (el) google.accounts.id.renderButton(el, { theme: 'filled_black', size: 'large', shape: 'pill', text: 'signin_with', logo_alignment: 'left', width: 280 });
-        if (!t && !opts.noPrompt) google.accounts.id.prompt();
+        if (!t && !ss && !opts.noPrompt) google.accounts.id.prompt();
       });
     });
   }
 
   function signOut() {
-    clear();
+    clear(); clearSession();
+    try { Object.keys(localStorage).forEach(function (k) { if (/^hx-(dealer-ctx|pipe-filters)/.test(k)) localStorage.removeItem(k); }); } catch (e) {}
     try { google.accounts.id.disableAutoSelect(); } catch (e) {}
   }
 
   /** POST to the Apps Script API. text/plain avoids a CORS preflight, which Apps Script cannot answer. */
-  function api(action, payload) {
-    if (!TOKEN) return Promise.reject(new Error('no_token'));
-    var body = Object.assign({ action: action, idToken: TOKEN, page: location.pathname.split('/').pop() }, payload || {});
-    return fetch(CFG.apiUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body), redirect: 'follow' })
-      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(function (d) {
-        if (!d.ok && (d.error === 'expired' || d.error === 'invalid_token')) clear();
-        return d;
-      });
+  function post(body) {
+    return loadConfig().then(function () {
+      return fetch(CFG.apiUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body), redirect: 'follow' });
+    }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
   }
+  function api(action, payload) {
+    var ss = savedSession();
+    if (!TOKEN && !ss) return Promise.reject(new Error('no_token'));
+    var body = Object.assign({ action: action, page: location.pathname.split('/').pop() }, payload || {});
+    if (ss) body.session = ss.token; else body.idToken = TOKEN;
+    // identical read requests in flight share one network call
+    var key = /^(save|log|set|assign|delete|upload|decide|request|release|create|revoke|register)/.test(action) ? null : action + '|' + JSON.stringify(payload || {});
+    if (key && inflight[key]) return inflight[key];
+    var pr = post(body).then(function (d) {
+      if (d.session) saveSession(d.session);
+      if (!d.ok && (d.error === 'expired' || d.error === 'invalid_token')) {
+        if (body.session) { clearSession(); if (TOKEN) return api(action, payload); }
+        clear();
+      }
+      return d;
+    });
+    if (key) { inflight[key] = pr; pr.then(function () { delete inflight[key]; }, function () { delete inflight[key]; }); }
+    return pr;
+  }
+  /** Public, sign-in-free call (guest quote logging). */
+  function publicApi(action, payload) { return post(Object.assign({ action: action, page: location.pathname.split('/').pop() }, payload || {})); }
 
   var MESSAGES = {
     not_allowed: 'This Google account is not on the Iontech sales list yet. Request access on the Register page (link below).',
@@ -91,9 +123,11 @@ var HXAuth = (function () {
     duplicate_email: 'That email is listed twice.',
     bad_paste: 'That paste could not be read.',
     bad_request: 'Some details are missing.',
+    rate_limited: 'Too many requests. Wait a minute and try again.',
+    not_found: 'That record was not found or you cannot open it.',
     server_error: 'The pricing server hit an error.'
   };
   function message(code) { return MESSAGES[code] || ('Something went wrong (' + code + ').'); }
 
-  return { init: init, api: api, signOut: signOut, message: message, loadConfig: loadConfig, hasSession: function () { return !!saved(); } };
+  return { init: init, api: api, publicApi: publicApi, signOut: signOut, message: message, loadConfig: loadConfig, email: email, hasSession: function () { return !!(saved() || savedSession()); } };
 })();
