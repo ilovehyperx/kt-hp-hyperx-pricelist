@@ -85,7 +85,8 @@
       "assets/products/cloud-iii/black-1.webp",
       "assets/products/cloud-iii/black-2.webp",
       "assets/products/cloud-iii/black-3.webp"
-     ]
+     ],
+     "mat": "521615142695"
     },
     {
      "label": "Black-Red",
@@ -96,7 +97,8 @@
       "assets/products/cloud-iii/black-red-1.webp",
       "assets/products/cloud-iii/black-red-2.webp",
       "assets/products/cloud-iii/black-red-3.webp"
-     ]
+     ],
+     "mat": "521615142696"
     },
     {
      "label": "White",
@@ -107,7 +109,8 @@
       "assets/products/cloud-iii/white-1.webp",
       "assets/products/cloud-iii/white-2.webp",
       "assets/products/cloud-iii/white-3.webp"
-     ]
+     ],
+     "mat": "521615143801"
     },
     {
      "label": "White-Pink",
@@ -118,14 +121,16 @@
       "assets/products/cloud-iii/white-pink-1.webp",
       "assets/products/cloud-iii/white-pink-2.webp",
       "assets/products/cloud-iii/white-pink-3.webp"
-     ]
+     ],
+     "mat": "521615143802"
     },
     {
      "label": "Black-Blue",
      "sku": "D0SX6AA",
      "srp": 4990,
      "dp": 3493.08,
-     "img": "https://hyperx.com/cdn/shop/files/hyperx_cloud_iii_black_blue_d0sx6aa_angle_4_49cab7a3-d3e8-43d1-839e-06cdc63d095d.jpg?v=1784067120"
+     "img": "https://hyperx.com/cdn/shop/files/hyperx_cloud_iii_black_blue_d0sx6aa_angle_4_49cab7a3-d3e8-43d1-839e-06cdc63d095d.jpg?v=1784067120",
+     "mat": "432115036889"
     },
     {
      "label": "Black-Lavender",
@@ -134,7 +139,8 @@
      "dp": 3742.12,
      "gallery": [
       "assets/products/cloud-iii/u-cloud3-black-lavender.webp"
-     ]
+     ],
+     "mat": "521615144037"
     },
     {
      "label": "White-Blue",
@@ -143,7 +149,8 @@
      "dp": 3742.12,
      "gallery": [
       "assets/products/cloud-iii/u-cloud3-white-blue.webp"
-     ]
+     ],
+     "mat": "521615144038"
     }
    ],
    "img": "assets/products/cloud-iii/black-1.webp",
@@ -181,7 +188,8 @@
       "assets/products/cloud-iii-s-wl/black-red-1.webp",
       "assets/products/cloud-iii-s-wl/black-red-2.webp",
       "assets/products/cloud-iii-s-wl/black-red-3.webp"
-     ]
+     ],
+     "mat": "432117062050"
     },
     {
      "label": "Black",
@@ -192,7 +200,8 @@
       "assets/products/cloud-iii-s-wl/black-1.webp",
       "assets/products/cloud-iii-s-wl/black-2.webp",
       "assets/products/cloud-iii-s-wl/black-3.webp"
-     ]
+     ],
+     "mat": "521615143387"
     },
     {
      "label": "White",
@@ -203,7 +212,8 @@
       "assets/products/cloud-iii-s-wl/white-1.webp",
       "assets/products/cloud-iii-s-wl/white-2.webp",
       "assets/products/cloud-iii-s-wl/white-3.webp"
-     ]
+     ],
+     "mat": "521615143637"
     },
     {
      "label": "Lavender",
@@ -212,7 +222,8 @@
      "dp": 5249.51,
      "gallery": [
       "assets/products/cloud-iii-s-wl/u-cloud3s-lavender.webp"
-     ]
+     ],
+     "mat": "432115036890"
     },
     {
      "label": "Black-Blue",
@@ -220,7 +231,8 @@
      "srp": 8090,
      "dp": 5623.72,
      "img": "https://hyperx.com/cdn/shop/files/hyperx_cloud_iii_s_wireless_black_blue_df7e9aa_main_1_medium.jpg?v=1787248258",
-     "imgLow": true
+     "imgLow": true,
+     "mat": "521615144039"
     },
     {
      "label": "White-Pink",
@@ -229,7 +241,8 @@
      "dp": 5623.72,
      "gallery": [
       "assets/products/cloud-iii-s-wl/u-cloud3s-white-pink.webp"
-     ]
+     ],
+     "mat": "521615144040"
     }
    ],
    "img": "assets/products/cloud-iii-s-wl/black-red-1.webp",
@@ -261,7 +274,8 @@
      "label": "Red",
      "sku": "4P5L1AB",
      "srp": 6199,
-     "dp": 4339.01
+     "dp": 4339.01,
+     "mat": "521615142263"
     }
    ],
    "img": "assets/products/cloud-alpha/all-1.webp",
@@ -299,7 +313,8 @@
      "label": "Black-Red",
      "sku": "4P5D4AA",
      "srp": 11200,
-     "dp": 7840.0
+     "dp": 7840.0,
+     "mat": "521615142566"
     }
    ],
    "img": "assets/products/cloud-alpha-wl/all-1.webp",
@@ -335,7 +350,8 @@
      "sku": "D14ZCAA",
      "srp": 9890,
      "dp": 6907.11,
-     "img": "https://hyperx.com/cdn/shop/files/hyperx_cloud_alpha_air_d14zcaa_main_1.jpg?v=1787066281"
+     "img": "https://hyperx.com/cdn/shop/files/hyperx_cloud_alpha_air_d14zcaa_main_1.jpg?v=1787066281",
+     "mat": "521615144035"
     }
    ],
    "img": "https://hyperx.com/cdn/shop/files/hyperx_cloud_alpha_air_d14zcaa_main_1.jpg?v=1787066281",
@@ -367,7 +383,8 @@
      "label": "Black",
      "sku": "AJ5C7AA",
      "srp": 18890,
-     "dp": 13222.59
+     "dp": 13222.59,
+     "mat": "521615143731"
     }
    ],
    "img": "assets/products/cloud-alpha-2-wl/all-1.webp",
@@ -406,7 +423,8 @@
      "dp": 2022.59,
      "gallery": [
       "assets/products/stinger-3/u-stinger3-black-pc.webp"
-     ]
+     ],
+     "mat": "432115036884"
     },
     {
      "label": "White · PlayStation",
@@ -415,7 +433,8 @@
      "dp": 2022.59,
      "gallery": [
       "assets/products/stinger-3/u-stinger3-white-ps.webp"
-     ]
+     ],
+     "mat": "432115036885"
     }
    ],
    "img": "assets/products/stinger-3/u-stinger3-black-pc.webp",
@@ -448,7 +467,8 @@
      "sku": "BS1T7AA",
      "srp": 2890,
      "dp": 2022.59,
-     "img": "https://row.hyperx.com/cdn/shop/files/hyperx_cloudx_stinger_3_xb_bs1t7aa_main_1.jpg?v=1793386294"
+     "img": "https://row.hyperx.com/cdn/shop/files/hyperx_cloudx_stinger_3_xb_bs1t7aa_main_1.jpg?v=1793386294",
+     "mat": "432115036886"
     }
    ],
    "img": "https://row.hyperx.com/cdn/shop/files/hyperx_cloudx_stinger_3_xb_bs1t7aa_main_1.jpg?v=1793386294",
@@ -483,7 +503,8 @@
       "assets/products/stinger-3-wl/u-stinger3wl-black-1.webp",
       "assets/products/stinger-3-wl/u-stinger3wl-black-3.webp",
       "assets/products/stinger-3-wl/u-stinger3wl-black-11.webp"
-     ]
+     ],
+     "mat": "432115036887"
     },
     {
      "label": "White · PlayStation",
@@ -494,7 +515,8 @@
       "assets/products/stinger-3-wl/u-stinger3wl-white-2.webp",
       "assets/products/stinger-3-wl/u-stinger3wl-white-4.webp",
       "assets/products/stinger-3-wl/u-stinger3wl-white-12.webp"
-     ]
+     ],
+     "mat": "432115036888"
     }
    ],
    "img": "assets/products/stinger-3-wl/u-stinger3wl-black-1.webp",
@@ -526,7 +548,8 @@
      "sku": "683L9AA",
      "srp": 2190,
      "dp": 1532.42,
-     "img": "https://hyperx.com/cdn/shop/files/hyperx_cloud_stinger_2_core_1_main.jpg?v=1784821560"
+     "img": "https://hyperx.com/cdn/shop/files/hyperx_cloud_stinger_2_core_1_main.jpg?v=1784821560",
+     "mat": "521615142563"
     },
     {
      "label": "Black · PlayStation",
@@ -537,7 +560,8 @@
       "assets/products/stinger-2-core/black-playstation-1.webp",
       "assets/products/stinger-2-core/black-playstation-2.webp",
       "assets/products/stinger-2-core/black-playstation-3.webp"
-     ]
+     ],
+     "mat": "521615142631"
     },
     {
      "label": "White · PlayStation",
@@ -548,7 +572,8 @@
       "assets/products/stinger-2-core/white-playstation-1.webp",
       "assets/products/stinger-2-core/white-playstation-2.webp",
       "assets/products/stinger-2-core/white-playstation-3.webp"
-     ]
+     ],
+     "mat": "521615142630"
     }
    ],
    "img": "assets/products/stinger-2-core/black-playstation-1.webp",
@@ -583,7 +608,8 @@
       "assets/products/stinger-2-core-x/white-1.webp",
       "assets/products/stinger-2-core-x/white-2.webp",
       "assets/products/stinger-2-core-x/white-3.webp"
-     ]
+     ],
+     "mat": "521615142687"
     },
     {
      "label": "Black",
@@ -594,7 +620,8 @@
       "assets/products/stinger-2-core-x/black-1.webp",
       "assets/products/stinger-2-core-x/black-2.webp",
       "assets/products/stinger-2-core-x/black-3.webp"
-     ]
+     ],
+     "mat": "521615142688"
     }
    ],
    "img": "assets/products/stinger-2-core-x/white-1.webp",
@@ -629,7 +656,8 @@
       "assets/products/stinger-2/black-pc-1.webp",
       "assets/products/stinger-2/black-pc-2.webp",
       "assets/products/stinger-2/black-pc-3.webp"
-     ]
+     ],
+     "mat": "521615142564"
     },
     {
      "label": "Black · PlayStation",
@@ -640,7 +668,8 @@
       "assets/products/stinger-2/black-playstation-1.webp",
       "assets/products/stinger-2/black-playstation-2.webp",
       "assets/products/stinger-2/black-playstation-3.webp"
-     ]
+     ],
+     "mat": "521615143659"
     }
    ],
    "img": "assets/products/stinger-2/black-pc-1.webp",
@@ -670,7 +699,8 @@
      "label": "Black",
      "sku": "75X28AA",
      "srp": 2890,
-     "dp": 2022.59
+     "dp": 2022.59,
+     "mat": "521615143873"
     }
    ],
    "img": "assets/products/stinger-2-x/all-1.webp",
@@ -705,7 +735,8 @@
      "label": "Black",
      "sku": "676A2AA",
      "srp": 3890,
-     "dp": 4123.0
+     "dp": 4123.0,
+     "mat": "521615142686"
     }
    ],
    "img": "assets/products/stinger-2-wl/all-1.webp",
@@ -744,7 +775,8 @@
       "assets/products/cloud-jet-wl/black-1.webp",
       "assets/products/cloud-jet-wl/black-2.webp",
       "assets/products/cloud-jet-wl/black-3.webp"
-     ]
+     ],
+     "mat": "521615143385"
     },
     {
      "label": "Blue",
@@ -755,7 +787,8 @@
       "assets/products/cloud-jet-wl/blue-1.webp",
       "assets/products/cloud-jet-wl/blue-2.webp",
       "assets/products/cloud-jet-wl/blue-3.webp"
-     ]
+     ],
+     "mat": "521615143386"
     }
    ],
    "img": "assets/products/cloud-jet-wl/black-1.webp",
@@ -792,7 +825,8 @@
       "assets/products/cloud-mini/multi-1.webp",
       "assets/products/cloud-mini/multi-2.webp",
       "assets/products/cloud-mini/multi-3.webp"
-     ]
+     ],
+     "mat": "521615143101"
     },
     {
      "label": "Black",
@@ -803,7 +837,8 @@
       "assets/products/cloud-mini/black-1.webp",
       "assets/products/cloud-mini/black-2.webp",
       "assets/products/cloud-mini/black-3.webp"
-     ]
+     ],
+     "mat": "521615143102"
     },
     {
      "label": "Lavender",
@@ -814,7 +849,8 @@
       "assets/products/cloud-mini/lavender-1.webp",
       "assets/products/cloud-mini/lavender-2.webp",
       "assets/products/cloud-mini/lavender-3.webp"
-     ]
+     ],
+     "mat": "521615143103"
     }
    ],
    "img": "assets/products/cloud-mini/multi-1.webp",
@@ -850,7 +886,8 @@
       "assets/products/cloud-mini-wl/black-1.webp",
       "assets/products/cloud-mini-wl/black-2.webp",
       "assets/products/cloud-mini-wl/black-3.webp"
-     ]
+     ],
+     "mat": "521615143798"
     },
     {
      "label": "White",
@@ -861,7 +898,8 @@
       "assets/products/cloud-mini-wl/white-1.webp",
       "assets/products/cloud-mini-wl/white-2.webp",
       "assets/products/cloud-mini-wl/white-3.webp"
-     ]
+     ],
+     "mat": "521615143799"
     }
    ],
    "img": "assets/products/cloud-mini-wl/black-1.webp",
@@ -897,7 +935,8 @@
       "assets/products/earbuds-ii/red-1.webp",
       "assets/products/earbuds-ii/red-2.webp",
       "assets/products/earbuds-ii/red-3.webp"
-     ]
+     ],
+     "mat": "521615142690"
     },
     {
      "label": "Black",
@@ -908,7 +947,8 @@
       "assets/products/earbuds-ii/black-1.webp",
       "assets/products/earbuds-ii/black-2.webp",
       "assets/products/earbuds-ii/black-3.webp"
-     ]
+     ],
+     "mat": "521615142691"
     }
    ],
    "img": "assets/products/earbuds-ii/red-1.webp",
@@ -944,7 +984,8 @@
       "assets/products/earbuds-iii/black-1.webp",
       "assets/products/earbuds-iii/black-2.webp",
       "assets/products/earbuds-iii/black-3.webp"
-     ]
+     ],
+     "mat": "521615143727"
     },
     {
      "label": "Red",
@@ -955,7 +996,8 @@
       "assets/products/earbuds-iii/red-1.webp",
       "assets/products/earbuds-iii/red-2.webp",
       "assets/products/earbuds-iii/red-3.webp"
-     ]
+     ],
+     "mat": "521615143728"
     }
    ],
    "img": "assets/products/earbuds-iii/black-1.webp",
@@ -991,7 +1033,8 @@
       "assets/products/earbuds-iii-s/black-1.webp",
       "assets/products/earbuds-iii-s/black-2.webp",
       "assets/products/earbuds-iii-s/black-3.webp"
-     ]
+     ],
+     "mat": "521615143729"
     },
     {
      "label": "Red",
@@ -1002,7 +1045,8 @@
       "assets/products/earbuds-iii-s/red-1.webp",
       "assets/products/earbuds-iii-s/red-2.webp",
       "assets/products/earbuds-iii-s/red-3.webp"
-     ]
+     ],
+     "mat": "521615143730"
     }
    ],
    "img": "assets/products/earbuds-iii-s/black-1.webp",
@@ -1036,7 +1080,8 @@
      "dp": 2399.44,
      "gallery": [
       "assets/products/solocast-2/u-solocast2-black.webp"
-     ]
+     ],
+     "mat": "521615200267"
     },
     {
      "label": "Frost",
@@ -1045,7 +1090,8 @@
      "dp": 2249.22,
      "gallery": [
       "assets/products/solocast-2/u-solocast2-frost.webp"
-     ]
+     ],
+     "mat": "521615144036"
     }
    ],
    "img": "assets/products/solocast-2/u-solocast2-frost.webp",
@@ -1077,7 +1123,8 @@
      "sku": "C96GRAA",
      "srp": 5920.000000000002,
      "dp": 4144.0,
-     "img": "https://hyperx.com/cdn/shop/files/hyperx_solocast_2_pro_c96graa_main_1.jpg?v=1787066254"
+     "img": "https://hyperx.com/cdn/shop/files/hyperx_solocast_2_pro_c96graa_main_1.jpg?v=1787066254",
+     "mat": "521615200300"
     }
    ],
    "img": "https://hyperx.com/cdn/shop/files/hyperx_solocast_2_pro_c96graa_main_1.jpg?v=1787066254",
@@ -1109,7 +1156,8 @@
      "sku": "4P5E2AA",
      "srp": 4499,
      "dp": 3374.49,
-     "img": "https://au.hyperx.com/cdn/shop/files/hyperx_duocast_1_main_8b7caeaf-8b2b-459d-bae3-ae60dd3998d5.jpg?v=1765420048"
+     "img": "https://au.hyperx.com/cdn/shop/files/hyperx_duocast_1_main_8b7caeaf-8b2b-459d-bae3-ae60dd3998d5.jpg?v=1765420048",
+     "mat": "521615200180"
     }
    ],
    "img": "https://au.hyperx.com/cdn/shop/files/hyperx_duocast_1_main_8b7caeaf-8b2b-459d-bae3-ae60dd3998d5.jpg?v=1765420048",
@@ -1144,7 +1192,8 @@
       "assets/products/quadcast-2/black-1.webp",
       "assets/products/quadcast-2/black-2.webp",
       "assets/products/quadcast-2/black-3.webp"
-     ]
+     ],
+     "mat": "521615200236"
     },
     {
      "label": "Frost (white)",
@@ -1155,7 +1204,8 @@
       "assets/products/quadcast-2/frost-white-1.webp",
       "assets/products/quadcast-2/frost-white-2.webp",
       "assets/products/quadcast-2/frost-white-3.webp"
-     ]
+     ],
+     "mat": "521615200235"
     }
    ],
    "img": "assets/products/quadcast-2/black-1.webp",
@@ -1186,7 +1236,8 @@
      "label": "Black",
      "sku": "9A273AA",
      "srp": 13090,
-     "dp": 9162.92
+     "dp": 9162.92,
+     "mat": "521615200237"
     }
    ],
    "img": "assets/products/quadcast-2s/all-1.webp",
@@ -1222,7 +1273,8 @@
      "label": "Black",
      "sku": "B2CM1AA",
      "srp": 14790,
-     "dp": 10352.75
+     "dp": 10352.75,
+     "mat": "521615143800"
     }
    ],
    "img": "assets/products/flipcast/all-1.webp",
@@ -1256,7 +1308,8 @@
      "label": "Black",
      "sku": "73C12AA",
      "srp": 12799,
-     "dp": 8958.68
+     "dp": 8958.68,
+     "mat": "521615143803"
     }
    ],
    "img": "assets/products/audio-mixer/all-1.webp",
@@ -1290,7 +1343,8 @@
      "label": "Black",
      "sku": "6X256AA",
      "srp": 1899,
-     "dp": 1329.51
+     "dp": 1329.51,
+     "mat": "521615200187"
     }
    ],
    "img": "assets/products/shield/all-1.webp",
@@ -1327,7 +1381,8 @@
      "dp": 1048.85,
      "gallery": [
       "assets/products/xlr-cable/u-xlr-cable.webp"
-     ]
+     ],
+     "mat": "521615200188"
     }
    ],
    "img": "assets/products/xlr-cable/u-xlr-cable.webp",
@@ -1357,7 +1412,8 @@
      "sku": "D9LS1AA",
      "srp": 6590,
      "dp": 4559.06,
-     "img": "https://hyperx.com/cdn/shop/files/hyperx_pulsefire_haste_3_wireless_d9ls2aa_main_1.jpg?v=1791546151"
+     "img": "https://hyperx.com/cdn/shop/files/hyperx_pulsefire_haste_3_wireless_d9ls2aa_main_1.jpg?v=1791546151",
+     "mat": "432117081680"
     }
    ],
    "img": "https://hyperx.com/cdn/shop/files/hyperx_pulsefire_haste_3_wireless_d9ls2aa_main_1.jpg?v=1791546151",
@@ -1387,7 +1443,8 @@
      "sku": "D9LS2AA",
      "srp": 3290,
      "dp": 2301.93,
-     "img": "https://hyperx.com/cdn/shop/files/hyperx_pulsefire_haste_3_d9ls1aa_main_1.jpg?v=1788484558"
+     "img": "https://hyperx.com/cdn/shop/files/hyperx_pulsefire_haste_3_d9ls1aa_main_1.jpg?v=1788484558",
+     "mat": "432117081682"
     }
    ],
    "img": "https://hyperx.com/cdn/shop/files/hyperx_pulsefire_haste_3_d9ls1aa_main_1.jpg?v=1788484558",
@@ -1417,7 +1474,8 @@
      "sku": "D6GJ3AA",
      "srp": 8490,
      "dp": 5939.95,
-     "img": "https://hyperx.com/cdn/shop/files/hyperx_pulsefire_haste_3_pro_d6gj3aa_main_1_6be8ed76-cc34-420b-8050-4723558ef5df.jpg?v=1791546151"
+     "img": "https://hyperx.com/cdn/shop/files/hyperx_pulsefire_haste_3_pro_d6gj3aa_main_1_6be8ed76-cc34-420b-8050-4723558ef5df.jpg?v=1791546151",
+     "mat": "432117081681"
     }
    ],
    "img": "https://hyperx.com/cdn/shop/files/hyperx_pulsefire_haste_3_pro_d6gj3aa_main_1_6be8ed76-cc34-420b-8050-4723558ef5df.jpg?v=1791546151",
@@ -1451,7 +1509,8 @@
       "assets/products/haste-2/black-1.webp",
       "assets/products/haste-2/black-2.webp",
       "assets/products/haste-2/black-3.webp"
-     ]
+     ],
+     "mat": "432117081315"
     },
     {
      "label": "White",
@@ -1462,7 +1521,8 @@
       "assets/products/haste-2/white-1.webp",
       "assets/products/haste-2/white-2.webp",
       "assets/products/haste-2/white-3.webp"
-     ]
+     ],
+     "mat": "432117081316"
     }
    ],
    "img": "assets/products/haste-2/black-1.webp",
@@ -1496,7 +1556,8 @@
       "assets/products/haste-2-core-wl/black-1.webp",
       "assets/products/haste-2-core-wl/black-2.webp",
       "assets/products/haste-2-core-wl/black-3.webp"
-     ]
+     ],
+     "mat": "432117081585"
     },
     {
      "label": "White",
@@ -1507,7 +1568,8 @@
       "assets/products/haste-2-core-wl/white-1.webp",
       "assets/products/haste-2-core-wl/white-2.webp",
       "assets/products/haste-2-core-wl/white-3.webp"
-     ]
+     ],
+     "mat": "432117081586"
     }
    ],
    "img": "assets/products/haste-2-core-wl/black-1.webp",
@@ -1537,7 +1599,8 @@
      "label": "Black",
      "sku": "A1KY6AA",
      "srp": 3890,
-     "dp": 2723.58
+     "dp": 2723.58,
+     "mat": "432117061826"
     }
    ],
    "img": "assets/products/fuse-wl/all-1.webp",
@@ -1572,7 +1635,8 @@
      "label": "Black",
      "sku": "A2PB3AA",
      "srp": 4390,
-     "dp": 3072.75
+     "dp": 3072.75,
+     "mat": "432117061827"
     }
    ],
    "img": "assets/products/saga/all-1.webp",
@@ -1611,7 +1675,8 @@
       "assets/products/haste-2-mini-wl/black-1.webp",
       "assets/products/haste-2-mini-wl/black-2.webp",
       "assets/products/haste-2-mini-wl/black-3.webp"
-     ]
+     ],
+     "mat": "432117081397"
     },
     {
      "label": "White",
@@ -1622,7 +1687,8 @@
       "assets/products/haste-2-mini-wl/white-1.webp",
       "assets/products/haste-2-mini-wl/white-2.webp",
       "assets/products/haste-2-mini-wl/white-3.webp"
-     ]
+     ],
+     "mat": "432117081398"
     }
    ],
    "img": "assets/products/haste-2-mini-wl/black-1.webp",
@@ -1657,7 +1723,8 @@
       "assets/products/haste-2-wl/black-1.webp",
       "assets/products/haste-2-wl/black-2.webp",
       "assets/products/haste-2-wl/black-3.webp"
-     ]
+     ],
+     "mat": "432117081318"
     },
     {
      "label": "White",
@@ -1668,7 +1735,8 @@
       "assets/products/haste-2-wl/white-1.webp",
       "assets/products/haste-2-wl/white-2.webp",
       "assets/products/haste-2-wl/white-3.webp"
-     ]
+     ],
+     "mat": "432117081317"
     }
    ],
    "img": "assets/products/haste-2-wl/black-1.webp",
@@ -1699,28 +1767,32 @@
      "sku": "4Z7X3AA",
      "srp": 799,
      "dp": 558.68,
-     "img": "https://row.hyperx.com/cdn/shop/files/hyperx_pulsefire_mat_m_1_straight.jpg?v=1793386446"
+     "img": "https://row.hyperx.com/cdn/shop/files/hyperx_pulsefire_mat_m_1_straight.jpg?v=1793386446",
+     "mat": "432117081236"
     },
     {
      "label": "L",
      "sku": "4Z7X4AA",
      "srp": 1099,
      "dp": 769.51,
-     "img": "https://row.hyperx.com/cdn/shop/files/hyperx_pulsefire_mat_l_1_straight.jpg?v=1793386436"
+     "img": "https://row.hyperx.com/cdn/shop/files/hyperx_pulsefire_mat_l_1_straight.jpg?v=1793386436",
+     "mat": "432117081235"
     },
     {
      "label": "XL",
      "sku": "4Z7X5AA",
      "srp": 1699,
      "dp": 1189.84,
-     "img": "https://row.hyperx.com/cdn/shop/files/hyperx_pulsefire_mat_xl_1_straight.jpg?v=1793386372"
+     "img": "https://row.hyperx.com/cdn/shop/files/hyperx_pulsefire_mat_xl_1_straight.jpg?v=1793386372",
+     "mat": "432117081237"
     },
     {
      "label": "2XL",
      "sku": "4Z7X6AA",
      "srp": 2499,
      "dp": 1749.84,
-     "img": "https://row.hyperx.com/cdn/shop/files/hyperx_pulsefire_mat_2xl_1_straight.jpg?v=1793386392"
+     "img": "https://row.hyperx.com/cdn/shop/files/hyperx_pulsefire_mat_2xl_1_straight.jpg?v=1793386392",
+     "mat": "432117081234"
     }
    ],
    "img": "https://row.hyperx.com/cdn/shop/files/hyperx_pulsefire_mat_m_1_straight.jpg?v=1793386446",
@@ -1750,7 +1822,8 @@
      "sku": "4P4F5AA",
      "srp": 2590,
      "dp": 1942.21,
-     "img": "https://hyperx.com/cdn/shop/files/hyperx_alloy_core_rgb_us_1_main.jpg?v=1784821560"
+     "img": "https://hyperx.com/cdn/shop/files/hyperx_alloy_core_rgb_us_1_main.jpg?v=1784821560",
+     "mat": "432117061452"
     }
    ],
    "img": "https://hyperx.com/cdn/shop/files/hyperx_alloy_core_rgb_us_1_main.jpg?v=1784821560",
@@ -1779,7 +1852,8 @@
      "label": "Black · US",
      "sku": "B7JE0AA",
      "srp": 2690,
-     "dp": 2017.32
+     "dp": 2017.32,
+     "mat": "432117062029"
     }
    ],
    "img": "assets/products/eve-1800/all-1.webp",
@@ -1813,7 +1887,8 @@
      "label": "Black · US",
      "sku": "B4QS3AA",
      "srp": 6890,
-     "dp": 5167.81
+     "dp": 5167.81,
+     "mat": "432117062026"
     }
    ],
    "img": "assets/products/origins-2-65/all-1.webp",
@@ -1847,7 +1922,8 @@
      "label": "Black · US",
      "sku": "B4QS4AA",
      "srp": 9190,
-     "dp": 6892.61
+     "dp": 6892.61,
+     "mat": "432117062027"
     }
    ],
    "img": "assets/products/origins-2-1800/all-1.webp",
@@ -1881,7 +1957,8 @@
      "label": "Black · US",
      "sku": "BN7S3AA",
      "srp": 9590,
-     "dp": 7193.04
+     "dp": 7193.04,
+     "mat": "432117062028"
     }
    ],
    "img": "assets/products/origins-pro-2-65/all-1.webp",
@@ -1915,7 +1992,8 @@
      "label": "Black · Red linear",
      "sku": "7G7A4AA",
      "srp": 8799,
-     "dp": 6598.78
+     "dp": 6598.78,
+     "mat": "432117061692"
     }
    ],
    "img": "assets/products/alloy-rise-75/all-1.webp",
@@ -1949,7 +2027,8 @@
      "label": "Black · Red linear",
      "sku": "7G7A3AA",
      "srp": 9799,
-     "dp": 7349.84
+     "dp": 7349.84,
+     "mat": "432117061691"
     }
    ],
    "img": "assets/products/alloy-rise/all-1.webp",
@@ -1984,14 +2063,16 @@
      "sku": "4P4F6AA",
      "srp": 5999,
      "dp": 4499.76,
-     "img": "https://hyperx.com/cdn/shop/files/hyperx_alloy_origins_us_1_top_down.jpg?v=1783095510"
+     "img": "https://hyperx.com/cdn/shop/files/hyperx_alloy_origins_us_1_top_down.jpg?v=1783095510",
+     "mat": "432117061314"
     },
     {
      "label": "Aqua tactile",
      "sku": "4P5N9AA",
      "srp": 5999,
      "dp": 4499.76,
-     "img": "https://hyperx.com/cdn/shop/files/hyperx_alloy_origins_us_1_top_down_ee99a353-2d7b-43a1-9bd6-11f736d1b510.jpg?v=1783095510"
+     "img": "https://hyperx.com/cdn/shop/files/hyperx_alloy_origins_us_1_top_down_ee99a353-2d7b-43a1-9bd6-11f736d1b510.jpg?v=1783095510",
+     "mat": "432117061315"
     }
    ],
    "img": "https://hyperx.com/cdn/shop/files/hyperx_alloy_origins_us_1_top_down.jpg?v=1783095510",
@@ -2023,7 +2104,8 @@
      "dp": 4499.76,
      "gallery": [
       "assets/products/alloy-origins-60/u-alloy-origins-60.webp"
-     ]
+     ],
+     "mat": "432117061325"
     }
    ],
    "img": "assets/products/alloy-origins-60/u-alloy-origins-60.webp",
@@ -2055,7 +2137,8 @@
      "dp": 4499.76,
      "gallery": [
       "assets/products/alloy-origins-65/u-alloy-origins-65.webp"
-     ]
+     ],
+     "mat": "432117061385"
     },
     {
      "label": "Aqua tactile",
@@ -2064,7 +2147,8 @@
      "dp": 4499.76,
      "gallery": [
       "assets/products/alloy-origins-65/u-alloy-origins-65.webp"
-     ]
+     ],
+     "mat": "432117061386"
     }
    ],
    "img": "assets/products/alloy-origins-65/u-alloy-origins-65.webp",
@@ -2096,7 +2180,8 @@
      "dp": 4873.98,
      "gallery": [
       "assets/products/alloy-origins-pbt/u-alloy-origins-full.webp"
-     ]
+     ],
+     "mat": "432117061458"
     },
     {
      "label": "Blue clicky",
@@ -2105,7 +2190,8 @@
      "dp": 4873.98,
      "gallery": [
       "assets/products/alloy-origins-pbt/u-alloy-origins-full.webp"
-     ]
+     ],
+     "mat": "432117061457"
     },
     {
      "label": "Aqua tactile",
@@ -2114,7 +2200,8 @@
      "dp": 4873.98,
      "gallery": [
       "assets/products/alloy-origins-pbt/u-alloy-origins-full.webp"
-     ]
+     ],
+     "mat": "432117061456"
     }
    ],
    "img": "assets/products/alloy-origins-pbt/u-alloy-origins-full.webp",
@@ -2146,7 +2233,8 @@
      "dp": 4499.76,
      "gallery": [
       "assets/products/alloy-origins-core-pbt/u-alloy-origins-core.webp"
-     ]
+     ],
+     "mat": "432117061453"
     },
     {
      "label": "Aqua tactile",
@@ -2155,7 +2243,8 @@
      "dp": 4499.76,
      "gallery": [
       "assets/products/alloy-origins-core-pbt/u-alloy-origins-core.webp"
-     ]
+     ],
+     "mat": "432117061455"
     }
    ],
    "img": "assets/products/alloy-origins-core-pbt/u-alloy-origins-core.webp",
@@ -2189,7 +2278,8 @@
       "assets/products/pbt-keycaps/black-1.webp",
       "assets/products/pbt-keycaps/black-2.webp",
       "assets/products/pbt-keycaps/black-3.webp"
-     ]
+     ],
+     "mat": "432022050020"
     },
     {
      "label": "White",
@@ -2200,7 +2290,8 @@
       "assets/products/pbt-keycaps/white-1.webp",
       "assets/products/pbt-keycaps/white-2.webp",
       "assets/products/pbt-keycaps/white-3.webp"
-     ]
+     ],
+     "mat": "432022050021"
     },
     {
      "label": "Pink",
@@ -2211,7 +2302,8 @@
       "assets/products/pbt-keycaps/pink-1.webp",
       "assets/products/pbt-keycaps/pink-2.webp",
       "assets/products/pbt-keycaps/pink-3.webp"
-     ]
+     ],
+     "mat": "432022050014"
     }
    ],
    "img": "assets/products/pbt-keycaps/black-1.webp",
@@ -2240,7 +2332,8 @@
      "label": "Pink",
      "sku": "644H7AA",
      "srp": 1490,
-     "dp": 1043.58
+     "dp": 1043.58,
+     "mat": "432022050023"
     }
    ],
    "img": "assets/products/pudding-keycaps/all-1.webp",
@@ -2279,7 +2372,8 @@
       "assets/products/switches/linear-red-1.webp",
       "assets/products/switches/linear-red-2.webp",
       "assets/products/switches/linear-red-3.webp"
-     ]
+     ],
+     "mat": "391215460067"
     },
     {
      "label": "Tactile · Aqua",
@@ -2290,7 +2384,8 @@
       "assets/products/switches/tactile-aqua-1.webp",
       "assets/products/switches/tactile-aqua-2.webp",
       "assets/products/switches/tactile-aqua-3.webp"
-     ]
+     ],
+     "mat": "391215460068"
     }
    ],
    "img": "assets/products/switches/linear-red-1.webp",
@@ -2324,7 +2419,8 @@
       "assets/products/coiled-cable/red-black-1.webp",
       "assets/products/coiled-cable/red-black-2.webp",
       "assets/products/coiled-cable/red-black-3.webp"
-     ]
+     ],
+     "mat": "261216131646"
     },
     {
      "label": "Gray",
@@ -2335,7 +2431,8 @@
       "assets/products/coiled-cable/gray-1.webp",
       "assets/products/coiled-cable/gray-2.webp",
       "assets/products/coiled-cable/gray-3.webp"
-     ]
+     ],
+     "mat": "261216131647"
     },
     {
      "label": "Gray-Black",
@@ -2346,7 +2443,8 @@
       "assets/products/coiled-cable/gray-black-1.webp",
       "assets/products/coiled-cable/gray-black-2.webp",
       "assets/products/coiled-cable/gray-black-3.webp"
-     ]
+     ],
+     "mat": "261216131648"
     },
     {
      "label": "Light Blue-White",
@@ -2357,7 +2455,8 @@
       "assets/products/coiled-cable/light-blue-white-1.webp",
       "assets/products/coiled-cable/light-blue-white-2.webp",
       "assets/products/coiled-cable/light-blue-white-3.webp"
-     ]
+     ],
+     "mat": "261216131649"
     },
     {
      "label": "Light Green-White",
@@ -2368,7 +2467,8 @@
       "assets/products/coiled-cable/light-green-white-1.webp",
       "assets/products/coiled-cable/light-green-white-2.webp",
       "assets/products/coiled-cable/light-green-white-3.webp"
-     ]
+     ],
+     "mat": "261216131650"
     },
     {
      "label": "Light Purple",
@@ -2379,7 +2479,8 @@
       "assets/products/coiled-cable/light-purple-1.webp",
       "assets/products/coiled-cable/light-purple-2.webp",
       "assets/products/coiled-cable/light-purple-3.webp"
-     ]
+     ],
+     "mat": "261216131651"
     }
    ],
    "img": "assets/products/coiled-cable/red-black-1.webp",
@@ -2412,7 +2513,8 @@
      "gallery": [
       "assets/products/rise-top-plate/white-1.webp",
       "assets/products/rise-top-plate/white-2.webp"
-     ]
+     ],
+     "mat": "311623070001"
     },
     {
      "label": "Navy",
@@ -2422,7 +2524,8 @@
      "gallery": [
       "assets/products/rise-top-plate/navy-1.webp",
       "assets/products/rise-top-plate/navy-2.webp"
-     ]
+     ],
+     "mat": "311623070002"
     }
    ],
    "img": "assets/products/rise-top-plate/white-1.webp",
@@ -2455,7 +2558,8 @@
      "gallery": [
       "assets/products/rise-75-top-plate/white-1.webp",
       "assets/products/rise-75-top-plate/white-2.webp"
-     ]
+     ],
+     "mat": "311623070003"
     },
     {
      "label": "Navy",
@@ -2465,7 +2569,8 @@
      "gallery": [
       "assets/products/rise-75-top-plate/navy-1.webp",
       "assets/products/rise-75-top-plate/navy-2.webp"
-     ]
+     ],
+     "mat": "311623070004"
     }
    ],
    "img": "assets/products/rise-75-top-plate/white-1.webp",
@@ -2499,7 +2604,8 @@
       "assets/products/badges/8-bit-1.webp",
       "assets/products/badges/8-bit-2.webp",
       "assets/products/badges/8-bit-3.webp"
-     ]
+     ],
+     "mat": "551218040002"
     },
     {
      "label": "Abstract",
@@ -2510,7 +2616,8 @@
       "assets/products/badges/abstract-1.webp",
       "assets/products/badges/abstract-2.webp",
       "assets/products/badges/abstract-3.webp"
-     ]
+     ],
+     "mat": "551218040003"
     },
     {
      "label": "Cute",
@@ -2521,7 +2628,8 @@
       "assets/products/badges/cute-1.webp",
       "assets/products/badges/cute-2.webp",
       "assets/products/badges/cute-3.webp"
-     ]
+     ],
+     "mat": "551218040004"
     }
    ],
    "img": "assets/products/badges/8-bit-1.webp",
@@ -2555,7 +2663,8 @@
       "assets/products/wrist-rest/full-size-1.webp",
       "assets/products/wrist-rest/full-size-2.webp",
       "assets/products/wrist-rest/full-size-3.webp"
-     ]
+     ],
+     "mat": "461822060001"
     },
     {
      "label": "60",
@@ -2566,7 +2675,8 @@
       "assets/products/wrist-rest/60-1.webp",
       "assets/products/wrist-rest/60-2.webp",
       "assets/products/wrist-rest/60-3.webp"
-     ]
+     ],
+     "mat": "461822060002"
     },
     {
      "label": "75 / TKL",
@@ -2577,14 +2687,16 @@
       "assets/products/wrist-rest/75-tkl-1.webp",
       "assets/products/wrist-rest/75-tkl-2.webp",
       "assets/products/wrist-rest/75-tkl-3.webp"
-     ]
+     ],
+     "mat": "461822060004"
     },
     {
      "label": "Mouse",
      "sku": "4Z7X2AA",
      "srp": 799,
      "dp": 558.68,
-     "img": "https://row.hyperx.com/cdn/shop/files/hyperx_wrist_rest_mice_1_main.jpg?v=1793386306"
+     "img": "https://row.hyperx.com/cdn/shop/files/hyperx_wrist_rest_mice_1_main.jpg?v=1793386306",
+     "mat": "461822060003"
     }
    ],
    "img": "assets/products/wrist-rest/full-size-1.webp",
@@ -2613,7 +2725,8 @@
      "label": "White",
      "sku": "51P68AA",
      "srp": 1490,
-     "dp": 1043.58
+     "dp": 1043.58,
+     "mat": "261117040238"
     }
    ],
    "img": "assets/products/chargeplay-duo/all-1.webp",
@@ -2647,7 +2760,8 @@
      "label": "Black",
      "sku": "6Y2G7AA",
      "srp": 1490,
-     "dp": 1043.58
+     "dp": 1043.58,
+     "mat": "391215460031"
     }
    ],
    "img": "assets/products/chargeplay-quad-2/all-1.webp",
@@ -2681,7 +2795,8 @@
      "label": "Black",
      "sku": "6L366AA",
      "srp": 1999,
-     "dp": 1399.34
+     "dp": 1399.34,
+     "mat": "391215460030"
     }
    ],
    "img": "assets/products/gladiate/all-1.webp",
@@ -2716,7 +2831,8 @@
      "label": "Clear",
      "sku": "7D6H2AA",
      "srp": 2299,
-     "dp": 1608.85
+     "dp": 1608.85,
+     "mat": "391215460050"
     }
    ],
    "img": "assets/products/gladiate-rgb/all-1.webp",
@@ -2752,7 +2868,8 @@
      "sku": "B11D9AA",
      "srp": 12890,
      "dp": 9023.25,
-     "img": "https://hyperx.com/cdn/shop/files/hyperx_clutch_tachi_b11d9aa_main_1.jpg?v=1787066263"
+     "img": "https://hyperx.com/cdn/shop/files/hyperx_clutch_tachi_b11d9aa_main_1.jpg?v=1787066263",
+     "mat": "391215460085"
     }
    ],
    "img": "https://hyperx.com/cdn/shop/files/hyperx_clutch_tachi_b11d9aa_main_1.jpg?v=1787066263",
@@ -2783,7 +2900,8 @@
      "sku": "D5KB2AA",
      "srp": 7990,
      "dp": 6791.5,
-     "img": "https://hyperx.com/cdn/shop/files/gelato_hyperx_24e_display_gunmetal_coreset_front.jpg?v=1791845172"
+     "img": "https://hyperx.com/cdn/shop/files/gelato_hyperx_24e_display_gunmetal_coreset_front.jpg?v=1791845172",
+     "mat": "432119024731"
     }
    ],
    "img": "https://hyperx.com/cdn/shop/files/gelato_hyperx_24e_display_gunmetal_coreset_front.jpg?v=1791845172",
@@ -2815,7 +2933,8 @@
      "sku": "C2JP4AA",
      "srp": 9990,
      "dp": 8491.51,
-     "img": "https://ca.hyperx.com/cdn/shop/files/wario_omen_24_g2_display_jetblack_catalog_front_5084404.jpg?v=1789397459"
+     "img": "https://ca.hyperx.com/cdn/shop/files/wario_omen_24_g2_display_jetblack_catalog_front_5084404.jpg?v=1789397459",
+     "mat": "432119024732"
     }
    ],
    "img": "https://ca.hyperx.com/cdn/shop/files/wario_omen_24_g2_display_jetblack_catalog_front_5084404.jpg?v=1789397459",
@@ -2847,7 +2966,8 @@
      "sku": "D5KB3AA",
      "srp": 12990,
      "dp": 10813.84,
-     "img": "https://hyperx.com/cdn/shop/files/gelato_hyperx_27e_display_gunmetal_coreset_front.jpg?v=1791845173"
+     "img": "https://hyperx.com/cdn/shop/files/gelato_hyperx_27e_display_gunmetal_coreset_front.jpg?v=1791845173",
+     "mat": "432119024733"
     }
    ],
    "img": "https://hyperx.com/cdn/shop/files/gelato_hyperx_27e_display_gunmetal_coreset_front.jpg?v=1791845173",
@@ -2879,7 +2999,8 @@
      "sku": "CH0R2AA",
      "srp": 34990,
      "dp": 30711.34,
-     "img": "https://hyperx.com/cdn/shop/files/hyperxoled27q_catalog_2b_front_6265118_6265118.jpg?v=1787066289"
+     "img": "https://hyperx.com/cdn/shop/files/hyperxoled27q_catalog_2b_front_6265118_6265118.jpg?v=1787066289",
+     "mat": "432119024734"
     }
    ],
    "img": "https://hyperx.com/cdn/shop/files/hyperxoled27q_catalog_2b_front_6265118_6265118.jpg?v=1787066289",
@@ -2911,7 +3032,8 @@
      "sku": "C49PPAA",
      "srp": 88990,
      "dp": 73252.82,
-     "img": "https://hyperx.com/cdn/shop/files/samus_34c_display_hook_jetblack_catalog_front_6312650.jpg?v=1787080779"
+     "img": "https://hyperx.com/cdn/shop/files/samus_34c_display_hook_jetblack_catalog_front_6312650.jpg?v=1787080779",
+     "mat": "432119024735"
     }
    ],
    "img": "https://hyperx.com/cdn/shop/files/samus_34c_display_hook_jetblack_catalog_front_6312650.jpg?v=1787080779",
@@ -2940,7 +3062,8 @@
      "label": "Black",
      "sku": "8C524AA",
      "srp": 1999,
-     "dp": 1399.34
+     "dp": 1399.34,
+     "mat": "241115000026"
     }
    ],
    "img": "assets/products/delta-backpack/all-1.webp",
@@ -2974,7 +3097,8 @@
      "label": "Black",
      "sku": "8C525AA",
      "srp": 3999,
-     "dp": 2799.3
+     "dp": 2799.3,
+     "mat": "531217060345"
     }
    ],
    "img": "assets/products/knight-backpack/all-1.webp",

@@ -87,7 +87,8 @@
       "assets/products/cloud-iii/k-black-3.webp",
       "assets/products/cloud-iii/k-black-4.webp"
      ],
-     "kit": "cloud-iii-gaming-headset"
+     "kit": "cloud-iii-gaming-headset",
+     "mat": "521615142695"
     },
     {
      "label": "Black-Red",
@@ -100,7 +101,8 @@
       "assets/products/cloud-iii/k-black-red-3.webp",
       "assets/products/cloud-iii/k-black-red-4.webp"
      ],
-     "kit": "cloud-iii-gaming-headset"
+     "kit": "cloud-iii-gaming-headset",
+     "mat": "521615142696"
     },
     {
      "label": "White",
@@ -113,7 +115,8 @@
       "assets/products/cloud-iii/k-white-3.webp",
       "assets/products/cloud-iii/k-white-4.webp"
      ],
-     "kit": "cloud-iii-gaming-headset"
+     "kit": "cloud-iii-gaming-headset",
+     "mat": "521615143801"
     },
     {
      "label": "White-Pink",
@@ -126,7 +129,8 @@
       "assets/products/cloud-iii/k-white-pink-3.webp",
       "assets/products/cloud-iii/k-white-pink-4.webp"
      ],
-     "kit": "cloud-iii-gaming-headset"
+     "kit": "cloud-iii-gaming-headset",
+     "mat": "521615143802"
     },
     {
      "label": "Black-Blue",
@@ -139,7 +143,8 @@
       "assets/products/cloud-iii/k-black-blue-3.webp",
       "assets/products/cloud-iii/k-black-blue-4.webp"
      ],
-     "kit": "cloud-iii-gaming-headset"
+     "kit": "cloud-iii-gaming-headset",
+     "mat": "432115036889"
     },
     {
      "label": "Black-Lavender",
@@ -152,7 +157,8 @@
       "assets/products/cloud-iii/k-black-lavender-3.webp",
       "assets/products/cloud-iii/k-black-lavender-4.webp"
      ],
-     "kit": "cloud-iii-gaming-headset"
+     "kit": "cloud-iii-gaming-headset",
+     "mat": "521615144037"
     },
     {
      "label": "White-Blue",
@@ -165,7 +171,8 @@
       "assets/products/cloud-iii/k-white-blue-3.webp",
       "assets/products/cloud-iii/k-white-blue-4.webp"
      ],
-     "kit": "cloud-iii-gaming-headset"
+     "kit": "cloud-iii-gaming-headset",
+     "mat": "521615144038"
     }
    ],
    "img": "assets/products/cloud-iii/k-black-1.webp",
@@ -206,7 +213,8 @@
       "assets/products/cloud-iii-s-wl/k-black-red-3.webp",
       "assets/products/cloud-iii-s-wl/k-black-red-4.webp"
      ],
-     "kit": "cloud-iii-s-wireless-gaming-headset"
+     "kit": "cloud-iii-s-wireless-gaming-headset",
+     "mat": "432117062050"
     },
     {
      "label": "Black",
@@ -219,7 +227,8 @@
       "assets/products/cloud-iii-s-wl/k-black-3.webp",
       "assets/products/cloud-iii-s-wl/k-black-4.webp"
      ],
-     "kit": "cloud-iii-s-wireless-gaming-headset"
+     "kit": "cloud-iii-s-wireless-gaming-headset",
+     "mat": "521615143387"
     },
     {
      "label": "White",
@@ -232,7 +241,8 @@
       "assets/products/cloud-iii-s-wl/k-white-3.webp",
       "assets/products/cloud-iii-s-wl/k-white-4.webp"
      ],
-     "kit": "cloud-iii-s-wireless-gaming-headset"
+     "kit": "cloud-iii-s-wireless-gaming-headset",
+     "mat": "521615143637"
     },
     {
      "label": "Lavender",
@@ -245,7 +255,8 @@
       "assets/products/cloud-iii-s-wl/k-lavender-3.webp",
       "assets/products/cloud-iii-s-wl/k-lavender-4.webp"
      ],
-     "kit": "cloud-iii-s-wireless-gaming-headset"
+     "kit": "cloud-iii-s-wireless-gaming-headset",
+     "mat": "432115036890"
     },
     {
      "label": "Black-Blue",
@@ -258,7 +269,8 @@
       "assets/products/cloud-iii-s-wl/k-black-blue-3.webp",
       "assets/products/cloud-iii-s-wl/k-black-blue-4.webp"
      ],
-     "kit": "cloud-iii-s-wireless-gaming-headset"
+     "kit": "cloud-iii-s-wireless-gaming-headset",
+     "mat": "521615144039"
     },
     {
      "label": "White-Pink",
@@ -271,7 +283,8 @@
       "assets/products/cloud-iii-s-wl/k-white-pink-3.webp",
       "assets/products/cloud-iii-s-wl/k-white-pink-4.webp"
      ],
-     "kit": "cloud-iii-s-wireless-gaming-headset"
+     "kit": "cloud-iii-s-wireless-gaming-headset",
+     "mat": "521615144040"
     }
    ],
    "img": "assets/products/cloud-iii-s-wl/k-black-red-1.webp",
@@ -310,7 +323,8 @@
       "assets/products/cloud-alpha/k-red-2.webp",
       "assets/products/cloud-alpha/k-red-3.webp"
      ],
-     "kit": "cloud-alpha-gaming-headset"
+     "kit": "cloud-alpha-gaming-headset",
+     "mat": "521615142263"
     }
    ],
    "img": "assets/products/cloud-alpha/k-red-1.webp",
@@ -351,7 +365,8 @@
       "assets/products/cloud-alpha-wl/k-black-red-3.webp",
       "assets/products/cloud-alpha-wl/k-black-red-4.webp"
      ],
-     "kit": "cloud-alpha-wireless-gaming-headset"
+     "kit": "cloud-alpha-wireless-gaming-headset",
+     "mat": "521615142566"
     }
    ],
    "img": "assets/products/cloud-alpha-wl/k-black-red-1.webp",
@@ -389,7 +404,8 @@
       "assets/products/cloud-alpha-air/k-black-3.webp",
       "assets/products/cloud-alpha-air/k-black-4.webp"
      ],
-     "kit": "cloud-alpha-air-open-back-gaming-headset"
+     "kit": "cloud-alpha-air-open-back-gaming-headset",
+     "mat": "521615144035"
     }
    ],
    "img": "assets/products/cloud-alpha-air/k-black-1.webp",
@@ -429,7 +445,8 @@
       "assets/products/cloud-alpha-2-wl/k-black-3.webp",
       "assets/products/cloud-alpha-2-wl/k-black-4.webp"
      ],
-     "kit": "cloud-alpha-2-wireless-gaming-headset"
+     "kit": "cloud-alpha-2-wireless-gaming-headset",
+     "mat": "521615143731"
     }
    ],
    "img": "assets/products/cloud-alpha-2-wl/k-black-1.webp",
@@ -468,7 +485,8 @@
       "assets/products/stinger-3/k-black-pc-3.webp",
       "assets/products/stinger-3/k-black-pc-4.webp"
      ],
-     "kit": "cloud-stinger-3-gaming-headset"
+     "kit": "cloud-stinger-3-gaming-headset",
+     "mat": "432115036884"
     },
     {
      "label": "White · PlayStation",
@@ -481,7 +499,8 @@
       "assets/products/stinger-3/k-white-playstation-3.webp",
       "assets/products/stinger-3/k-white-playstation-4.webp"
      ],
-     "kit": "cloud-stinger-3-gaming-headset"
+     "kit": "cloud-stinger-3-gaming-headset",
+     "mat": "432115036885"
     }
    ],
    "img": "assets/products/stinger-3/k-black-pc-1.webp",
@@ -521,7 +540,8 @@
       "assets/products/stinger-3-x/k-black-3.webp",
       "assets/products/stinger-3-x/k-black-4.webp"
      ],
-     "kit": "cloudx-stinger-3-gaming-headset-xbox"
+     "kit": "cloudx-stinger-3-gaming-headset-xbox",
+     "mat": "432115036886"
     }
    ],
    "img": "assets/products/stinger-3-x/k-black-1.webp",
@@ -559,7 +579,8 @@
       "assets/products/stinger-3-wl/k-black-pc-3.webp",
       "assets/products/stinger-3-wl/k-black-pc-4.webp"
      ],
-     "kit": "cloud-stinger-3-wireless-gaming-headset"
+     "kit": "cloud-stinger-3-wireless-gaming-headset",
+     "mat": "432115036887"
     },
     {
      "label": "White · PlayStation",
@@ -572,7 +593,8 @@
       "assets/products/stinger-3-wl/k-white-playstation-3.webp",
       "assets/products/stinger-3-wl/k-white-playstation-4.webp"
      ],
-     "kit": "cloud-stinger-3-wireless-gaming-headset"
+     "kit": "cloud-stinger-3-wireless-gaming-headset",
+     "mat": "432115036888"
     }
    ],
    "img": "assets/products/stinger-3-wl/k-black-pc-1.webp",
@@ -611,7 +633,8 @@
       "assets/products/stinger-2-core/k-black-pc-3.webp",
       "assets/products/stinger-2-core/k-black-pc-4.webp"
      ],
-     "kit": "cloud-stinger-2-core-gaming-headsets"
+     "kit": "cloud-stinger-2-core-gaming-headsets",
+     "mat": "521615142563"
     },
     {
      "label": "Black · PlayStation",
@@ -624,7 +647,8 @@
       "assets/products/stinger-2-core/k-black-playstation-3.webp",
       "assets/products/stinger-2-core/k-black-playstation-4.webp"
      ],
-     "kit": "cloud-stinger-2-core-gaming-headset-playstation"
+     "kit": "cloud-stinger-2-core-gaming-headset-playstation",
+     "mat": "521615142631"
     },
     {
      "label": "White · PlayStation",
@@ -636,7 +660,8 @@
       "assets/products/stinger-2-core/k-white-playstation-2.webp",
       "assets/products/stinger-2-core/k-white-playstation-3.webp"
      ],
-     "kit": "cloud-stinger-2-core-gaming-headset-playstation"
+     "kit": "cloud-stinger-2-core-gaming-headset-playstation",
+     "mat": "521615142630"
     }
    ],
    "img": "assets/products/stinger-2-core/k-black-pc-1.webp",
@@ -673,7 +698,8 @@
       "assets/products/stinger-2-core-x/k-white-2.webp",
       "assets/products/stinger-2-core-x/k-white-3.webp"
      ],
-     "kit": "cloudx-stinger-2-core-gaming-headsets-xbox"
+     "kit": "cloudx-stinger-2-core-gaming-headsets-xbox",
+     "mat": "521615142687"
     },
     {
      "label": "Black",
@@ -685,7 +711,8 @@
       "assets/products/stinger-2-core-x/k-black-2.webp",
       "assets/products/stinger-2-core-x/k-black-3.webp"
      ],
-     "kit": "cloudx-stinger-2-core-gaming-headsets-xbox"
+     "kit": "cloudx-stinger-2-core-gaming-headsets-xbox",
+     "mat": "521615142688"
     }
    ],
    "img": "assets/products/stinger-2-core-x/k-white-1.webp",
@@ -722,7 +749,8 @@
       "assets/products/stinger-2/k-black-pc-2.webp",
       "assets/products/stinger-2/k-black-pc-3.webp"
      ],
-     "kit": "cloud-stinger-2-gaming-headset"
+     "kit": "cloud-stinger-2-gaming-headset",
+     "mat": "521615142564"
     },
     {
      "label": "Black · PlayStation",
@@ -735,7 +763,8 @@
       "assets/products/stinger-2/k-black-playstation-3.webp",
       "assets/products/stinger-2/k-black-playstation-4.webp"
      ],
-     "kit": "cloud-stinger-2-wired-headset-playstation"
+     "kit": "cloud-stinger-2-wired-headset-playstation",
+     "mat": "521615143659"
     }
    ],
    "img": "assets/products/stinger-2/k-black-pc-1.webp",
@@ -773,7 +802,8 @@
       "assets/products/stinger-2-x/k-black-3.webp",
       "assets/products/stinger-2-x/k-black-4.webp"
      ],
-     "kit": "cloudx-stinger-2-wired-headset-xbox"
+     "kit": "cloudx-stinger-2-wired-headset-xbox",
+     "mat": "521615143873"
     }
    ],
    "img": "assets/products/stinger-2-x/k-black-1.webp",
@@ -810,7 +840,8 @@
       "assets/products/stinger-2-wl/k-black-2.webp",
       "assets/products/stinger-2-wl/k-black-3.webp"
      ],
-     "kit": "cloud-stinger-2-wireless-gaming-headset"
+     "kit": "cloud-stinger-2-wireless-gaming-headset",
+     "mat": "521615142686"
     }
    ],
    "img": "assets/products/stinger-2-wl/k-black-1.webp",
@@ -846,7 +877,8 @@
       "assets/products/cloud-jet-wl/k-black-2.webp",
       "assets/products/cloud-jet-wl/k-black-3.webp"
      ],
-     "kit": "cloud-jet-wireless-gaming-headset"
+     "kit": "cloud-jet-wireless-gaming-headset",
+     "mat": "521615143385"
     },
     {
      "label": "Blue",
@@ -858,7 +890,8 @@
       "assets/products/cloud-jet-wl/k-blue-2.webp",
       "assets/products/cloud-jet-wl/k-blue-3.webp"
      ],
-     "kit": "cloud-jet-wireless-gaming-headset"
+     "kit": "cloud-jet-wireless-gaming-headset",
+     "mat": "521615143386"
     }
    ],
    "img": "assets/products/cloud-jet-wl/k-black-1.webp",
@@ -897,7 +930,8 @@
       "assets/products/cloud-mini/k-multi-2.webp",
       "assets/products/cloud-mini/k-multi-3.webp"
      ],
-     "kit": "cloud-mini-gaming-headset"
+     "kit": "cloud-mini-gaming-headset",
+     "mat": "521615143101"
     },
     {
      "label": "Black",
@@ -909,7 +943,8 @@
       "assets/products/cloud-mini/k-black-2.webp",
       "assets/products/cloud-mini/k-black-3.webp"
      ],
-     "kit": "cloud-mini-gaming-headset"
+     "kit": "cloud-mini-gaming-headset",
+     "mat": "521615143102"
     },
     {
      "label": "Lavender",
@@ -921,7 +956,8 @@
       "assets/products/cloud-mini/k-lavender-2.webp",
       "assets/products/cloud-mini/k-lavender-3.webp"
      ],
-     "kit": "cloud-mini-gaming-headset"
+     "kit": "cloud-mini-gaming-headset",
+     "mat": "521615143103"
     }
    ],
    "img": "assets/products/cloud-mini/k-multi-1.webp",
@@ -959,7 +995,8 @@
       "assets/products/cloud-mini-wl/k-black-2.webp",
       "assets/products/cloud-mini-wl/k-black-3.webp"
      ],
-     "kit": "cloud-mini-wireless-gaming-headset"
+     "kit": "cloud-mini-wireless-gaming-headset",
+     "mat": "521615143798"
     },
     {
      "label": "White",
@@ -971,7 +1008,8 @@
       "assets/products/cloud-mini-wl/k-white-2.webp",
       "assets/products/cloud-mini-wl/k-white-3.webp"
      ],
-     "kit": "cloud-mini-wireless-gaming-headset"
+     "kit": "cloud-mini-wireless-gaming-headset",
+     "mat": "521615143799"
     }
    ],
    "img": "assets/products/cloud-mini-wl/k-black-1.webp",
@@ -1008,7 +1046,8 @@
       "assets/products/earbuds-ii/k-red-1.webp",
       "assets/products/earbuds-ii/k-red-2.webp"
      ],
-     "kit": "cloud-earbuds-ii-gaming-earbuds"
+     "kit": "cloud-earbuds-ii-gaming-earbuds",
+     "mat": "521615142690"
     },
     {
      "label": "Black",
@@ -1019,7 +1058,8 @@
       "assets/products/earbuds-ii/k-black-1.webp",
       "assets/products/earbuds-ii/k-black-2.webp"
      ],
-     "kit": "cloud-earbuds-ii-gaming-earbuds"
+     "kit": "cloud-earbuds-ii-gaming-earbuds",
+     "mat": "521615142691"
     }
    ],
    "img": "assets/products/earbuds-ii/k-red-1.webp",
@@ -1057,7 +1097,8 @@
       "assets/products/earbuds-iii/k-black-2.webp",
       "assets/products/earbuds-iii/k-black-3.webp"
      ],
-     "kit": "cloud-earbuds-iii"
+     "kit": "cloud-earbuds-iii",
+     "mat": "521615143727"
     },
     {
      "label": "Red",
@@ -1069,7 +1110,8 @@
       "assets/products/earbuds-iii/k-red-2.webp",
       "assets/products/earbuds-iii/k-red-3.webp"
      ],
-     "kit": "cloud-earbuds-iii"
+     "kit": "cloud-earbuds-iii",
+     "mat": "521615143728"
     }
    ],
    "img": "assets/products/earbuds-iii/k-black-1.webp",
@@ -1107,7 +1149,8 @@
       "assets/products/earbuds-iii-s/k-black-2.webp",
       "assets/products/earbuds-iii-s/k-black-3.webp"
      ],
-     "kit": "cloud-earbuds-iii-s"
+     "kit": "cloud-earbuds-iii-s",
+     "mat": "521615143729"
     },
     {
      "label": "Red",
@@ -1119,7 +1162,8 @@
       "assets/products/earbuds-iii-s/k-red-2.webp",
       "assets/products/earbuds-iii-s/k-red-3.webp"
      ],
-     "kit": "cloud-earbuds-iii-s"
+     "kit": "cloud-earbuds-iii-s",
+     "mat": "521615143730"
     }
    ],
    "img": "assets/products/earbuds-iii-s/k-black-1.webp",
@@ -1157,7 +1201,8 @@
       "assets/products/solocast-2/k-black-2.webp",
       "assets/products/solocast-2/k-black-3.webp"
      ],
-     "kit": "solocast-2-usb-microphone"
+     "kit": "solocast-2-usb-microphone",
+     "mat": "521615200267"
     },
     {
      "label": "Frost",
@@ -1167,7 +1212,8 @@
      "gallery": [
       "assets/products/solocast-2/u-solocast2-frost.webp"
      ],
-     "kit": "solocast-2-usb-microphone"
+     "kit": "solocast-2-usb-microphone",
+     "mat": "521615144036"
     }
    ],
    "img": "assets/products/solocast-2/k-black-1.webp",
@@ -1205,7 +1251,8 @@
       "assets/products/solocast-2-pro/k-black-2.webp",
       "assets/products/solocast-2-pro/k-black-3.webp"
      ],
-     "kit": "solocast-2-pro-gaming-usb-condenser-microphone"
+     "kit": "solocast-2-pro-gaming-usb-condenser-microphone",
+     "mat": "521615200300"
     }
    ],
    "img": "assets/products/solocast-2-pro/k-black-1.webp",
@@ -1244,7 +1291,8 @@
       "assets/products/duocast/k-black-3.webp",
       "assets/products/duocast/k-black-4.webp"
      ],
-     "kit": "duocast-usb-microphone-black-rgb-lighting-4p5e2aa"
+     "kit": "duocast-usb-microphone-black-rgb-lighting-4p5e2aa",
+     "mat": "521615200180"
     }
    ],
    "img": "assets/products/duocast/k-black-1.webp",
@@ -1281,7 +1329,8 @@
       "assets/products/quadcast-2/k-black-2.webp",
       "assets/products/quadcast-2/k-black-3.webp"
      ],
-     "kit": "quadcast-2-usb-microphone"
+     "kit": "quadcast-2-usb-microphone",
+     "mat": "521615200236"
     },
     {
      "label": "Frost (white)",
@@ -1293,7 +1342,8 @@
       "assets/products/quadcast-2/k-frost-white-2.webp",
       "assets/products/quadcast-2/k-frost-white-3.webp"
      ],
-     "kit": "quadcast-2-usb-microphone"
+     "kit": "quadcast-2-usb-microphone",
+     "mat": "521615200235"
     }
    ],
    "img": "assets/products/quadcast-2/k-black-1.webp",
@@ -1331,7 +1381,8 @@
       "assets/products/quadcast-2s/k-black-2.webp",
       "assets/products/quadcast-2s/k-black-3.webp"
      ],
-     "kit": "quadcast-2-s-usb-microphone"
+     "kit": "quadcast-2-s-usb-microphone",
+     "mat": "521615200237"
     }
    ],
    "img": "assets/products/quadcast-2s/k-black-1.webp",
@@ -1369,7 +1420,8 @@
       "assets/products/flipcast/k-black-2.webp",
       "assets/products/flipcast/k-black-3.webp"
      ],
-     "kit": "flipcast-usb-xlr-dynamic-microphone"
+     "kit": "flipcast-usb-xlr-dynamic-microphone",
+     "mat": "521615143800"
     }
    ],
    "img": "assets/products/flipcast/k-black-1.webp",
@@ -1406,7 +1458,8 @@
       "assets/products/audio-mixer/k-black-3.webp",
       "assets/products/audio-mixer/k-black-4.webp"
      ],
-     "kit": "audio-mixer"
+     "kit": "audio-mixer",
+     "mat": "521615143803"
     }
    ],
    "img": "assets/products/audio-mixer/k-black-1.webp",
@@ -1442,7 +1495,8 @@
       "assets/products/shield/k-black-2.webp",
       "assets/products/shield/k-black-3.webp"
      ],
-     "kit": "shield"
+     "kit": "shield",
+     "mat": "521615200187"
     }
    ],
    "img": "assets/products/shield/k-black-1.webp",
@@ -1478,7 +1532,8 @@
       "assets/products/xlr-cable/k-black-2.webp",
       "assets/products/xlr-cable/k-black-3.webp"
      ],
-     "kit": "xlr-cable"
+     "kit": "xlr-cable",
+     "mat": "521615200188"
     }
    ],
    "img": "assets/products/xlr-cable/k-black-1.webp",
@@ -1514,7 +1569,8 @@
       "assets/products/haste-3-wl/k-black-2.webp",
       "assets/products/haste-3-wl/k-black-3.webp"
      ],
-     "kit": "pulsefire-haste-3-wireless-gaming-mouse"
+     "kit": "pulsefire-haste-3-wireless-gaming-mouse",
+     "mat": "432117081680"
     }
    ],
    "img": "assets/products/haste-3-wl/k-black-1.webp",
@@ -1550,7 +1606,8 @@
       "assets/products/haste-3/k-black-2.webp",
       "assets/products/haste-3/k-black-3.webp"
      ],
-     "kit": "pulsefire-haste-3-wired-gaming-mouse"
+     "kit": "pulsefire-haste-3-wired-gaming-mouse",
+     "mat": "432117081682"
     }
    ],
    "img": "assets/products/haste-3/k-black-1.webp",
@@ -1586,7 +1643,8 @@
       "assets/products/haste-3-pro-wl/k-black-2.webp",
       "assets/products/haste-3-pro-wl/k-black-3.webp"
      ],
-     "kit": "pulsefire-haste-3-pro-wireless-gaming-mouse"
+     "kit": "pulsefire-haste-3-pro-wireless-gaming-mouse",
+     "mat": "432117081681"
     }
    ],
    "img": "assets/products/haste-3-pro-wl/k-black-1.webp",
@@ -1622,7 +1680,8 @@
       "assets/products/haste-2/k-black-2.webp",
       "assets/products/haste-2/k-black-3.webp"
      ],
-     "kit": "pulsefire-haste-2-gaming-mouse"
+     "kit": "pulsefire-haste-2-gaming-mouse",
+     "mat": "432117081315"
     },
     {
      "label": "White",
@@ -1634,7 +1693,8 @@
       "assets/products/haste-2/k-white-2.webp",
       "assets/products/haste-2/k-white-3.webp"
      ],
-     "kit": "pulsefire-haste-2-gaming-mouse"
+     "kit": "pulsefire-haste-2-gaming-mouse",
+     "mat": "432117081316"
     }
    ],
    "img": "assets/products/haste-2/k-black-1.webp",
@@ -1669,7 +1729,8 @@
       "assets/products/haste-2-core-wl/k-black-1.webp",
       "assets/products/haste-2-core-wl/k-black-2.webp"
      ],
-     "kit": "pulsefire-haste-2-core-wireless-gaming-mouse"
+     "kit": "pulsefire-haste-2-core-wireless-gaming-mouse",
+     "mat": "432117081585"
     },
     {
      "label": "White",
@@ -1680,7 +1741,8 @@
       "assets/products/haste-2-core-wl/k-white-1.webp",
       "assets/products/haste-2-core-wl/k-white-2.webp"
      ],
-     "kit": "pulsefire-haste-2-core-wireless-gaming-mouse"
+     "kit": "pulsefire-haste-2-core-wireless-gaming-mouse",
+     "mat": "432117081586"
     }
    ],
    "img": "assets/products/haste-2-core-wl/k-black-1.webp",
@@ -1717,7 +1779,8 @@
       "assets/products/fuse-wl/k-black-2.webp",
       "assets/products/fuse-wl/k-black-3.webp"
      ],
-     "kit": "pulsefire-fuse-wireless-gaming-mouse"
+     "kit": "pulsefire-fuse-wireless-gaming-mouse",
+     "mat": "432117061826"
     }
    ],
    "img": "assets/products/fuse-wl/k-black-1.webp",
@@ -1754,7 +1817,8 @@
       "assets/products/saga/k-black-2.webp",
       "assets/products/saga/k-black-3.webp"
      ],
-     "kit": "pulsefire-saga-gaming-mouse"
+     "kit": "pulsefire-saga-gaming-mouse",
+     "mat": "432117061827"
     }
    ],
    "img": "assets/products/saga/k-black-1.webp",
@@ -1790,7 +1854,8 @@
       "assets/products/haste-2-mini-wl/k-black-2.webp",
       "assets/products/haste-2-mini-wl/k-black-3.webp"
      ],
-     "kit": "pulsefire-haste-2-mini-wireless-gaming-mouse"
+     "kit": "pulsefire-haste-2-mini-wireless-gaming-mouse",
+     "mat": "432117081397"
     },
     {
      "label": "White",
@@ -1802,7 +1867,8 @@
       "assets/products/haste-2-mini-wl/k-white-2.webp",
       "assets/products/haste-2-mini-wl/k-white-3.webp"
      ],
-     "kit": "pulsefire-haste-2-mini-wireless-gaming-mouse"
+     "kit": "pulsefire-haste-2-mini-wireless-gaming-mouse",
+     "mat": "432117081398"
     }
    ],
    "img": "assets/products/haste-2-mini-wl/k-black-1.webp",
@@ -1839,7 +1905,8 @@
       "assets/products/haste-2-wl/k-black-2.webp",
       "assets/products/haste-2-wl/k-black-3.webp"
      ],
-     "kit": "pulsefire-haste-2-wireless-gaming-mouse"
+     "kit": "pulsefire-haste-2-wireless-gaming-mouse",
+     "mat": "432117081318"
     },
     {
      "label": "White",
@@ -1851,7 +1918,8 @@
       "assets/products/haste-2-wl/k-white-2.webp",
       "assets/products/haste-2-wl/k-white-3.webp"
      ],
-     "kit": "pulsefire-haste-2-wireless-gaming-mouse"
+     "kit": "pulsefire-haste-2-wireless-gaming-mouse",
+     "mat": "432117081317"
     }
    ],
    "img": "assets/products/haste-2-wl/k-black-1.webp",
@@ -1888,7 +1956,8 @@
       "assets/products/pulsefire-mat/k-m-2.webp",
       "assets/products/pulsefire-mat/k-m-3.webp"
      ],
-     "kit": "pulsefire-mat-gaming-mousepad-m"
+     "kit": "pulsefire-mat-gaming-mousepad-m",
+     "mat": "432117081236"
     },
     {
      "label": "L",
@@ -1900,7 +1969,8 @@
       "assets/products/pulsefire-mat/k-l-2.webp",
       "assets/products/pulsefire-mat/k-l-3.webp"
      ],
-     "kit": "pulsefire-mat-gaming-mousepad-l"
+     "kit": "pulsefire-mat-gaming-mousepad-l",
+     "mat": "432117081235"
     },
     {
      "label": "XL",
@@ -1912,7 +1982,8 @@
       "assets/products/pulsefire-mat/k-xl-2.webp",
       "assets/products/pulsefire-mat/k-xl-3.webp"
      ],
-     "kit": "pulsefire-mat-gaming-mouse-pad-cloth-xl"
+     "kit": "pulsefire-mat-gaming-mouse-pad-cloth-xl",
+     "mat": "432117081237"
     },
     {
      "label": "2XL",
@@ -1924,7 +1995,8 @@
       "assets/products/pulsefire-mat/k-2xl-2.webp",
       "assets/products/pulsefire-mat/k-2xl-3.webp"
      ],
-     "kit": "pulsefire-mat-gaming-mouse-pad-cloth-2xl"
+     "kit": "pulsefire-mat-gaming-mouse-pad-cloth-2xl",
+     "mat": "432117081234"
     }
    ],
    "img": "assets/products/pulsefire-mat/k-m-1.webp",
@@ -1958,7 +2030,8 @@
      "gallery": [
       "assets/products/alloy-core-rgb/k-black-1.webp"
      ],
-     "kit": "alloy-core-rgb-gaming-keyboard"
+     "kit": "alloy-core-rgb-gaming-keyboard",
+     "mat": "432117061452"
     }
    ],
    "img": "assets/products/alloy-core-rgb/k-black-1.webp",
@@ -1994,7 +2067,8 @@
       "assets/products/eve-1800/k-black-us-2.webp",
       "assets/products/eve-1800/k-black-us-3.webp"
      ],
-     "kit": "eve-1800-gaming-keyboard"
+     "kit": "eve-1800-gaming-keyboard",
+     "mat": "432117062029"
     }
    ],
    "img": "assets/products/eve-1800/k-black-us-1.webp",
@@ -2030,7 +2104,8 @@
       "assets/products/origins-2-65/k-black-us-2.webp",
       "assets/products/origins-2-65/k-black-us-3.webp"
      ],
-     "kit": "origins-2-65"
+     "kit": "origins-2-65",
+     "mat": "432117062026"
     }
    ],
    "img": "assets/products/origins-2-65/k-black-us-1.webp",
@@ -2066,7 +2141,8 @@
       "assets/products/origins-2-1800/k-black-us-2.webp",
       "assets/products/origins-2-1800/k-black-us-3.webp"
      ],
-     "kit": "origins-2-1800"
+     "kit": "origins-2-1800",
+     "mat": "432117062027"
     }
    ],
    "img": "assets/products/origins-2-1800/k-black-us-1.webp",
@@ -2102,7 +2178,8 @@
       "assets/products/origins-pro-2-65/k-black-us-2.webp",
       "assets/products/origins-pro-2-65/k-black-us-3.webp"
      ],
-     "kit": "origins-2-pro-65-gaming-keyboard"
+     "kit": "origins-2-pro-65-gaming-keyboard",
+     "mat": "432117062028"
     }
    ],
    "img": "assets/products/origins-pro-2-65/k-black-us-1.webp",
@@ -2139,7 +2216,8 @@
       "assets/products/alloy-rise-75/k-black-red-linear-3.webp",
       "assets/products/alloy-rise-75/k-black-red-linear-4.webp"
      ],
-     "kit": "alloy-rise-75-gaming-keyboard"
+     "kit": "alloy-rise-75-gaming-keyboard",
+     "mat": "432117061692"
     }
    ],
    "img": "assets/products/alloy-rise-75/k-black-red-linear-1.webp",
@@ -2176,7 +2254,8 @@
       "assets/products/alloy-rise/k-black-red-linear-3.webp",
       "assets/products/alloy-rise/k-black-red-linear-4.webp"
      ],
-     "kit": "alloy-rise-gaming-keyboard"
+     "kit": "alloy-rise-gaming-keyboard",
+     "mat": "432117061691"
     }
    ],
    "img": "assets/products/alloy-rise/k-black-red-linear-1.webp",
@@ -2213,7 +2292,8 @@
       "assets/products/alloy-origins/k-red-linear-3.webp",
       "assets/products/alloy-origins/k-red-linear-4.webp"
      ],
-     "kit": "alloy-origins-mechanical-gaming-keyboard"
+     "kit": "alloy-origins-mechanical-gaming-keyboard",
+     "mat": "432117061314"
     },
     {
      "label": "Aqua tactile",
@@ -2226,7 +2306,8 @@
       "assets/products/alloy-origins/k-red-linear-3.webp",
       "assets/products/alloy-origins/k-red-linear-4.webp"
      ],
-     "kit": "alloy-origins-mechanical-gaming-keyboard"
+     "kit": "alloy-origins-mechanical-gaming-keyboard",
+     "mat": "432117061315"
     }
    ],
    "img": "assets/products/alloy-origins/k-red-linear-1.webp",
@@ -2262,7 +2343,8 @@
       "assets/products/alloy-origins-60/k-red-linear-3.webp",
       "assets/products/alloy-origins-60/k-red-linear-4.webp"
      ],
-     "kit": "alloy-origins-60-mechanical-gaming-keyboard"
+     "kit": "alloy-origins-60-mechanical-gaming-keyboard",
+     "mat": "432117061325"
     }
    ],
    "img": "assets/products/alloy-origins-60/k-red-linear-1.webp",
@@ -2299,7 +2381,8 @@
       "assets/products/alloy-origins-65/k-red-linear-3.webp",
       "assets/products/alloy-origins-65/k-red-linear-4.webp"
      ],
-     "kit": "alloy-origins-65-mechanical-gaming-keyboard"
+     "kit": "alloy-origins-65-mechanical-gaming-keyboard",
+     "mat": "432117061385"
     },
     {
      "label": "Aqua tactile",
@@ -2312,7 +2395,8 @@
       "assets/products/alloy-origins-65/k-aqua-tactile-3.webp",
       "assets/products/alloy-origins-65/k-red-linear-1.webp"
      ],
-     "kit": "alloy-origins-65-mechanical-gaming-keyboard"
+     "kit": "alloy-origins-65-mechanical-gaming-keyboard",
+     "mat": "432117061386"
     }
    ],
    "img": "assets/products/alloy-origins-65/k-red-linear-1.webp",
@@ -2349,7 +2433,8 @@
       "assets/products/alloy-origins-pbt/k-red-linear-3.webp",
       "assets/products/alloy-origins-pbt/k-red-linear-4.webp"
      ],
-     "kit": "alloy-origins-pbt-mechanical-gaming-keyboard"
+     "kit": "alloy-origins-pbt-mechanical-gaming-keyboard",
+     "mat": "432117061458"
     },
     {
      "label": "Blue clicky",
@@ -2362,7 +2447,8 @@
       "assets/products/alloy-origins-pbt/k-red-linear-3.webp",
       "assets/products/alloy-origins-pbt/k-red-linear-4.webp"
      ],
-     "kit": "alloy-origins-pbt-mechanical-gaming-keyboard"
+     "kit": "alloy-origins-pbt-mechanical-gaming-keyboard",
+     "mat": "432117061457"
     },
     {
      "label": "Aqua tactile",
@@ -2374,7 +2460,8 @@
       "assets/products/alloy-origins-pbt/k-aqua-tactile-2.webp",
       "assets/products/alloy-origins-pbt/k-red-linear-1.webp"
      ],
-     "kit": "alloy-origins-pbt-mechanical-gaming-keyboard"
+     "kit": "alloy-origins-pbt-mechanical-gaming-keyboard",
+     "mat": "432117061456"
     }
    ],
    "img": "assets/products/alloy-origins-pbt/k-red-linear-1.webp",
@@ -2411,7 +2498,8 @@
       "assets/products/alloy-origins-core-pbt/k-blue-clicky-3.webp",
       "assets/products/alloy-origins-core-pbt/k-blue-clicky-4.webp"
      ],
-     "kit": "alloy-origins-core-pbt-hx-red-gaming-keyboard"
+     "kit": "alloy-origins-core-pbt-hx-red-gaming-keyboard",
+     "mat": "432117061453"
     },
     {
      "label": "Aqua tactile",
@@ -2424,7 +2512,8 @@
       "assets/products/alloy-origins-core-pbt/k-aqua-tactile-3.webp",
       "assets/products/alloy-origins-core-pbt/k-aqua-tactile-4.webp"
      ],
-     "kit": "alloy-origins-core-pbt-hx-red-gaming-keyboard"
+     "kit": "alloy-origins-core-pbt-hx-red-gaming-keyboard",
+     "mat": "432117061455"
     }
    ],
    "img": "assets/products/alloy-origins-core-pbt/k-blue-clicky-1.webp",
@@ -2460,7 +2549,8 @@
       "assets/products/pbt-keycaps/k-black-2.webp",
       "assets/products/pbt-keycaps/k-black-3.webp"
      ],
-     "kit": "full-key-set-keycaps-pbt"
+     "kit": "full-key-set-keycaps-pbt",
+     "mat": "432022050020"
     },
     {
      "label": "White",
@@ -2473,7 +2563,8 @@
       "assets/products/pbt-keycaps/k-white-3.webp",
       "assets/products/pbt-keycaps/k-white-4.webp"
      ],
-     "kit": "full-key-set-keycaps-pbt"
+     "kit": "full-key-set-keycaps-pbt",
+     "mat": "432022050021"
     },
     {
      "label": "Pink",
@@ -2486,7 +2577,8 @@
       "assets/products/pbt-keycaps/k-pink-3.webp",
       "assets/products/pbt-keycaps/k-pink-4.webp"
      ],
-     "kit": "full-key-set-keycaps-pbt"
+     "kit": "full-key-set-keycaps-pbt",
+     "mat": "432022050014"
     }
    ],
    "img": "assets/products/pbt-keycaps/k-black-1.webp",
@@ -2516,7 +2608,8 @@
      "label": "Pink",
      "sku": "644H7AA",
      "srp": 1490,
-     "dp": 1043.58
+     "dp": 1043.58,
+     "mat": "432022050023"
     }
    ],
    "img": "assets/products/pudding-keycaps/all-1.webp",
@@ -2555,7 +2648,8 @@
       "assets/products/switches/k-linear-red-1.webp",
       "assets/products/switches/k-linear-red-2.webp"
      ],
-     "kit": "linear-switches"
+     "kit": "linear-switches",
+     "mat": "391215460067"
     },
     {
      "label": "Tactile · Aqua",
@@ -2566,7 +2660,8 @@
       "assets/products/switches/k-tactile-aqua-1.webp",
       "assets/products/switches/k-tactile-aqua-2.webp"
      ],
-     "kit": "tactile-switches"
+     "kit": "tactile-switches",
+     "mat": "391215460068"
     }
    ],
    "img": "assets/products/switches/k-linear-red-1.webp",
@@ -2602,7 +2697,8 @@
       "assets/products/coiled-cable/k-red-black-2.webp",
       "assets/products/coiled-cable/k-red-black-3.webp"
      ],
-     "kit": "usb-c-coiled-cable-light-purple"
+     "kit": "usb-c-coiled-cable-light-purple",
+     "mat": "261216131646"
     },
     {
      "label": "Gray",
@@ -2614,7 +2710,8 @@
       "assets/products/coiled-cable/k-gray-2.webp",
       "assets/products/coiled-cable/k-gray-3.webp"
      ],
-     "kit": "usb-c-coiled-cable-light-purple"
+     "kit": "usb-c-coiled-cable-light-purple",
+     "mat": "261216131647"
     },
     {
      "label": "Gray-Black",
@@ -2626,7 +2723,8 @@
       "assets/products/coiled-cable/k-gray-black-2.webp",
       "assets/products/coiled-cable/k-gray-black-3.webp"
      ],
-     "kit": "usb-c-coiled-cable-light-purple"
+     "kit": "usb-c-coiled-cable-light-purple",
+     "mat": "261216131648"
     },
     {
      "label": "Light Blue-White",
@@ -2638,7 +2736,8 @@
       "assets/products/coiled-cable/k-light-blue-white-2.webp",
       "assets/products/coiled-cable/k-light-blue-white-3.webp"
      ],
-     "kit": "usb-c-coiled-cable-light-purple"
+     "kit": "usb-c-coiled-cable-light-purple",
+     "mat": "261216131649"
     },
     {
      "label": "Light Green-White",
@@ -2650,7 +2749,8 @@
       "assets/products/coiled-cable/k-light-green-white-2.webp",
       "assets/products/coiled-cable/k-light-green-white-3.webp"
      ],
-     "kit": "usb-c-coiled-cable-light-purple"
+     "kit": "usb-c-coiled-cable-light-purple",
+     "mat": "261216131650"
     },
     {
      "label": "Light Purple",
@@ -2662,7 +2762,8 @@
       "assets/products/coiled-cable/k-light-purple-2.webp",
       "assets/products/coiled-cable/k-light-purple-3.webp"
      ],
-     "kit": "usb-c-coiled-cable-light-purple"
+     "kit": "usb-c-coiled-cable-light-purple",
+     "mat": "261216131651"
     }
    ],
    "img": "assets/products/coiled-cable/k-red-black-1.webp",
@@ -2697,7 +2798,8 @@
       "assets/products/rise-top-plate/white-1.webp",
       "assets/products/rise-top-plate/white-2.webp"
      ],
-     "kit": "alloy-rise-75-top-plate"
+     "kit": "alloy-rise-75-top-plate",
+     "mat": "311623070001"
     },
     {
      "label": "Navy",
@@ -2708,7 +2810,8 @@
       "assets/products/rise-top-plate/navy-1.webp",
       "assets/products/rise-top-plate/navy-2.webp"
      ],
-     "kit": "alloy-rise-75-top-plate"
+     "kit": "alloy-rise-75-top-plate",
+     "mat": "311623070002"
     }
    ],
    "img": "assets/products/rise-top-plate/white-1.webp",
@@ -2743,7 +2846,8 @@
       "assets/products/rise-75-top-plate/k-white-1.webp",
       "assets/products/rise-75-top-plate/k-white-2.webp"
      ],
-     "kit": "alloy-rise-75-top-plate"
+     "kit": "alloy-rise-75-top-plate",
+     "mat": "311623070003"
     },
     {
      "label": "Navy",
@@ -2754,7 +2858,8 @@
       "assets/products/rise-75-top-plate/k-navy-1.webp",
       "assets/products/rise-75-top-plate/k-navy-2.webp"
      ],
-     "kit": "alloy-rise-75-top-plate"
+     "kit": "alloy-rise-75-top-plate",
+     "mat": "311623070004"
     }
    ],
    "img": "assets/products/rise-75-top-plate/k-white-1.webp",
@@ -2790,7 +2895,8 @@
       "assets/products/badges/8-bit-2.webp",
       "assets/products/badges/8-bit-3.webp"
      ],
-     "kit": "badge-pack-abstract-magnetic-badges"
+     "kit": "badge-pack-abstract-magnetic-badges",
+     "mat": "551218040002"
     },
     {
      "label": "Abstract",
@@ -2802,7 +2908,8 @@
       "assets/products/badges/abstract-2.webp",
       "assets/products/badges/abstract-3.webp"
      ],
-     "kit": "badge-pack-abstract-magnetic-badges"
+     "kit": "badge-pack-abstract-magnetic-badges",
+     "mat": "551218040003"
     },
     {
      "label": "Cute",
@@ -2814,7 +2921,8 @@
       "assets/products/badges/cute-2.webp",
       "assets/products/badges/cute-3.webp"
      ],
-     "kit": "badge-pack-abstract-magnetic-badges"
+     "kit": "badge-pack-abstract-magnetic-badges",
+     "mat": "551218040004"
     }
    ],
    "img": "assets/products/badges/8-bit-1.webp",
@@ -2850,7 +2958,8 @@
       "assets/products/wrist-rest/full-size-2.webp",
       "assets/products/wrist-rest/full-size-3.webp"
      ],
-     "kit": "wrist-rest-full-size-keyboard"
+     "kit": "wrist-rest-full-size-keyboard",
+     "mat": "461822060001"
     },
     {
      "label": "60",
@@ -2862,7 +2971,8 @@
       "assets/products/wrist-rest/k-60-2.webp",
       "assets/products/wrist-rest/k-60-3.webp"
      ],
-     "kit": "wrist-rest-keyboard-compact-60-65"
+     "kit": "wrist-rest-keyboard-compact-60-65",
+     "mat": "461822060002"
     },
     {
      "label": "75 / TKL",
@@ -2874,7 +2984,8 @@
       "assets/products/wrist-rest/k-75-tkl-2.webp",
       "assets/products/wrist-rest/k-75-tkl-3.webp"
      ],
-     "kit": "wrist-rest-keyboard-tenkeyless"
+     "kit": "wrist-rest-keyboard-tenkeyless",
+     "mat": "461822060004"
     },
     {
      "label": "Mouse",
@@ -2886,7 +2997,8 @@
       "assets/products/wrist-rest/k-mouse-2.webp",
       "assets/products/wrist-rest/k-mouse-3.webp"
      ],
-     "kit": "wrist-rest-mouse"
+     "kit": "wrist-rest-mouse",
+     "mat": "461822060003"
     }
    ],
    "img": "assets/products/wrist-rest/full-size-1.webp",
@@ -2923,7 +3035,8 @@
       "assets/products/chargeplay-duo/k-white-3.webp",
       "assets/products/chargeplay-duo/k-white-4.webp"
      ],
-     "kit": "chargeplay-duo-controller-charging-station-for-ps5"
+     "kit": "chargeplay-duo-controller-charging-station-for-ps5",
+     "mat": "261117040238"
     }
    ],
    "img": "assets/products/chargeplay-duo/k-white-1.webp",
@@ -2960,7 +3073,8 @@
       "assets/products/chargeplay-quad-2/k-white-red-3.webp",
       "assets/products/chargeplay-quad-2/k-white-red-4.webp"
      ],
-     "kit": "chargeplay-quad-2"
+     "kit": "chargeplay-quad-2",
+     "mat": "391215460031"
     }
    ],
    "img": "assets/products/chargeplay-quad-2/k-white-red-1.webp",
@@ -2996,7 +3110,8 @@
       "assets/products/gladiate/k-black-2.webp",
       "assets/products/gladiate/k-black-3.webp"
      ],
-     "kit": "clutch-gladiate-gaming-controller-xbox"
+     "kit": "clutch-gladiate-gaming-controller-xbox",
+     "mat": "391215460030"
     }
    ],
    "img": "assets/products/gladiate/k-black-1.webp",
@@ -3033,7 +3148,8 @@
       "assets/products/gladiate-rgb/k-clear-2.webp",
       "assets/products/gladiate-rgb/k-clear-3.webp"
      ],
-     "kit": "clutch-gladiate-wired-gaming-rgb-controller-xbox"
+     "kit": "clutch-gladiate-wired-gaming-rgb-controller-xbox",
+     "mat": "391215460050"
     }
    ],
    "img": "assets/products/gladiate-rgb/k-clear-1.webp",
@@ -3070,7 +3186,8 @@
       "assets/products/clutch-tachi/k-black-2.webp",
       "assets/products/clutch-tachi/k-black-3.webp"
      ],
-     "kit": "clutch-tachi-xbox"
+     "kit": "clutch-tachi-xbox",
+     "mat": "391215460085"
     }
    ],
    "img": "assets/products/clutch-tachi/k-black-1.webp",
@@ -3106,7 +3223,8 @@
       "assets/products/omen-24e/k-black-1.webp",
       "assets/products/omen-24e/k-black-2.webp"
      ],
-     "kit": "omen-23-8-inch-fhd-144hz-gaming-monitor-omen-24e"
+     "kit": "omen-23-8-inch-fhd-144hz-gaming-monitor-omen-24e",
+     "mat": "432119024731"
     }
    ],
    "img": "assets/products/omen-24e/k-black-1.webp",
@@ -3144,7 +3262,8 @@
       "assets/products/omen-24-g2/k-black-2.webp",
       "assets/products/omen-24-g2/k-black-3.webp"
      ],
-     "kit": "omen-23-8-inch-fhd-180hz-gaming-monitor-omen-24-g2"
+     "kit": "omen-23-8-inch-fhd-180hz-gaming-monitor-omen-24-g2",
+     "mat": "432119024732"
     }
    ],
    "img": "assets/products/omen-24-g2/k-black-1.webp",
@@ -3182,7 +3301,8 @@
       "assets/products/omen-27e/k-black-2.webp",
       "assets/products/omen-27e/k-black-3.webp"
      ],
-     "kit": "omen-27-inch-fhd-144hz-gaming-monitor-omen-27e"
+     "kit": "omen-27-inch-fhd-144hz-gaming-monitor-omen-27e",
+     "mat": "432119024733"
     }
    ],
    "img": "assets/products/omen-27e/k-black-1.webp",
@@ -3219,7 +3339,8 @@
       "assets/products/omen-oled-27q/k-black-1.webp",
       "assets/products/omen-oled-27q/k-black-2.webp"
      ],
-     "kit": "omen-oled-27-inch-qhd-240hz-gaming-monitor-omen-oled-27q"
+     "kit": "omen-oled-27-inch-qhd-240hz-gaming-monitor-omen-oled-27q",
+     "mat": "432119024734"
     }
    ],
    "img": "assets/products/omen-oled-27q/k-black-1.webp",
@@ -3256,7 +3377,8 @@
       "assets/products/omen-oled-34/k-black-1.webp",
       "assets/products/omen-oled-34/k-black-2.webp"
      ],
-     "kit": "omen-oled-34-inch-wqhd-360hz-gaming-monitor-omen-oled-34"
+     "kit": "omen-oled-34-inch-wqhd-360hz-gaming-monitor-omen-oled-34",
+     "mat": "432119024735"
     }
    ],
    "img": "assets/products/omen-oled-34/k-black-1.webp",
@@ -3292,7 +3414,8 @@
       "assets/products/delta-backpack/k-black-2.webp",
       "assets/products/delta-backpack/k-black-3.webp"
      ],
-     "kit": "delta-backpack"
+     "kit": "delta-backpack",
+     "mat": "241115000026"
     }
    ],
    "img": "assets/products/delta-backpack/k-black-1.webp",
@@ -3328,7 +3451,8 @@
       "assets/products/knight-backpack/k-black-2.webp",
       "assets/products/knight-backpack/k-black-3.webp"
      ],
-     "kit": "knight-backpack"
+     "kit": "knight-backpack",
+     "mat": "531217060345"
     }
    ],
    "img": "assets/products/knight-backpack/k-black-1.webp",
